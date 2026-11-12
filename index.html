@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f4f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12172a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="道場">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>リーディング道場</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Source+Serif+4:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: phone-first single column (max 560px), fixed bottom tab bar, test-booklet serif for English passages */
+:root{
+  --bg:#f3f4f8; --card:#ffffff; --ink:#1a2238; --sub:#5d6780; --line:#dfe2ea;
+  --gold:#b98510; --gold-soft:#f6ebcb; --navy:#243a73; --navy-soft:#e6eaf6;
+  --ok:#1f7a4d; --ok-soft:#def2e6; --ng:#b83a32; --ng-soft:#f8e1de;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-en:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-num:"Space Grotesk","Zen Kaku Gothic New",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#12172a; --card:#1b2238; --ink:#e9ecf5; --sub:#9aa3bd; --line:#2e3752;
+  --gold:#e3b23c; --gold-soft:#3a3118; --navy:#8ea6ea; --navy-soft:#252f52;
+  --ok:#5fc892; --ok-soft:#173326; --ng:#ef8a80; --ng-soft:#3d1f1d; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#12172a; --card:#1b2238; --ink:#e9ecf5; --sub:#9aa3bd; --line:#2e3752;
+  --gold:#e3b23c; --gold-soft:#3a3118; --navy:#8ea6ea; --navy-soft:#252f52;
+  --ok:#5fc892; --ok-soft:#173326; --ng:#ef8a80; --ng-soft:#3d1f1d; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+#app{max-width:560px;margin:0 auto;padding-block:18px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+#app.insess{padding-block:14px 32px}
+h1,h2,h3,p{margin:0}
+h1{font-size:20px;font-weight:700;text-wrap:balance}
+h2{font-size:16px;font-weight:700}
+.sub{color:var(--sub);font-size:13px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>.grow{flex:1;min-width:0}
+.between{justify-content:space-between}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:500}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:var(--card);font-weight:700;padding:13px 18px;font-size:16px}
+.btn.gold{background:var(--gold-soft);border-color:var(--gold);color:var(--ink);font-weight:700}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.wide{width:100%}
+/* top stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-family:var(--f-num);font-size:22px;line-height:1.2}
+.stat span{font-size:12px;color:var(--sub)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--navy);border-radius:99px}
+.bar.gold>i{background:var(--gold)}
+.slots{display:flex;gap:6px}
+.slots i{flex:1;height:12px;border-radius:4px;background:var(--line)}
+.slots i.on{background:var(--gold)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--navy-soft);color:var(--navy)}
+.tag.due{background:var(--ng-soft);color:var(--ng)}
+.ticket{border:2px dashed var(--gold);background:var(--gold-soft);border-radius:12px;padding:14px;text-align:center}
+.ticket b{font-size:18px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.week div{font-size:11px;color:var(--sub)}
+.week i{display:block;margin:2px auto 0;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);font-style:normal;line-height:22px;font-size:12px;color:var(--sub)}
+.week i.full{background:var(--gold);border-color:var(--gold);color:var(--card);font-weight:700}
+.week i.part{border-color:var(--gold)}
+.week i.now{box-shadow:0 0 0 2px var(--navy)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal i{aspect-ratio:1;border-radius:5px;background:var(--line)}
+.cal i.part{background:var(--gold-soft);outline:1px solid var(--gold);outline-offset:-1px}
+.cal i.full{background:var(--gold)}
+/* units */
+.unit{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.unit:first-of-type{border-top:0;padding-top:0}
+.tips{background:var(--navy-soft);border-radius:10px;padding:10px 12px 10px 28px;margin:0;font-size:14px}
+.tips li{margin:2px 0}
+/* session */
+.shead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dots{display:flex;gap:5px}
+.dots i{width:18px;height:6px;border-radius:3px;background:var(--line)}
+.dots i.ok{background:var(--ok)} .dots i.ng{background:var(--ng)} .dots i.cur{background:var(--navy)}
+.timer{height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+.timer i{display:block;height:100%;width:100%;background:var(--gold);transform-origin:left;animation:drain linear forwards}
+@keyframes drain{to{transform:scaleX(0)}}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;font-family:var(--f-en);font-size:16px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.doc .dh{display:block;font-family:var(--f-body);font-size:12px;color:var(--sub);letter-spacing:.04em;margin-bottom:6px}
+.stem{font-family:var(--f-en);font-size:18px;line-height:1.6}
+.stem.jp{font-family:var(--f-body);font-size:16px;font-weight:500}
+.blank{font-family:var(--f-num);letter-spacing:.05em;white-space:nowrap}
+.blank.cur{background:var(--gold-soft);box-shadow:0 0 0 2px var(--gold);border-radius:3px;padding:0 3px}
+.filled{background:var(--ok-soft);border-radius:3px;padding:0 3px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:11px 12px;font-family:var(--f-en);font-size:16px;line-height:1.45}
+.opt em{font-style:normal;font-family:var(--f-num);font-weight:700;color:var(--sub);min-width:26px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+.fb{border-radius:12px;padding:12px 14px;background:var(--ok-soft)}
+.fb.ng{background:var(--ng-soft)}
+.fb b{display:block;margin-bottom:2px}
+.big{font-family:var(--f-num);font-size:44px;font-weight:700;line-height:1.1}
+.center{text-align:center;align-items:center}
+.pop{animation:pop .45s ease-out}
+@keyframes pop{0%{transform:scale(.8);opacity:.3}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.pop{animation:none}.timer i{animation:none;transform:scaleX(.5)}}
+/* forms */
+label{font-size:13px;color:var(--sub);display:block;margin-bottom:3px}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px;font-size:14px}
+.chip.on{border-color:var(--gold);background:var(--gold-soft);font-weight:700}
+.why{border-top:1px solid var(--line);padding-top:10px}
+.why:first-of-type{border-top:0;padding-top:0}
+.why b{display:block}
+.why small{color:var(--sub)}
+/* tab bar */
+#tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+#tabs div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+#tabs button{border:0;background:none;padding:12px 4px 10px;font-size:13px;color:var(--sub);border-top:3px solid transparent;margin-top:-1px}
+#tabs button.on{color:var(--ink);font-weight:700;border-top-color:var(--gold)}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<nav id="tabs" aria-label="メニュー"><div>
+  <button id="tab-home" data-act="tab" data-v="home">ホーム</button>
+  <button id="tab-units" data-act="tab" data-v="units">ユニット</button>
+  <button id="tab-record" data-act="tab" data-v="record">記録</button>
+  <button id="tab-setup" data-act="tab" data-v="setup">設定</button>
+</div></nav>
+
+<script>
+/* ===================== 教材データ（すべてオリジナル問題。選択肢は先頭が正解、表示時にシャッフル） ===================== */
+const UNITS=[
+ {id:'pos',part:5,name:'品詞',per:20,tips:[
+  '空所の前後だけを見て、文の意味は読まずに解く。',
+  '冠詞・形容詞のあと、前置詞の前は名詞。',
+  '名詞の前は形容詞。動詞・形容詞・文全体を飾るのは副詞。',
+  '助動詞（will, can など）のあとは動詞の原形。',
+  '語尾で見分ける：-tion / -ment / -ness は名詞、-ive / -al / -ful / -able は形容詞、-ly は副詞、-ize / -ify は動詞。']},
+ {id:'verb',part:5,name:'動詞の形',per:20,tips:[
+  '確認する順番は「主語の単数・複数」「目的語があるか（能動か受動か）」「時を表す語句」。',
+  'yesterday, last week は過去形。since, for + 期間 は現在完了。next, tomorrow は未来。',
+  '空所のあとに目的語がなければ受動態（be + 過去分詞）を疑う。',
+  'suggest, consider, enjoy のあとは -ing。look forward to のあとも -ing。',
+  'be required / be asked / be expected のあとは to + 原形。']},
+ {id:'pron',part:5,name:'代名詞',per:20,tips:[
+  '名詞の前は所有格（its, her）。前置詞や動詞のあとは目的格（him, her）。',
+  '名詞が続かず「〜のもの」なら所有代名詞（hers, mine）。',
+  'by oneself は「ひとりで」。主語と同じ人を指すときは -self。',
+  'those who 〜 は「〜する人々」。',
+  'some 〜, others 〜 は「〜する人もいれば、〜する人もいる」。']},
+ {id:'prep',part:5,name:'前置詞・接続詞',per:20,tips:[
+  'うしろが名詞のかたまりなら前置詞、主語＋動詞なら接続詞。',
+  '前置詞：despite, during, due to, because of。接続詞：although, while, because。',
+  'by は「〜までに（期限）」、until は「〜までずっと（継続）」。',
+  'within + 期間 は「〜以内に」。',
+  'unless は「〜しない限り」。if の反対として考える。']},
+ {id:'rel',part:5,name:'関係詞・比較',per:20,tips:[
+  '先行詞が人か物か、うしろの文で何が欠けているかを見る。',
+  '主語が欠けていれば who / which / that。名詞が続けば whose。',
+  '場所が先行詞で、うしろが完全な文なら where。',
+  'what は先行詞なしで「〜すること・もの」。',
+  'than があれば比較級。the と of all / in があれば最上級。as 〜 as の間は原級。']},
+ {id:'vocab',part:5,name:'語彙',per:20,tips:[
+  '単語は「いっしょに使う語」とセットで覚える（comply with, refer to, out of stock）。',
+  '空所の直後の前置詞がヒントになることが多い。',
+  'つづりが似た語（expand / expend / expose）は引っかけ。意味で区別する。',
+  '金フレのフレーズごと音読すると、この単元の正答率が上がる。']},
+ {id:'p6',part:6,name:'長文穴埋め',per:30,tips:[
+  '品詞・動詞の形の問題は、空所のある文だけで解く。',
+  'つなぎ言葉（However, Therefore）と文を入れる問題は、前後の文を読む。',
+  '文を入れる問題は、代名詞（this, it）や話題のつながりを手がかりにする。',
+  '1文書2分が目安。迷ったら印をつけて次へ進む。']},
+ {id:'p7s',part:7,name:'読解（1つの文書）',per:60,tips:[
+  '先に設問を読み、何を探すかを決めてから本文を読む。',
+  '正解は本文の言い換えになっている（free → at no cost など）。',
+  'NOT問題は、本文にある選択肢を3つ消していく。',
+  '1問1分が目安。根拠の文を見つけたら、それ以上読まない。']},
+ {id:'p7d',part:7,name:'読解（2つの文書）',per:60,tips:[
+  '設問のキーワード（名前・日付）で、どちらの文書に答えがあるかを決める。',
+  '1セットに1〜2問は、2つの文書を合わせないと解けない。',
+  '日付・金額・条件（割引、期限）には読みながら印をつける。',
+  '時間が足りないときは、1つの文書だけで解ける設問から先に答える。']}
+];
+const Q5=[
+['pos',`The manager reviewed the report ------- before sending it to the client.`,[`carefully`,`careful`,`care`,`caring`],`動詞 reviewed を飾るので副詞 carefully。「報告書を注意深く見直した」。`],
+['pos',`Ms. Tanaka gave a very ------- presentation at the conference.`,[`impressive`,`impress`,`impressively`,`impression`],`a very ___ + 名詞 presentation。名詞の前は形容詞 impressive。`],
+['pos',`The ------- of the new software took longer than expected.`,[`installation`,`install`,`installed`,`installs`],`The ___ of の形。冠詞と前置詞の間は名詞 installation。`],
+['pos',`Sales have increased ------- since the new advertising campaign began.`,[`significantly`,`significant`,`significance`,`signify`],`動詞 have increased を飾る副詞 significantly。「大幅に増えた」。`],
+['pos',`All employees are ------- for submitting their timesheets by Friday.`,[`responsible`,`responsibly`,`responsibility`,`respond`],`be responsible for 〜「〜に責任がある」。be動詞のあとの形容詞。`],
+['pos',`The company is seeking a ------- candidate for the marketing position.`,[`qualified`,`qualify`,`qualification`,`qualifies`],`a ___ candidate。名詞の前なので形容詞の働きをする qualified「資格のある」。`],
+['pos',`Customer ------- is our top priority.`,[`satisfaction`,`satisfy`,`satisfied`,`satisfactory`],`主語になる名詞が必要。customer satisfaction「顧客満足」で1つの名詞。`],
+['pos',`The new policy will ------- the process of requesting vacation time.`,[`simplify`,`simple`,`simply`,`simplicity`],`助動詞 will のあとは動詞の原形 simplify「簡単にする」。`],
+['pos',`Mr. Lee's proposal was ------- accepted by the board of directors.`,[`finally`,`final`,`finalize`,`finals`],`was と accepted の間に入るのは副詞 finally。`],
+['pos',`The hotel is ------- located near the train station.`,[`conveniently`,`convenient`,`convenience`,`conveniences`],`is located を飾る副詞。conveniently located「便利な場所にある」は頻出。`],
+['verb',`The shipment ------- yesterday afternoon.`,[`arrived`,`arrives`,`has arrived`,`will arrive`],`yesterday があるので過去形。現在完了は過去の一時点を表す語と使えない。`],
+['verb',`Mr. Sato ------- for this company since 2015.`,[`has worked`,`works`,`worked`,`is working`],`since 2015「2015年からずっと」は現在完了 has worked。`],
+['verb',`The annual meeting ------- in the main conference room next Monday.`,[`will be held`,`held`,`was held`,`has held`],`会議は「開かれる」側なので受動態。next Monday で未来。`],
+['verb',`All visitors are required ------- an identification badge.`,[`to wear`,`wear`,`wearing`,`worn`],`be required to do「〜することを求められる」。`],
+['verb',`The invoices ------- to all customers last week.`,[`were sent`,`sent`,`have sent`,`are sending`],`請求書は「送られる」側で、空所のあとに目的語がない。last week で過去の受動態。`],
+['verb',`Each of the employees ------- a copy of the handbook.`,[`receives`,`receive`,`are receiving`,`have received`],`主語は Each（単数）。employees につられない。`],
+['verb',`We look forward to ------- from you soon.`,[`hearing`,`hear`,`heard`,`be heard`],`look forward to の to は前置詞。うしろは -ing。`],
+['verb',`If you ------- any questions, please contact our support team.`,[`have`,`had`,`will have`,`having`],`条件を表す if の中は、未来のことでも現在形。`],
+['verb',`The director suggested ------- the meeting until next week.`,[`postponing`,`postpone`,`to postpone`,`postponed`],`suggest のあとは -ing。「延期することを提案した」。`],
+['verb',`By the time the CEO arrives, the staff ------- the preparations.`,[`will have finished`,`finished`,`were finishing`,`finishing`],`By the time + 現在形 は未来の時点。その時までに終えているので未来完了。`],
+['pron',`Ms. Kim asked the staff to send the documents directly to -------.`,[`her`,`she`,`hers`,`herself`],`前置詞 to のあとは目的格 her。送る人（staff）と別の人なので herself は不可。`],
+['pron',`Mr. Brown completed the entire project by -------.`,[`himself`,`he`,`him`,`his`],`by oneself「ひとりで」。`],
+['pron',`The company announced that ------- profits rose by 10 percent.`,[`its`,`it`,`it's`,`itself`],`名詞 profits の前は所有格 its。it's は it is の短縮。`],
+['pron',`------- who wish to attend the seminar must register by Friday.`,[`Those`,`Anyone`,`Them`,`Whoever`],`those who 〜「〜する人々」。動詞 wish が複数形なので Anyone は合わない。`],
+['pron',`Please make sure that ------- of the two forms is signed.`,[`each`,`both`,`all`,`every`],`動詞が is（単数）なので each。both なら are。every of とは言えない。`],
+['pron',`My laptop is being repaired, so a colleague lent me -------.`,[`hers`,`she`,`her`,`herself`],`うしろに名詞がなく「彼女のもの（her laptop）」を表す所有代名詞 hers。`],
+['pron',`The two departments share information with one -------.`,[`another`,`other`,`others`,`the others`],`one another「お互い」。`],
+['pron',`Some customers prefer e-mail, while ------- prefer to be contacted by phone.`,[`others`,`another`,`other`,`the other`],`some 〜, others 〜「〜する人もいれば、〜する人もいる」。動詞 prefer に合う複数の others。`],
+['prep',`------- the heavy rain, the outdoor event was held as scheduled.`,[`Despite`,`Although`,`Because`,`However`],`うしろは名詞 the heavy rain なので前置詞 Despite「〜にもかかわらず」。`],
+['prep',`------- the flight was delayed, Ms. Ito arrived in time for the meeting.`,[`Although`,`Despite`,`During`,`Due to`],`うしろが主語＋動詞なので接続詞 Although。`],
+['prep',`The store will be closed ------- the renovation.`,[`during`,`while`,`when`,`since`],`うしろは名詞 the renovation。「改装の間」は前置詞 during。while は接続詞。`],
+['prep',`Please submit your application ------- March 31.`,[`by`,`until`,`within`,`at`],`「3月31日までに提出」という期限は by。until は「ずっと続ける」。`],
+['prep',`The office will remain open ------- 8 P.M. tonight.`,[`until`,`by`,`within`,`among`],`「8時までずっと開いている」という継続は until。`],
+['prep',`The meeting was canceled ------- a scheduling conflict.`,[`due to`,`because`,`since`,`so`],`うしろは名詞なので due to「〜が原因で」。because は接続詞。`],
+['prep',`Orders are usually delivered ------- three business days.`,[`within`,`by`,`until`,`since`],`within + 期間「〜以内に」。`],
+['prep',`------- you have a receipt, we cannot offer a refund.`,[`Unless`,`If`,`Because`,`Despite`],`「レシートがない限り返金できない」。unless = if ... not。`],
+['prep',`Mr. Ono will check the figures ------- he sends the report.`,[`before`,`during`,`by`,`prior`],`うしろが主語＋動詞。接続詞として使えるのは before。prior は prior to の形で使う。`],
+['prep',`The seminar is open to ------- members and non-members.`,[`both`,`either`,`neither`,`whether`],`both A and B「AもBも」。either は or、neither は nor と組む。`],
+['rel',`The employee ------- won the award works in the sales department.`,[`who`,`whose`,`whom`,`which`],`先行詞は人で、うしろは主語が欠けている（won の主語）。主格の who。`],
+['rel',`This is the manager ------- team developed the new application.`,[`whose`,`who`,`whom`,`which`],`うしろに名詞 team が続く。「そのマネージャーのチーム」で所有格 whose。`],
+['rel',`The report ------- Ms. Sato wrote was very detailed.`,[`that`,`who`,`whose`,`what`],`先行詞は物 the report。wrote の目的語が欠けているので that。what は先行詞があると使えない。`],
+['rel',`The hotel ------- the conference will take place is near the airport.`,[`where`,`which`,`that`,`what`],`うしろは欠けのない完全な文。場所を表す where。`],
+['rel',`This year's sales were ------- than last year's.`,[`higher`,`high`,`highest`,`highly`],`than があるので比較級 higher。`],
+['rel',`Of all the candidates, Mr. Kato is the ------- experienced.`,[`most`,`more`,`much`,`very`],`Of all 〜「〜の中で」と the があるので最上級 the most experienced。`],
+['rel',`The new printer works as ------- as the old one.`,[`efficiently`,`efficient`,`more efficiently`,`most efficiently`],`as 〜 as の間は原級。動詞 works を飾るので副詞 efficiently。`],
+['rel',`------- surprised the staff was the sudden change in schedule.`,[`What`,`That`,`Which`,`Who`],`「スタッフを驚かせたこと」。先行詞なしで主語のかたまりを作る What。`],
+['vocab',`Please ------- to the attached file for details of the schedule.`,[`refer`,`reply`,`apply`,`belong`],`refer to 〜「〜を参照する」。`],
+['vocab',`The company plans to ------- its business into Asian markets.`,[`expand`,`expend`,`expect`,`expose`],`expand A into B「AをBに拡大する」。expend は「費やす」。`],
+['vocab',`Due to a scheduling -------, the meeting was moved to Thursday.`,[`conflict`,`contract`,`contact`,`content`],`scheduling conflict「予定の重なり」。`],
+['vocab',`Ms. Abe will ------- the Tokyo branch at the trade fair.`,[`represent`,`replace`,`remind`,`reserve`],`represent「〜を代表する」。「展示会で東京支店を代表する」。`],
+['vocab',`Employees must ------- with the safety regulations at all times.`,[`comply`,`obey`,`follow`,`observe`],`うしろに with をとるのは comply だけ。comply with 〜「〜に従う」。`],
+['vocab',`The discount is ------- only to customers who order online.`,[`available`,`capable`,`possible`,`eligible`],`be available to 人「人が利用できる」。eligible は人が主語（customers are eligible for 〜）。`],
+['vocab',`We apologize for any ------- the delay may have caused.`,[`inconvenience`,`convenience`,`complaint`,`attendance`],`apologize for any inconvenience「ご不便をおわびします」は定番の表現。`],
+['vocab',`The warranty ------- at the end of this month.`,[`expires`,`exposes`,`expands`,`explains`],`expire「期限が切れる」。warranty「保証」とよくいっしょに使う。`],
+['vocab',`Please ------- your seat at least two days in advance.`,[`reserve`,`deserve`,`preserve`,`observe`],`reserve a seat「席を予約する」。`],
+['vocab',`Prices have risen ------- over the past year.`,[`steadily`,`formerly`,`closely`,`shortly`],`rise steadily「着実に上がる」。shortly は「まもなく」。`]
+];
+const SETS=[
+{id:'p6-1',u:'p6',docs:[{h:'お知らせ',t:`To: All Tenants
+From: Building Management
+Subject: Elevator Maintenance
+
+Please be advised that the elevators in the east wing will be out of service on Saturday, June 14, from 9 A.M. to 3 P.M. Our technicians will be [1] routine maintenance during this time. [2], the elevators in the west wing will operate as usual. We recommend that tenants with heavy deliveries [3] them for another day. [4] Thank you for your understanding.`}],
+ qs:[{o:[`performing`,`performed`,`performance`,`perform`],ex:`will be のあとで、うしろに目的語 routine maintenance がある。未来進行形の performing。`},
+     {o:[`However`,`Therefore`,`For example`,`Similarly`],ex:`東棟は止まるが、西棟は通常どおり動く。逆の内容をつなぐ However。`},
+     {o:[`schedule`,`scheduled`,`to schedule`,`scheduling`],ex:`recommend that + 主語 + 動詞の原形。`},
+     {o:[`We apologize for any inconvenience this may cause.`,`The new elevators were installed last year.`,`Please pay your rent by the end of the month.`,`The east wing has been closed permanently.`],ex:`直後が「ご理解ありがとうございます」。不便をわびる文が自然につながる。`}]},
+{id:'p6-2',u:'p6',docs:[{h:'Eメール',t:`Dear Mr. Carter,
+
+Thank you for your recent order of a Model X200 office chair. Unfortunately, the item is currently out of [1]. We expect a new shipment to arrive on May 20. [2] you would like to wait, we will send the chair as soon as it arrives. [3] Please let us know which option you prefer by replying to this e-mail. We are sorry for the delay and appreciate your [4].
+
+Sincerely,
+Linda Park
+Customer Service`}],
+ qs:[{o:[`stock`,`reach`,`place`,`sight`],ex:`out of stock「在庫切れ」。次の文の「新しい入荷」がヒント。`},
+     {o:[`If`,`Unless`,`Although`,`Whether`],ex:`「待つことをご希望なら、届きしだい送る」。条件の If。`},
+     {o:[`Alternatively, we can give you a full refund.`,`The chair comes in three colors.`,`Your order was delivered yesterday.`,`We have recently opened a new store.`],ex:`直後に which option「どちらの選択肢」とある。待つ以外のもう1つの選択肢（返金）を示す文が入る。`},
+     {o:[`patience`,`patient`,`patiently`,`patients`],ex:`所有格 your のあとは名詞。patience「しんぼう」。patients は「患者」。`}]},
+{id:'p6-3',u:'p6',docs:[{h:'社内メモ',t:`To: All Sales Staff
+From: Human Resources
+
+Starting next month, we will introduce a new customer management system. To help everyone become familiar with it, training sessions [1] on July 8 and July 10. Each session will last about two hours and will cover the basic functions of the system. [2] Staff members who cannot attend [3] session should contact Mr. Diaz in Human Resources. [4] training is completed, you will receive a login ID and password.`}],
+ qs:[{o:[`will be held`,`were held`,`have held`,`holding`],ex:`研修は「開かれる」側で、来月の話。未来の受動態。`},
+     {o:[`Attendance at one of the sessions is required.`,`The old system was purchased ten years ago.`,`Sales increased sharply last quarter.`,`Mr. Diaz joined the company in March.`],ex:`直後に「どちらにも出られない人は連絡を」とある。出席が必須だと述べる文が入る。`},
+     {o:[`either`,`both`,`all`,`every`],ex:`session が単数形。cannot attend either session「どちらの回にも出られない」。`},
+     {o:[`Once`,`While`,`Until`,`Whereas`],ex:`「研修が終わりしだい、IDを受け取る」。Once「いったん〜したら」。`}]},
+{id:'p7s-1',u:'p7s',docs:[{h:'広告',t:`Riverside Fitness Center
+Grand Opening Special!
+
+Join before October 31 and pay no registration fee (regularly $50). Members enjoy access to our gym, swimming pool, and more than 30 group classes each week. Personal training sessions are available for an additional charge.
+
+Bring this advertisement to the front desk to receive a free one-day trial pass.
+
+Open daily from 6 A.M. to 11 P.M.`}],
+ qs:[{q:`What is being advertised?`,o:[`A fitness facility`,`A sports equipment store`,`A swimming competition`,`A hotel`],ex:`ジム、プール、クラスを使える会員を募集している。Fitness Center を facility と言い換えている。`},
+     {q:`What costs extra for members?`,o:[`Personal training`,`Group classes`,`Use of the pool`,`A trial pass`],ex:`Personal training sessions are available for an additional charge. additional charge が extra の言い換え。`},
+     {q:`How can readers get a free trial pass?`,o:[`By presenting the advertisement`,`By visiting a Web site`,`By joining before October 31`,`By attending a group class`],ex:`Bring this advertisement to the front desk。bring を present「提示する」と言い換えている。`}]},
+{id:'p7s-2',u:'p7s',docs:[{h:'Eメール',t:`To: All Staff
+From: Kenji Mori, Facilities
+Date: March 3
+Subject: Parking lot
+
+The employee parking lot behind the building will be repaved from March 10 to March 12. During this period, please park in the visitor lot on Elm Street. A parking permit for the visitor lot is required; you can pick one up at the security desk starting this Thursday.
+
+The work is expected to finish on schedule, but it may be extended in case of rain. I will send an update if the dates change.`}],
+ qs:[{q:`What is the purpose of the e-mail?`,o:[`To announce temporary parking arrangements`,`To introduce a new security guard`,`To request payment for parking`,`To report damage to a vehicle`],ex:`工事の間は来客用の駐車場を使うように、という一時的な案内。`},
+     {q:`What are employees asked to do?`,o:[`Obtain a permit`,`Work from home`,`Use public transportation`,`Move their cars on Thursday`],ex:`A parking permit ... is required; you can pick one up。pick up を obtain と言い換えている。`},
+     {q:`What might cause the work to take longer?`,o:[`Bad weather`,`A shortage of workers`,`A national holiday`,`A security problem`],ex:`it may be extended in case of rain。rain を bad weather と言い換えている。`}]},
+{id:'p7s-3',u:'p7s',docs:[{h:'テキストメッセージ',t:`Maria Lopez (10:12 A.M.)
+Hi Tom. I'm at the client's office, but I left the product samples on my desk. Are you still at the office?
+
+Tom Baker (10:14 A.M.)
+Yes, I am. Do you want me to bring them over?
+
+Maria Lopez (10:15 A.M.)
+That would be great. The meeting starts at 11:00.
+
+Tom Baker (10:16 A.M.)
+No problem. I can catch a taxi and be there in 20 minutes.
+
+Maria Lopez (10:17 A.M.)
+You're a lifesaver. I'll wait for you in the lobby.`}],
+ qs:[{q:`What problem does Ms. Lopez have?`,o:[`She forgot to bring some items.`,`She is late for a meeting.`,`She cannot find the client's office.`,`She lost her phone.`],ex:`I left the product samples on my desk。サンプルを机に置き忘れた。`},
+     {q:`At 10:16 A.M., what does Mr. Baker most likely mean when he writes, "No problem"?`,o:[`He is willing to deliver the samples.`,`He has fixed a technical issue.`,`He thinks the meeting will be short.`,`He does not need a taxi.`],ex:`「持ってきてくれると助かる」への返事。届けることを引き受けている。`},
+     {q:`Where will Ms. Lopez wait for Mr. Baker?`,o:[`In a lobby`,`At a taxi stand`,`At her desk`,`In a meeting room`],ex:`I'll wait for you in the lobby。`}]},
+{id:'p7s-4',u:'p7s',docs:[{h:'記事',t:`SPRINGFIELD (April 5) — Local bakery Sweet Morning announced yesterday that it will open a second location in the Harbor District this summer. Owner Anna Rossi started the business five years ago, selling bread at a weekend market.
+
+"We never expected to grow this fast," Ms. Rossi said. The new shop will be twice the size of the original and will include a café area with seating for 40 customers.
+
+Sweet Morning plans to hire about 15 new employees. Job applications will be accepted through the bakery's Web site starting May 1.`}],
+ qs:[{q:`What is the article mainly about?`,o:[`The expansion of a business`,`The closing of a market`,`A new bread recipe`,`An award for a local chef`],ex:`2店舗目を開くという話。open a second location を expansion と言い換えている。`},
+     {q:`What is indicated about Ms. Rossi?`,o:[`She began by selling at a market.`,`She has worked as a chef for 15 years.`,`She lives in the Harbor District.`,`She plans to sell her business.`],ex:`started the business five years ago, selling bread at a weekend market。`},
+     {q:`What will the new shop have?`,o:[`A seating area`,`A parking lot`,`A cooking school`,`A delivery service`],ex:`a café area with seating for 40 customers。`},
+     {q:`When can people begin applying for jobs?`,o:[`On May 1`,`On April 5`,`This summer`,`Five years from now`],ex:`Job applications will be accepted ... starting May 1。`}]},
+{id:'p7s-5',u:'p7s',docs:[{h:'お知らせ',t:`Notice to Library Users
+
+The Westbrook Public Library will introduce a new online reservation system on September 1. With the new system, users can reserve books, renew borrowed items, and check due dates from home.
+
+To use the system, you need a library card number and a password. Passwords can be set up at the information desk; please bring photo identification. Please note that DVDs cannot be renewed online.
+
+Our staff will hold free 15-minute demonstrations every Saturday in September at 2 P.M.`}],
+ qs:[{q:`What is NOT mentioned as something users can do with the new system?`,o:[`Pay late fees`,`Reserve books`,`Renew borrowed items`,`Check due dates`],ex:`reserve books, renew borrowed items, check due dates の3つは本文にある。延滞料の支払いは書かれていない。`},
+     {q:`What should users bring to set up a password?`,o:[`Photo identification`,`A library book`,`A DVD`,`A registration fee`],ex:`please bring photo identification。`},
+     {q:`What will happen on Saturdays in September?`,o:[`Demonstrations will be given.`,`The library will close early.`,`DVDs will be sold.`,`New cards will be mailed.`],ex:`hold free 15-minute demonstrations every Saturday in September。`}]},
+{id:'p7s-6',u:'p7s',docs:[{h:'オンラインレビュー',t:`Hartley Electric Kettle
+Rating: 4 out of 5
+Posted by J. Nguyen
+
+I bought this kettle a month ago to replace my old one, which took forever to boil. The Hartley boils a full liter in under three minutes, and it switches off automatically. I also like that it is quiet.
+
+My only complaint is the cord, which is too short to reach the outlet on my kitchen counter, so I had to buy an extension cord. Still, for the price, I would recommend it to friends.`}],
+ qs:[{q:`Why did the reviewer buy the kettle?`,o:[`The previous one was slow.`,`The previous one was broken.`,`It was a gift for a friend.`,`It was on sale.`],ex:`my old one, which took forever to boil「わくのにとても時間がかかった」。`},
+     {q:`What does the reviewer dislike about the product?`,o:[`The length of the cord`,`The noise it makes`,`The price`,`The size of the kettle`],ex:`My only complaint is the cord, which is too short。`},
+     {q:`What is suggested about the reviewer?`,o:[`The reviewer is generally satisfied.`,`The reviewer will return the product.`,`The reviewer works for Hartley.`,`The reviewer bought two kettles.`],ex:`5段階の4で、友人にすすめたいと書いている。全体としては満足している。`}]},
+{id:'p7d-1',u:'p7d',docs:[{h:'お知らせ',t:`Bayside Community Center
+Weekend Workshops in November
+
+- Digital Photography Basics: Nov. 7, 10 A.M.-12 P.M., Room A, $30
+- Home Cooking: Italian: Nov. 14, 1-4 P.M., Kitchen Studio, $45 (ingredients included)
+- Introduction to Gardening: Nov. 21, 10 A.M.-12 P.M., Rooftop Garden, $25
+- Watercolor Painting: Nov. 28, 2-4 P.M., Room B, $35
+
+Please register at least three days before each workshop. Members receive a 10% discount on all fees.`},{h:'Eメール',t:`To: Bayside Community Center
+From: Paul Grant
+Date: November 9
+
+Hello,
+
+I would like to sign up for the workshop on November 14. I am a member of the center, so I believe I qualify for the discount.
+
+Also, I am allergic to nuts. Could you tell me whether the recipes use any?
+
+Thank you,
+Paul Grant`}],
+ qs:[{q:`Which workshop does Mr. Grant want to attend?`,o:[`Home Cooking: Italian`,`Digital Photography Basics`,`Introduction to Gardening`,`Watercolor Painting`],ex:`メールの November 14 を、お知らせの日付と合わせる。11月14日は料理のワークショップ。`},
+     {q:`How much will Mr. Grant most likely pay?`,o:[`$40.50`,`$45.00`,`$49.50`,`$25.00`],ex:`料理は45ドル。会員は10%引きなので 45 − 4.50 = 40.50ドル。2つの文書を合わせる問題。`},
+     {q:`What does Mr. Grant ask about?`,o:[`The ingredients that will be used`,`The location of the workshop`,`The starting time`,`The parking fee`],ex:`ナッツのアレルギーがあり、レシピに使うかどうかをたずねている。`},
+     {q:`What is indicated about the workshops?`,o:[`They require advance registration.`,`They are all held in the morning.`,`They are free for members.`,`They are all held in Room A.`],ex:`register at least three days before each workshop。3日前までの申し込みが必要。`}]},
+{id:'p7d-2',u:'p7d',docs:[{h:'ウェブページ',t:`Corwin Office Supplies
+Shipping Information
+
+Standard shipping (5-7 business days): $5, free for orders over $50
+Express shipping (2 business days): $12
+Next-day shipping: $20, available only for orders placed before noon
+
+Items can be returned within 30 days of delivery. Return shipping is free if the item is defective.`},{h:'Eメール',t:`To: Customer Support
+From: Emily Chen
+Date: June 3
+Subject: Order #58213
+
+I placed an order for a desk lamp ($38) yesterday and chose express shipping. However, I have just noticed that I will be away on a business trip from June 4 to June 8. Could you change the delivery to standard shipping so that it arrives after I return? Also, please refund the difference in the shipping fee.
+
+Thank you,
+Emily Chen`}],
+ qs:[{q:`Why did Ms. Chen write the e-mail?`,o:[`To change a delivery method`,`To cancel an order`,`To report a defective item`,`To ask about a product's price`],ex:`change the delivery to standard shipping。配送方法の変更を頼んでいる。`},
+     {q:`How much money does Ms. Chen expect to get back?`,o:[`$7`,`$5`,`$12`,`$20`],ex:`速達は12ドル。注文は38ドルで50ドルを超えないので、通常配送は5ドル。差額は 12 − 5 = 7ドル。`},
+     {q:`What is indicated about next-day shipping?`,o:[`Orders must be placed in the morning.`,`It is free for orders over $50.`,`It takes two business days.`,`It is not offered in June.`],ex:`available only for orders placed before noon。before noon を in the morning と言い換えている。`},
+     {q:`When is return shipping free?`,o:[`When an item has a fault`,`When an order is over $50`,`When an item is returned within a week`,`When express shipping was chosen`],ex:`Return shipping is free if the item is defective。defective を has a fault と言い換えている。`}]}
+];
+
+/* ===================== 索引 ===================== */
+const UNIT={}; UNITS.forEach(u=>UNIT[u.id]=u);
+const ITEM={}, BYUNIT={}, SETBY={};
+UNITS.forEach(u=>{BYUNIT[u.id]=[];SETBY[u.id]=[]});
+(function(){const c={};Q5.forEach(r=>{c[r[0]]=(c[r[0]]||0)+1;const id=r[0]+'-'+c[r[0]];ITEM[id]={id,u:r[0],q:r[1],o:r[2],ex:r[3]};BYUNIT[r[0]].push(id)});
+ SETS.forEach(s=>{SETBY[s.u].push(s);s.qs.forEach((q,i)=>{const id=s.id+'-'+(i+1);q.id=id;q.u=s.u;q.n=i+1;ITEM[id]=q;BYUNIT[s.u].push(id)})})})();
+const TITLES=['見習い','門下生','初段','二段','三段','四段','師範代','師範'];
+const TRIGGERS=['朝食を食べ終えたら','8:20の英単語の前に','昼食を食べ終えたら','夕食を食べ終えたら','ゲームを始める前に','布団に入る前に'];
+const IV=[0,1,3,7,14,30];
+const DAY=864e5, KEY='reading-dojo-v1';
+
+/* ===================== 状態 ===================== */
+function today(){const n=new Date();return Math.floor((n.getTime()-n.getTimezoneOffset()*6e4-4*36e5)/DAY)}
+function fresh(){return{v:1,updatedAt:0,xp:0,streak:0,best:0,freezes:0,lastDone:null,
+  day:{key:today(),done:0,correct:0,total:0,kin:false},quota:5,nextQuota:null,trigger:'',setup:false,
+  testDate:'2026-11-15',kin:{pos:1,pace:50},cards:{},hist:{},lastUnit:''}}
+function fix(s){const f=fresh();s=Object.assign(f,s||{});s.kin=Object.assign({pos:1,pace:50},s.kin);s.day=Object.assign({key:today(),done:0,correct:0,total:0,kin:false},s.day);return s}
+let S=fresh(), view='home', sess=null, done=null, openTips={}, resetArm=false, syncState='この端末に保存しています';
+function loadLocal(){try{const t=localStorage.getItem(KEY);if(t)S=fix(JSON.parse(t))}catch(e){}}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let cloud=null,busy=false,dirty=false;
+function save(){S.updatedAt=Date.now();saveLocal();push()}
+async function push(){if(!cloud)return;if(busy){dirty=true;return}busy=true;
+  try{await cloud.set({json:JSON.stringify(S),updatedAt:S.updatedAt});syncState='アカウントに保存しています（ほかの端末でも続きから使えます）'}catch(e){syncState='この端末に保存しています（アカウントへの保存に失敗しました）'}
+  busy=false;if(dirty){dirty=false;push()}}
+async function initCloud(){try{
+  if(!(window.claude&&window.claude.use))return;
+  const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+  if(!db||!user)return;const id=await user.id();if(!id)return;
+  const ref=db.collection('data/users/'+id).doc('reading');
+  const snap=await ref.get();cloud=ref;
+  let remote=null;if(snap.exists){const d=snap.data();if(d&&typeof d.json==='string')remote=JSON.parse(d.json)}
+  if(remote&&(remote.updatedAt||0)>(S.updatedAt||0)){if(!sess){S=fix(remote);rollover();saveLocal()}}
+  else if(S.updatedAt)push();
+  syncState='アカウントに保存しています（ほかの端末でも続きから使えます）';if(!sess)render();
+ }catch(e){}}
+
+function rollover(){const t=today();if(S.day.key===t)return;
+  if(S.day.kin){S.kin.pos+=S.kin.pace;if(S.kin.pos>1000)S.kin.pos=1}
+  if(S.lastDone!=null&&S.lastDone<t-1){const gap=t-1-S.lastDone;
+    if(gap<=S.freezes){S.freezes-=gap;S.lastDone=t-1}else S.streak=0}
+  if(S.nextQuota){S.quota=S.nextQuota;S.nextQuota=null}
+  S.day={key:t,done:0,correct:0,total:0,kin:false}}
+function level(){let xp=S.xp,lv=1,need=150;while(xp>=need){xp-=need;lv++;need=100+lv*50}return{lv,cur:xp,need,title:TITLES[Math.min(lv-1,TITLES.length-1)]}}
+function locked(){return S.day.done>=S.quota}
+function daysToTest(){const p=(S.testDate||'').split('-').map(Number);if(p.length!==3||!p[0])return null;return Math.round(Date.UTC(p[0],p[1]-1,p[2])/DAY)-today()}
+function ustat(u){const ids=BYUNIT[u],t=today();let m=0,due=0,seen=0;ids.forEach(id=>{const c=S.cards[id];if(c){seen++;if(c.b>=2)m++;if(c.d<=t)due++}});return{total:ids.length,m,due,seen,unseen:ids.length-seen}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function recommend(){const pat=['g','p7s','g','p6','p7d','g','p7s','g'];let k=pat[S.day.done%pat.length];
+  if(k!=='g')return k;
+  let best=null,bs=-1;UNITS.filter(u=>u.part===5).forEach(u=>{const s=ustat(u.id);let sc=s.due*2+s.unseen+(s.total-s.m)*0.1;if(u.id===S.lastUnit)sc-=3;if(sc>bs){bs=sc;best=u.id}});return best}
+function pick5(u){const t=today();const rank=id=>{const c=S.cards[id];if(!c)return 1000;if(c.d<=t)return c.b;return 2000+c.d};
+  return shuffle(shuffle(BYUNIT[u]).sort((a,b)=>rank(a)-rank(b)).slice(0,5))}
+function pickSet(u){const t=today();const rank=s=>{let r=0,un=0,mind=1e9;s.qs.forEach(q=>{const c=S.cards[q.id];if(!c)un++;else{if(c.d<=t&&c.b===0)r-=10;mind=Math.min(mind,c.d)}});if(r<0)return r;if(un)return 0;return mind};
+  return shuffle(SETBY[u]).sort((a,b)=>rank(a)-rank(b))[0]}
+
+/* ===================== セッション ===================== */
+function start(u){rollover();if(locked())return;const unit=UNIT[u];let set=null,ids;
+  if(unit.part===5)ids=pick5(u);else{set=pickSet(u);ids=set.qs.map(q=>q.id)}
+  sess={u,set,i:0,items:ids.map(id=>({id,order:shuffle([0,1,2,3]),pick:null,ok:null,ms:0})),t0:Date.now()};done=null;render();window.scrollTo(0,0)}
+function answer(k){const it=sess.items[sess.i];if(it.pick!=null)return;const t=today();
+  it.pick=k;it.ok=it.order[k]===0;it.ms=Date.now()-sess.t0;
+  const c=S.cards[it.id]||{b:0,d:t,n:0,w:0};c.n++;
+  if(it.ok){c.b=Math.min(c.b+1,5);c.d=t+IV[c.b]}else{c.b=0;c.d=t;c.w++}
+  S.cards[it.id]=c;S.day.total++;if(it.ok)S.day.correct++;save();render();
+  const fb=document.getElementById('fb');if(fb&&fb.scrollIntoView)fb.scrollIntoView({block:'nearest',behavior:'smooth'})}
+function next(){if(sess.i<sess.items.length-1){sess.i++;sess.t0=Date.now();render();if(!sess.set)window.scrollTo(0,0);else{const s=document.getElementById('qtop');if(s)s.scrollIntoView({block:'start'})}}else finish()}
+function finish(){const n=sess.items.length,ok=sess.items.filter(x=>x.ok).length;const before=level().lv;
+  let xp=ok*10+20;const bonus=Math.random()<0.2;if(bonus)xp*=2;let dayBonus=0,streakUp=false,freeze=false;
+  S.day.done++;S.lastUnit=sess.u;
+  if(S.day.done>=S.quota&&S.lastDone!==S.day.key){S.streak++;S.lastDone=S.day.key;S.best=Math.max(S.best,S.streak);dayBonus=50;streakUp=true;
+    if(S.streak%7===0&&S.freezes<2){S.freezes++;freeze=true}}
+  S.xp+=xp+dayBonus;S.hist[S.day.key]={s:S.day.done,q:S.quota,c:S.day.correct,t:S.day.total};
+  const keys=Object.keys(S.hist).map(Number).sort((a,b)=>a-b);while(keys.length>120)delete S.hist[keys.shift()];
+  done={u:sess.u,n,ok,xp,bonus,dayBonus,streakUp,freeze,lvUp:level().lv>before};sess=null;save();render();window.scrollTo(0,0)}
+
+/* ===================== 描画 ===================== */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const blank=s=>esc(s).replace(/-{5,}/g,'<span class="blank">-------</span>');
+function dlabel(k){const d=new Date(k*DAY);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+'（'+'日月火水木金土'[d.getUTCDay()]+'）'}
+function est(u){const p=UNIT[u].part;return p===5?'5問・約2分':p===6?'1文書4問・約2分':u==='p7d'?'2文書4問・約5分':'1文書3〜4問・約3分'}
+
+function vHome(){const L=level(),dt=daysToTest(),lk=locked();let h='';
+  h+=`<div class="row between"><div><h1>リーディング道場</h1><p class="sub">${dlabel(S.day.key)}${dt!=null&&dt>=0?`　本番まであと <b class="num">${dt}</b> 日`:''}</p></div><span class="tag">Lv.${L.lv} ${L.title}</span></div>`;
+  h+=`<div class="stats"><div class="stat"><b>${S.streak}</b><span>日連続</span></div><div class="stat"><b>${S.day.done}/${S.quota}</b><span>今日の回数</span></div><div class="stat"><b>${S.day.total?Math.round(S.day.correct/S.day.total*100)+'%':'–'}</b><span>今日の正答率</span></div></div>`;
+  if(!S.setup){h+=`<div class="card"><h2>最初に1つだけ決める</h2><p>「いつやるか」を先に決めておくと、実行しやすくなります。毎日すでにやっていることの直後を選んでください。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><button class="btn gold" data-act="setupdone"${S.trigger?'':' disabled'}>これで決める</button></div>`}
+  if(done)h+=vDone();
+  if(!lk){const u=recommend(),un=UNIT[u],st=ustat(u);
+    h+=`<div class="card"><div class="slots">${Array.from({length:S.quota},(_,i)=>`<i class="${i<S.day.done?'on':''}"></i>`).join('')}</div>
+    <div class="row between"><div class="grow"><p class="sub">次のセッション（${S.day.done+1}/${S.quota}）</p><h2>Part ${un.part}　${un.name}</h2><p class="sub">${est(u)}${st.due?`　<span class="tag due">復習 ${st.due}問</span>`:''}</p></div></div>
+    <button class="btn pri wide" data-act="start" data-v="${u}">始める</button>
+    ${S.trigger?`<p class="sub">きっかけ：<b>${esc(S.trigger)}</b>、1セッションやる</p>`:''}</div>`}
+  else{h+=`<div class="card"><div class="slots">${Array.from({length:S.quota},()=>`<i class="on"></i>`).join('')}</div>
+    <div class="ticket"><p class="sub">${dlabel(S.day.key)} 分</p><b>ゲーム解禁チケット</b><p>今日の ${S.quota} セッションは完了です。心おきなく休んでください。</p></div>
+    <p class="sub">今日はこれ以上できません。続きは明日の朝4時から開きます。</p></div>`}
+  const a=S.kin.pos,b=Math.min(a+S.kin.pace-1,1000);
+  h+=`<div class="card"><div class="row between"><div class="grow"><h2>金フレ　No.<span class="num">${a}–${b}</span></h2><p class="sub">本と音声で確認してから押す。押すと明日は次の範囲に進みます。</p></div>
+    <button class="btn gold" data-act="kin"${S.day.kin?' disabled':''}>${S.day.kin?'今日は完了':'やった +15'}</button></div></div>`;
+  h+=`<div class="card"><h2>この7日間</h2><div class="week">${Array.from({length:7},(_,i)=>{const k=S.day.key-6+i,r=k===S.day.key?{s:S.day.done,q:S.quota}:S.hist[k];const c=r?(r.s>=r.q?'full':r.s>0?'part':''):'';return `<div>${'日月火水木金土'[new Date(k*DAY).getUTCDay()]}<i class="${c}${k===S.day.key?' now':''}">${r&&r.s?r.s:''}</i></div>`}).join('')}</div>
+    <p class="sub">お守り <b class="num">${S.freezes}</b> 個（1日休んでも連続記録を守ります。7日連続ごとに1個、最大2個）</p></div>`;
+  return h}
+function vDone(){const d=done,un=UNIT[d.u];return `<div class="card center pop"><p class="sub">Part ${un.part} ${un.name}</p><div class="big">${d.ok}<span style="font-size:22px"> / ${d.n}</span></div>
+  <p><b class="num">+${d.xp+d.dayBonus}</b> XP${d.bonus?'　<span class="tag">ボーナス2倍</span>':''}${d.dayBonus?'　<span class="tag">1日達成 +50</span>':''}</p>
+  ${d.streakUp?`<p><b>${S.streak}日連続</b>になりました。${d.freeze?'お守りを1個もらいました。':''}</p>`:''}${d.lvUp?`<p><b>Lv.${level().lv} ${level().title}</b> に上がりました。</p>`:''}
+  ${d.ok<d.n?'<p class="sub">まちがえた問題は、次のセッションでもう一度出ます。</p>':''}</div>`}
+
+function vUnits(){const lk=locked();let h=`<h1>ユニット</h1><p class="sub">${lk?'今日の分は終わりました。要点はいつでも読めます。':`ここから始めても、今日の ${S.quota} セッションのうち1つとして数えます。`}</p>`;
+  [5,6,7].forEach(p=>{h+=`<div class="card"><h2>Part ${p}</h2>`;UNITS.filter(u=>u.part===p).forEach(u=>{const s=ustat(u.id);
+    h+=`<div class="unit"><div class="row between"><div class="grow"><b>${u.name}</b> ${s.due?`<span class="tag due">復習 ${s.due}</span>`:''}<p class="sub">身についた問題 <span class="num">${s.m}/${s.total}</span>　1問 <span class="num">${u.per}</span> 秒が目安</p></div></div>
+    <div class="bar"><i style="width:${Math.round(s.m/s.total*100)}%"></i></div>
+    <div class="row"><button class="btn" data-act="tips" data-v="${u.id}">${openTips[u.id]?'要点を閉じる':'要点を読む'}</button><button class="btn" data-act="start" data-v="${u.id}"${lk?' disabled':''}>この単元をやる</button></div>
+    ${openTips[u.id]?`<ul class="tips">${u.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}</div>`});h+='</div>'});
+  return h}
+
+function vRecord(){const L=level();let tot=0,w=0;Object.values(S.cards).forEach(c=>{tot+=c.n;w+=c.w});
+  let h=`<h1>記録</h1><div class="stats"><div class="stat"><b>${S.best}</b><span>最長連続日数</span></div><div class="stat"><b>${tot}</b><span>解いた問題（のべ）</span></div><div class="stat"><b>${tot?Math.round((tot-w)/tot*100)+'%':'–'}</b><span>通算の正答率</span></div></div>`;
+  h+=`<div class="card"><div class="row between"><h2>Lv.${L.lv} ${L.title}</h2><span class="sub num">${L.cur} / ${L.need} XP</span></div><div class="bar gold"><i style="width:${Math.round(L.cur/L.need*100)}%"></i></div></div>`;
+  h+=`<div class="card"><h2>この4週間</h2><div class="cal">${Array.from({length:28},(_,i)=>{const k=S.day.key-27+i,r=k===S.day.key?{s:S.day.done,q:S.quota}:S.hist[k];return `<i class="${r?(r.s>=r.q?'full':r.s>0?'part':''):''}" title="${dlabel(k)}"></i>`}).join('')}</div><p class="sub">濃い色は1日分を達成した日、薄い色は途中までやった日です。右下が今日です。</p></div>`;
+  h+=`<div class="card"><h2>ユニット別の正答率</h2>${UNITS.map(u=>{let n=0,ww=0;BYUNIT[u.id].forEach(id=>{const c=S.cards[id];if(c){n+=c.n;ww+=c.w}});const r=n?Math.round((n-ww)/n*100):0;return `<div><div class="row between"><span>Part ${u.part} ${u.name}</span><span class="sub num">${n?r+'%（'+n+'問）':'まだ'}</span></div><div class="bar"><i style="width:${r}%"></i></div></div>`}).join('')}</div>`;
+  h+=`<div class="card"><h2>このアプリのしくみと根拠</h2>
+   <div class="why"><b>読み直すより、思い出す</b>すべて問題形式です。答えを思い出す練習は、読み直すより1週間後の記憶に残ります。<small>Roediger &amp; Karpicke (2006)</small></div>
+   <div class="why"><b>忘れかけたころに、もう一度</b>正解した問題は1日後、3日後、7日後、14日後と間をあけて出します。まちがえた問題はすぐに戻ってきます。<small>Cepeda ほか (2006) のメタ分析</small></div>
+   <div class="why"><b>「〜したら、やる」と決めておく</b>通知に頼らず、毎日の行動をきっかけにします。この決め方は目標の達成率をはっきり上げます。<small>Gollwitzer &amp; Sheeran (2006) のメタ分析、94研究</small></div>
+   <div class="why"><b>楽しみは、終わったあとに</b>1日分を終えるとゲーム解禁チケットが出ます。楽しみを「やるべきこと」と結びつけると続きやすくなります。<small>Milkman ほか (2014)</small></div>
+   <div class="why"><b>1日休んでも、やり直しにしない</b>習慣づくりでは、1日抜けても大きな影響はありません。だからお守りで連続記録を守ります。<small>Lally ほか (2010)</small></div>
+   <div class="why"><b>1日の上限</b>上の5つほど強い研究の裏づけはありません。「少なくて必ず終わる量」にして、始めるハードルを下げるための設計です。</div></div>`;
+  return h}
+
+function vSetup(){let h=`<h1>設定</h1>`;
+  h+=`<div class="card"><h2>きっかけ</h2><p class="sub">この行動の直後に1セッションやる、と決めます。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>1日のセッション数</h2><p class="sub">今日は ${S.quota} セッションです。変更は明日から反映されます（今日の気分で増減できないようにしています）。</p><div class="chips">${[3,4,5,6,8].map(n=>`<button class="chip${(S.nextQuota||S.quota)===n?' on':''}" data-act="quota" data-v="${n}">${n}</button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>試験日</h2><div><label for="testdate">次に受ける日</label><input id="testdate" type="date" value="${esc(S.testDate)}"></div></div>`;
+  h+=`<div class="card"><h2>金フレ</h2><div class="row"><div><label for="kinpos">今日の開始番号</label><input id="kinpos" type="number" min="1" max="1000" value="${S.kin.pos}" style="width:110px"></div><div><label for="kinpace">1日の語数</label><select id="kinpace">${[30,50,100].map(n=>`<option${S.kin.pace===n?' selected':''}>${n}</option>`).join('')}</select></div></div></div>`;
+  h+=`<div class="card"><h2>データ</h2><p class="sub">${esc(syncState)}</p><button class="btn" data-act="reset">${resetArm?'本当に消す（もう一度押す）':'記録をすべて消す'}</button></div>`;
+  return h}
+
+function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=it.pick!=null;let h='';
+  h+=`<div class="shead"><button class="btn" data-act="quit">やめる</button><b>Part ${un.part} ${un.name}</b><div class="dots">${sess.items.map((x,i)=>`<i class="${x.ok===true?'ok':x.ok===false?'ng':i===sess.i?'cur':''}"></i>`).join('')}</div></div>`;
+  if(sess.set){sess.set.docs.forEach(d=>{let t=esc(d.t);
+    if(un.part===6)t=t.replace(/\[(\d)\]/g,(m,n)=>{n=+n;const x=sess.items[n-1];if(x.pick!=null)return `<span class="filled">${esc(ITEM[x.id].o[0])}</span>`;return `<span class="blank${n-1===sess.i?' cur':''}">(${n}) -------</span>`});
+    h+=`<div class="doc"><span class="dh">${esc(d.h)}</span>${t}</div>`})}
+  h+=`<div id="qtop"></div>`;
+  if(!ans)h+=`<div class="timer" title="目安の時間"><i style="animation-duration:${un.per}s"></i></div>`;
+  if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
+  else if(un.part===6)h+=`<p class="stem jp">空所 (${q.n}) に入るものを選ぶ</p>`;
+  else h+=`<p class="stem">${esc(q.q)}</p>`;
+  h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c=' right';else if(k===it.pick)c=' wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><em>(${'ABCD'[k]})</em><span>${esc(q.o[oi])}</span></button>`}).join('')}</div>`;
+  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb${it.ok?'':' ng'}"><b>${it.ok?'正解':'不正解'}　<span class="sub num">${sec}秒（目安 ${un.per}秒）</span></b>${esc(q.ex)}</div>
+    <button class="btn pri wide" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果を見る'}</button>`}
+  return h}
+
+function render(){rollover();const app=document.getElementById('app'),tabs=document.getElementById('tabs');
+  if(sess){app.className='insess';tabs.hidden=true;app.innerHTML=vSess();return}
+  app.className='';tabs.hidden=false;
+  app.innerHTML=view==='units'?vUnits():view==='record'?vRecord():view==='setup'?vSetup():vHome();
+  tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===view))}
+
+/* ===================== 操作 ===================== */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,v=b.dataset.v;
+  if(a!=='reset')resetArm=false;
+  if(a==='tab'){view=v;done=null;render();window.scrollTo(0,0)}
+  else if(a==='start')start(v);
+  else if(a==='ans')answer(+v);
+  else if(a==='next')next();
+  else if(a==='quit'){sess=null;render()}
+  else if(a==='tips'){openTips[v]=!openTips[v];render()}
+  else if(a==='trig'){S.trigger=TRIGGERS[+v];save();render()}
+  else if(a==='setupdone'){S.setup=true;save();render()}
+  else if(a==='quota'){const n=+v;S.nextQuota=n===S.quota?null:n;save();render()}
+  else if(a==='kin'){if(!S.day.kin){S.day.kin=true;S.xp+=15;save();render()}}
+  else if(a==='reset'){if(resetArm){S=fresh();resetArm=false;save();view='home'}else resetArm=true;render()}});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='testdate'){S.testDate=t.value;save()}
+  else if(t.id==='kinpos'){S.kin.pos=Math.max(1,Math.min(1000,parseInt(t.value,10)||1));save()}
+  else if(t.id==='kinpace'){S.kin.pace=+t.value;save()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!sess)render()});
+loadLocal();rollover();render();initCloud();
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+</body>
+</html>
