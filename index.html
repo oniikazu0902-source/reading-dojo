@@ -190,8 +190,210 @@ const UNITS=[
   '設問のキーワード（名前・日付）で、どちらの文書に答えがあるかを決める。',
   '1セットに1〜2問は、2つの文書を合わせないと解けない。',
   '日付・金額・条件（割引、期限）には読みながら印をつける。',
-  '時間が足りないときは、1つの文書だけで解ける設問から先に答える。']}
+  '時間が足りないときは、1つの文書だけで解ける設問から先に答える。']},
+ {id:'word',part:0,name:'単語',per:8,tips:[
+  'TOEICによく出る語を、出やすい順に並べています。',
+  '例文ごと声に出して読むと、Part 5 の語彙問題にも効きます。',
+  '正解した語は1日後、3日後、7日後と間をあけて出ます。まちがえた語はすぐ戻ります。',
+  '1日3セット（30語）まで。新しい語は1セットに最大10語です。']}
 ];
+/* 単語の選定と並び順は TOEIC Service List 1.2（Browne, C. & Culligan, B., 2016, CC BY-SA 4.0）の頻度順位に基づく。
+   日本語訳と例文は独自に作成。この単語データは CC BY-SA 4.0 で利用できる。途中に挿入せず、末尾に追加すること。 */
+const WORDS=[
+[`vacation`,'n',`休暇`,`She is on vacation until Friday.`,`彼女は金曜日まで休暇中です。`],
+[`client`,'n',`顧客・依頼人`,`We met a new client this morning.`,`今朝、新しい顧客に会いました。`],
+[`reservation`,'n',`予約`,`I made a reservation for two at seven.`,`7時に2名で予約しました。`],
+[`sincerely`,'d',`心から・敬具`,`We sincerely apologize for the delay.`,`遅れを心からおわびします。`],
+[`supervisor`,'n',`上司・監督者`,`Ask your supervisor before leaving early.`,`早退する前に上司に確認してください。`],
+[`refund`,'n',`返金`,`You can get a full refund within 30 days.`,`30日以内なら全額返金を受けられます。`],
+[`goods`,'n',`商品・品物`,`The goods were damaged during shipping.`,`商品は配送中に破損しました。`],
+[`workshop`,'n',`研修会・講習会`,`The workshop starts at 10 A.M.`,`研修会は午前10時に始まります。`],
+[`downtown`,'d',`中心街に・繁華街で`,`Our office is located downtown.`,`私たちの事務所は中心街にあります。`],
+[`deadline`,'n',`締め切り`,`The deadline for applications is May 1.`,`応募の締め切りは5月1日です。`],
+[`invoice`,'n',`請求書`,`Please pay the invoice by the end of the month.`,`月末までに請求書のお支払いをお願いします。`],
+[`brochure`,'n',`パンフレット`,`The brochure lists all of our services.`,`パンフレットに当社の全サービスが載っています。`],
+[`accountant`,'n',`会計士`,`An accountant checked the figures.`,`会計士が数字を確認しました。`],
+[`clerk`,'n',`店員・事務員`,`The clerk helped me find the right size.`,`店員が合うサイズを探すのを手伝ってくれました。`],
+[`publish`,'v',`出版する・公表する`,`The report will be published next week.`,`報告書は来週公表されます。`],
+[`résumé`,'n',`履歴書`,`Send your résumé to the hiring manager.`,`採用担当者に履歴書を送ってください。`],
+[`enclose`,'v',`同封する`,`I have enclosed a copy of the receipt.`,`領収書の写しを同封しました。`],
+[`applicant`,'n',`応募者`,`Each applicant will be interviewed twice.`,`応募者はそれぞれ2回面接を受けます。`],
+[`seminar`,'n',`セミナー・講習`,`He attended a seminar on marketing.`,`彼はマーケティングのセミナーに出席しました。`],
+[`technician`,'n',`技術者`,`A technician will repair the printer today.`,`技術者が今日プリンターを修理します。`],
+[`fare`,'n',`運賃`,`The bus fare will rise next month.`,`バスの運賃は来月上がります。`],
+[`receipt`,'n',`領収書・レシート`,`Keep your receipt in case you return the item.`,`返品に備えてレシートを保管してください。`],
+[`luggage`,'n',`手荷物`,`You may bring one piece of luggage on board.`,`機内には手荷物を1つ持ち込めます。`],
+[`shipment`,'n',`発送・積み荷`,`The shipment arrived two days late.`,`積み荷は2日遅れて届きました。`],
+[`rental`,'n',`賃貸・レンタル`,`The rental fee includes insurance.`,`レンタル料には保険が含まれます。`],
+[`warranty`,'n',`保証・保証書`,`The laptop comes with a two-year warranty.`,`そのノートパソコンには2年保証が付いています。`],
+[`reception`,'n',`受付・歓迎会`,`Please sign in at the reception desk.`,`受付で記名してください。`],
+[`lease`,'n',`賃貸借契約`,`The lease on our office ends in March.`,`事務所の賃貸契約は3月に切れます。`],
+[`notify`,'v',`知らせる・通知する`,`Please notify us of any change of address.`,`住所の変更があればお知らせください。`],
+[`preview`,'n',`試写・下見`,`Members are invited to a preview of the exhibit.`,`会員は展示の内覧会に招待されます。`],
+[`attendant`,'n',`係員・接客係`,`A flight attendant served drinks.`,`客室乗務員が飲み物を出しました。`],
+[`subscription`,'n',`定期購読・加入`,`My magazine subscription ends in June.`,`雑誌の定期購読は6月で終わります。`],
+[`convenient`,'a',`便利な・都合のよい`,`What time is convenient for you?`,`何時がご都合よいですか。`],
+[`manual`,'n',`説明書・手引き`,`Read the manual before using the machine.`,`機械を使う前に説明書を読んでください。`],
+[`obtain`,'v',`手に入れる・取得する`,`You must obtain a permit to park here.`,`ここに駐車するには許可証を取得する必要があります。`],
+[`inventory`,'n',`在庫・棚卸し`,`We check our inventory every month.`,`私たちは毎月在庫を確認します。`],
+[`destination`,'n',`目的地・行き先`,`The package reached its destination safely.`,`荷物は無事に目的地に届きました。`],
+[`occupation`,'n',`職業`,`Please write your name and occupation.`,`お名前と職業を書いてください。`],
+[`postpone`,'v',`延期する`,`The meeting was postponed until Monday.`,`会議は月曜日まで延期されました。`],
+[`compact`,'a',`小型の・ぎっしり詰まった`,`This compact camera fits in a pocket.`,`この小型カメラはポケットに入ります。`],
+[`merchandise`,'n',`商品（全体）`,`All merchandise is 20 percent off today.`,`今日は全商品が20%引きです。`],
+[`receptionist`,'n',`受付係`,`The receptionist will give you a visitor badge.`,`受付係が来客用の名札をお渡しします。`],
+[`identification`,'n',`身分証明（書）`,`Please show photo identification at the gate.`,`入口で写真付きの身分証明書を見せてください。`],
+[`depart`,'v',`出発する`,`The train departs from platform 3.`,`その列車は3番ホームから出発します。`],
+[`reschedule`,'v',`予定を変更する`,`Can we reschedule our meeting for Thursday?`,`会議を木曜日に変更できますか。`],
+[`renovation`,'n',`改装・改修`,`The lobby is closed for renovation.`,`ロビーは改装のため閉鎖中です。`],
+[`upgrade`,'v',`性能を上げる・格上げする`,`We upgraded our software last week.`,`先週ソフトウェアを更新しました。`],
+[`precede`,'v',`先に起こる・前に来る`,`A short talk will precede the dinner.`,`夕食の前に短い講演があります。`],
+[`replacement`,'n',`交換品・後任`,`We will send a replacement at no cost.`,`無料で交換品をお送りします。`],
+[`dine`,'v',`食事をする`,`Guests can dine on the terrace.`,`お客様はテラスで食事ができます。`],
+[`coworker`,'n',`同僚`,`A coworker covered my shift.`,`同僚が私の勤務を代わってくれました。`],
+[`upcoming`,'a',`近く予定されている`,`Details of the upcoming event are attached.`,`今度の催しの詳細を添付します。`],
+[`cabinet`,'n',`戸棚・保管庫`,`The files are kept in a locked cabinet.`,`書類は鍵のかかる保管庫に入れてあります。`],
+[`appliance`,'n',`家電製品・器具`,`The store sells kitchen appliances.`,`その店は台所用の家電を売っています。`],
+[`instructor`,'n',`講師・指導員`,`The instructor answered every question.`,`講師はすべての質問に答えました。`],
+[`valid`,'a',`有効な`,`This ticket is valid for three days.`,`この券は3日間有効です。`],
+[`admission`,'n',`入場（料）・入学`,`Admission to the museum is free on Sundays.`,`日曜日は美術館の入場が無料です。`],
+[`electrical`,'a',`電気の`,`An electrical problem caused the delay.`,`電気系統の不具合で遅れが出ました。`],
+[`assignment`,'n',`任務・割り当てられた仕事`,`Her first assignment was to write a report.`,`彼女の最初の仕事は報告書を書くことでした。`],
+[`attendee`,'n',`出席者・参加者`,`Each attendee will receive a name tag.`,`参加者には名札が配られます。`],
+[`medication`,'n',`薬・投薬`,`Take this medication after meals.`,`この薬は食後に飲んでください。`],
+[`renew`,'v',`更新する`,`You can renew your membership online.`,`会員資格はオンラインで更新できます。`],
+[`tenant`,'n',`入居者・借り主`,`Tenants must pay rent by the fifth.`,`入居者は5日までに家賃を払う必要があります。`],
+[`departure`,'n',`出発`,`Check in two hours before departure.`,`出発の2時間前に搭乗手続きをしてください。`],
+[`inconvenience`,'n',`不便・迷惑`,`We are sorry for the inconvenience.`,`ご不便をおかけして申し訳ありません。`],
+[`banquet`,'n',`宴会・祝宴`,`The awards banquet will be held at a hotel.`,`表彰の祝宴はホテルで開かれます。`],
+[`expire`,'v',`期限が切れる`,`My passport expires next year.`,`私のパスポートは来年期限が切れます。`],
+[`photocopy`,'v',`コピーする`,`Please photocopy this form for everyone.`,`この用紙を全員分コピーしてください。`],
+[`renovate`,'v',`改装する`,`The hotel was renovated last year.`,`そのホテルは昨年改装されました。`],
+[`donation`,'n',`寄付`,`The library accepts donations of books.`,`図書館は本の寄付を受け付けています。`],
+[`feedback`,'n',`意見・感想`,`We welcome feedback from our customers.`,`お客様からのご意見を歓迎します。`],
+[`shortly`,'d',`まもなく`,`The manager will be with you shortly.`,`担当者がまもなく参ります。`],
+[`warehouse`,'n',`倉庫`,`The items are stored in a warehouse.`,`品物は倉庫に保管されています。`],
+[`copier`,'n',`コピー機`,`The copier on the second floor is broken.`,`2階のコピー機は故障しています。`],
+[`provider`,'n',`供給業者・提供者`,`We changed our Internet provider.`,`インターネットの契約業者を替えました。`],
+[`beverage`,'n',`飲み物`,`Beverages are served free of charge.`,`飲み物は無料で提供されます。`],
+[`inspection`,'n',`点検・検査`,`A safety inspection is done every year.`,`安全点検は毎年行われます。`],
+[`recipient`,'n',`受取人・受賞者`,`The recipient must sign for the package.`,`受取人が荷物の受領に署名する必要があります。`],
+[`aisle`,'n',`通路`,`I would like an aisle seat, please.`,`通路側の席をお願いします。`],
+[`inspect`,'v',`点検する・検査する`,`Workers inspect each product by hand.`,`作業員が製品を1つずつ手で検査します。`],
+[`mechanic`,'n',`整備士・修理工`,`A mechanic fixed the engine.`,`整備士がエンジンを直しました。`],
+[`merger`,'n',`合併`,`The merger of the two banks was announced.`,`2つの銀行の合併が発表されました。`],
+[`ingredient`,'n',`材料・原料`,`We use only fresh ingredients.`,`新鮮な材料だけを使っています。`],
+[`itinerary`,'n',`旅程・旅行日程`,`I will e-mail you the itinerary for the trip.`,`出張の日程をメールで送ります。`],
+[`workplace`,'n',`職場`,`Safety in the workplace is important.`,`職場の安全は大切です。`],
+[`architect`,'n',`建築家`,`An architect designed the new library.`,`建築家が新しい図書館を設計しました。`],
+[`convenience`,'n',`便利さ・都合`,`Please reply at your earliest convenience.`,`ご都合がつきしだいお返事ください。`],
+[`eligible`,'a',`資格のある`,`Full-time staff are eligible for the bonus.`,`正社員は賞与を受ける資格があります。`],
+[`baggage`,'n',`手荷物`,`Collect your baggage on the first floor.`,`手荷物は1階でお受け取りください。`],
+[`container`,'n',`容器・入れ物`,`Keep the food in a closed container.`,`食品はふたをした容器に入れてください。`],
+[`submission`,'n',`提出（物）`,`The submission deadline is noon on Friday.`,`提出の締め切りは金曜日の正午です。`],
+[`bulletin`,'n',`掲示・公報`,`The schedule is posted on the bulletin board.`,`予定表は掲示板に貼ってあります。`],
+[`certificate`,'n',`証明書・修了証`,`You will receive a certificate after the course.`,`講座のあとに修了証がもらえます。`],
+[`overtime`,'n',`残業・時間外労働`,`She worked overtime to finish the project.`,`彼女は企画を終えるために残業しました。`],
+[`donate`,'v',`寄付する`,`He donated money to the local hospital.`,`彼は地元の病院にお金を寄付しました。`],
+[`outstanding`,'a',`とても優れた・未払いの`,`She won an award for outstanding service.`,`彼女は優れた接客で賞を取りました。`],
+[`briefcase`,'n',`書類かばん`,`He left his briefcase in the taxi.`,`彼は書類かばんをタクシーに置き忘れました。`],
+[`impact`,'n',`影響・衝撃`,`The new law had a big impact on sales.`,`新しい法律は売上に大きく影響しました。`],
+[`innovative`,'a',`革新的な`,`The company is known for innovative designs.`,`その会社は革新的なデザインで知られています。`],
+[`inquire`,'v',`問い合わせる`,`I am writing to inquire about the position.`,`その職について問い合わせるために書いています。`],
+[`overnight`,'d',`一晩で・夜通し`,`The package was delivered overnight.`,`荷物は一晩で届けられました。`],
+[`venue`,'n',`会場・開催地`,`The venue can hold 500 people.`,`その会場は500人を収容できます。`],
+[`commuter`,'n',`通勤者`,`The train was full of commuters.`,`電車は通勤客でいっぱいでした。`],
+[`newsletter`,'n',`会報・社内報`,`The monthly newsletter is sent by e-mail.`,`月刊の会報はメールで送られます。`],
+[`advisor`,'n',`助言者・顧問`,`A financial advisor reviewed our plan.`,`財務の顧問が私たちの計画を見直しました。`],
+[`cartridge`,'n',`カートリッジ（交換用の容器）`,`The printer needs a new ink cartridge.`,`プリンターに新しいインクカートリッジが必要です。`],
+[`aspect`,'n',`側面・面`,`Price is only one aspect of the decision.`,`価格は判断の一面にすぎません。`],
+[`audit`,'n',`監査・会計検査`,`The annual audit begins next week.`,`年次の監査は来週始まります。`],
+[`contractor`,'n',`請負業者`,`A contractor was hired to repair the roof.`,`屋根の修理に請負業者を雇いました。`],
+[`prohibit`,'v',`禁止する`,`Smoking is prohibited in the building.`,`建物内は禁煙です。`],
+[`terminal`,'n',`発着所・終点`,`International flights leave from terminal 2.`,`国際線は第2ターミナルから出ます。`],
+[`supervise`,'v',`監督する`,`She supervises a team of ten.`,`彼女は10人のチームを監督しています。`],
+[`developer`,'n',`開発者・開発業者`,`A developer plans to build apartments here.`,`開発業者がここに集合住宅を建てる予定です。`],
+[`headquarters`,'n',`本社・本部`,`The company's headquarters is in Osaka.`,`その会社の本社は大阪にあります。`],
+[`shuttle`,'n',`往復便・送迎バス`,`A free shuttle runs to the airport.`,`空港まで無料の送迎バスが出ています。`],
+[`stationery`,'n',`文房具`,`Order stationery from the supply office.`,`文房具は備品係に注文してください。`],
+[`subscribe`,'v',`定期購読する・加入する`,`Subscribe to our newsletter for updates.`,`最新情報は会報にご登録ください。`],
+[`flavor`,'n',`味・風味`,`The ice cream comes in five flavors.`,`そのアイスクリームは5種類の味があります。`],
+[`recipe`,'n',`調理法・レシピ`,`This recipe takes only ten minutes.`,`このレシピは10分でできます。`],
+[`refreshment`,'n',`軽い飲食物`,`Refreshments will be served after the talk.`,`講演のあとに軽食が出ます。`],
+[`administrative`,'a',`管理の・事務の`,`She handles administrative tasks.`,`彼女は事務の仕事を担当しています。`],
+[`authorize`,'v',`許可する・権限を与える`,`Only managers can authorize payments.`,`支払いを許可できるのは管理職だけです。`],
+[`commonly`,'d',`一般に・よく`,`This software is commonly used in schools.`,`このソフトは学校でよく使われています。`],
+[`distribution`,'n',`配布・流通`,`The firm handles distribution in Asia.`,`その会社はアジアでの流通を担当しています。`],
+[`accommodate`,'v',`収容する・対応する`,`The hall can accommodate 300 guests.`,`そのホールは300人の客を収容できます。`],
+[`affordable`,'a',`手ごろな価格の`,`They offer affordable housing near the station.`,`駅の近くで手ごろな住宅を提供しています。`],
+[`commute`,'v',`通勤する`,`He commutes to work by train.`,`彼は電車で通勤しています。`],
+[`coordinate`,'v',`調整する・まとめる`,`She coordinates the training schedule.`,`彼女は研修の日程を調整しています。`],
+[`paperwork`,'n',`書類仕事・事務手続き`,`There is a lot of paperwork to complete.`,`片づける書類仕事がたくさんあります。`],
+[`quit`,'v',`やめる・辞職する`,`He quit his job to start a business.`,`彼は起業するために仕事を辞めました。`],
+[`authority`,'n',`権限・当局`,`She has the authority to sign contracts.`,`彼女には契約書に署名する権限があります。`],
+[`installation`,'n',`設置・取り付け`,`Installation of the system took a day.`,`システムの設置に1日かかりました。`],
+[`availability`,'n',`空き状況・入手できること`,`Please check the availability of rooms.`,`部屋の空き状況を確認してください。`],
+[`bargain`,'n',`お買い得品・取引`,`These shoes were a real bargain.`,`この靴は本当にお買い得でした。`],
+[`complimentary`,'a',`無料の`,`Guests receive a complimentary breakfast.`,`宿泊客には無料の朝食が付きます。`],
+[`productivity`,'n',`生産性`,`The new tools improved productivity.`,`新しい道具で生産性が上がりました。`],
+[`relocate`,'v',`移転する・転勤する`,`The firm will relocate to a larger office.`,`その会社はもっと広い事務所に移転します。`],
+[`trainee`,'n',`研修生`,`Trainees work with a senior employee.`,`研修生は先輩社員と一緒に働きます。`],
+[`transaction`,'n',`取引`,`Each transaction is recorded automatically.`,`取引は1件ずつ自動で記録されます。`],
+[`verify`,'v',`確かめる・確認する`,`Please verify your e-mail address.`,`メールアドレスを確認してください。`],
+[`automobile`,'n',`自動車`,`The automobile industry is changing fast.`,`自動車産業は急速に変わっています。`],
+[`courier`,'n',`宅配業者・配達人`,`The documents were sent by courier.`,`書類は宅配便で送られました。`],
+[`incomplete`,'a',`不完全な・未完成の`,`Incomplete forms will be returned.`,`記入もれのある用紙は返却されます。`],
+[`questionnaire`,'n',`アンケート`,`Please fill out this short questionnaire.`,`この短いアンケートにご記入ください。`],
+[`lately`,'d',`最近`,`Sales have been strong lately.`,`最近、売上は好調です。`],
+[`machinery`,'n',`機械類`,`The factory bought new machinery.`,`工場は新しい機械を購入しました。`],
+[`presenter`,'n',`発表者`,`Each presenter has fifteen minutes.`,`発表者の持ち時間はそれぞれ15分です。`],
+[`seldom`,'d',`めったに〜ない`,`He is seldom late for work.`,`彼はめったに仕事に遅れません。`],
+[`signature`,'n',`署名`,`Your signature is required on page 2.`,`2ページ目に署名が必要です。`],
+[`worldwide`,'d',`世界中で`,`The product is sold worldwide.`,`その製品は世界中で売られています。`],
+[`carrier`,'n',`運送会社・航空会社`,`The carrier lost two of the boxes.`,`運送会社が箱を2つ紛失しました。`],
+[`designate`,'v',`指定する・指名する`,`Park only in designated areas.`,`指定された場所にだけ駐車してください。`],
+[`exclusive`,'a',`独占的な・限定の`,`Members get exclusive discounts.`,`会員は限定の割引を受けられます。`],
+[`grocery`,'n',`食料品（店）`,`She stopped at a grocery store on the way home.`,`彼女は帰りに食料品店に寄りました。`],
+[`memorandum`,'n',`社内連絡メモ・覚え書き`,`A memorandum was sent to all staff.`,`全社員に連絡メモが送られました。`],
+[`photocopier`,'n',`コピー機`,`The photocopier is out of paper.`,`コピー機の紙が切れています。`],
+[`suite`,'n',`続き部屋・一式`,`They booked a suite for the weekend.`,`彼らは週末にスイートルームを予約しました。`],
+[`thorough`,'a',`徹底的な・完全な`,`We did a thorough check of the data.`,`データを徹底的に確認しました。`],
+[`cater`,'v',`料理を提供する・要望に応じる`,`A local restaurant will cater the event.`,`地元のレストランが催しの料理を担当します。`],
+[`dental`,'a',`歯の・歯科の`,`The plan covers dental care.`,`その保険は歯科治療も対象です。`],
+[`duration`,'n',`継続期間`,`Please stay seated for the duration of the flight.`,`飛行中は着席したままでいてください。`],
+[`lounge`,'n',`休憩室・待合室`,`You can wait in the lounge.`,`待合室でお待ちいただけます。`],
+[`patron`,'n',`常連客・ひいき客`,`Patrons may park behind the restaurant.`,`お客様はレストランの裏に駐車できます。`],
+[`prescription`,'n',`処方せん・処方薬`,`You need a prescription for this medicine.`,`この薬には処方せんが必要です。`],
+[`productive`,'a',`生産的な・実りの多い`,`We had a very productive meeting.`,`とても実りのある会議でした。`],
+[`stack`,'v',`積み重ねる`,`Boxes were stacked against the wall.`,`箱が壁ぎわに積まれていました。`],
+[`delegate`,'n',`代表者・代議員`,`Delegates from ten countries attended.`,`10か国の代表が出席しました。`],
+[`salesperson`,'n',`販売員`,`A salesperson showed us the new model.`,`販売員が新型を見せてくれました。`],
+[`completion`,'n',`完了・完成`,`Payment is due on completion of the work.`,`支払いは作業の完了時です。`],
+[`defect`,'n',`欠陥・不具合`,`The product was recalled because of a defect.`,`その製品は欠陥のため回収されました。`],
+[`omit`,'v',`省く・抜かす`,`Do not omit your phone number.`,`電話番号を書きもらさないでください。`],
+[`correspondence`,'n',`通信・手紙のやりとり`,`Keep copies of all correspondence.`,`やりとりした文書はすべて写しを保管してください。`],
+[`anniversary`,'n',`記念日`,`The store is celebrating its tenth anniversary.`,`その店は10周年を祝っています。`],
+[`buffet`,'n',`立食・セルフサービス式の食事`,`Lunch will be served as a buffet.`,`昼食はビュッフェ形式で出ます。`],
+[`defective`,'a',`欠陥のある`,`Return defective items for a refund.`,`欠陥品は返金のためご返送ください。`],
+[`leak`,'n',`漏れ`,`There is a water leak in the kitchen.`,`台所で水漏れがあります。`],
+[`occupancy`,'n',`入居・占有（率）`,`The hotel's occupancy is high in summer.`,`そのホテルは夏の客室稼働率が高いです。`],
+[`proficiency`,'n',`熟達・技能`,`The job requires proficiency in English.`,`その仕事には英語の高い運用力が必要です。`],
+[`renewal`,'n',`更新`,`The renewal fee is 30 dollars.`,`更新料は30ドルです。`],
+[`urgent`,'a',`緊急の`,`This is an urgent request from a client.`,`これは顧客からの緊急の依頼です。`],
+[`annually`,'d',`毎年・年に1回`,`The conference is held annually.`,`その会議は毎年開かれます。`],
+[`accurately`,'d',`正確に`,`Please fill in the form accurately.`,`用紙は正確に記入してください。`],
+[`inspector`,'n',`検査官・調査員`,`An inspector visited the factory.`,`検査官が工場を訪れました。`],
+[`intern`,'n',`実習生・インターン`,`She worked as an intern last summer.`,`彼女は去年の夏、インターンとして働きました。`],
+[`confirmation`,'n',`確認（書）`,`You will receive a confirmation by e-mail.`,`確認のメールが届きます。`],
+[`expertise`,'n',`専門知識・専門技術`,`We need someone with expertise in design.`,`デザインの専門知識がある人が必要です。`],
+[`utility`,'n',`公共料金・電気や水道`,`Rent does not include utilities.`,`家賃に光熱費は含まれません。`],
+[`voucher`,'n',`引換券・割引券`,`Use this voucher for a free drink.`,`この券で飲み物が1杯無料になります。`],
+[`behalf`,'n',`（on behalf of で）〜を代表して`,`I am writing on behalf of my team.`,`チームを代表して書いています。`],
+[`minimize`,'v',`最小限にする`,`We try to minimize waste.`,`私たちはむだを最小限にするよう努めています。`],
+[`optional`,'a',`任意の・選択できる`,`The afternoon tour is optional.`,`午後の見学は任意参加です。`],
+[`paycheck`,'n',`給料（の小切手）`,`Paychecks are issued on the 25th.`,`給料は25日に支払われます。`]
+];
+
 const Q5=[
 ['pos',`The manager reviewed the report ------- before sending it to the client.`,[`carefully`,`careful`,`care`,`caring`],`動詞 reviewed を飾るので副詞 carefully。「報告書を注意深く見直した」。`],
 ['pos',`Ms. Tanaka gave a very ------- presentation at the conference.`,[`impressive`,`impress`,`impressively`,`impression`],`a very ___ + 名詞 presentation。名詞の前は形容詞 impressive。`],
@@ -398,18 +600,20 @@ const UNIT={}; UNITS.forEach(u=>UNIT[u.id]=u);
 const ITEM={}, BYUNIT={}, SETBY={};
 UNITS.forEach(u=>{BYUNIT[u.id]=[];SETBY[u.id]=[]});
 (function(){const c={};Q5.forEach(r=>{c[r[0]]=(c[r[0]]||0)+1;const id=r[0]+'-'+c[r[0]];ITEM[id]={id,u:r[0],q:r[1],o:r[2],ex:r[3]};BYUNIT[r[0]].push(id)});
+ WORDS.forEach((r,i)=>{const id='word-'+(i+1);ITEM[id]={id,u:'word',idx:i,w:r[0],pos:r[1],ja:r[2],ex:r[3],exj:r[4]};BYUNIT.word.push(id)});
  SETS.forEach(s=>{SETBY[s.u].push(s);s.qs.forEach((q,i)=>{const id=s.id+'-'+(i+1);q.id=id;q.u=s.u;q.n=i+1;ITEM[id]=q;BYUNIT[s.u].push(id)})})})();
 const TITLES=['見習い','門下生','初段','二段','三段','四段','師範代','師範'];
 const TRIGGERS=['朝食を食べ終えたら','8:20の英単語の前に','昼食を食べ終えたら','夕食を食べ終えたら','ゲームを始める前に','布団に入る前に'];
 const IV=[0,1,3,7,14,30];
-const DAY=864e5, KEY='reading-dojo-v1';
+const DAY=864e5, KEY='reading-dojo-v1', WSETS=3;
+const uname=u=>u.part?('Part '+u.part+' '+u.name):u.name;
 
 /* ===================== 状態 ===================== */
 function today(){const n=new Date();return Math.floor((n.getTime()-n.getTimezoneOffset()*6e4-4*36e5)/DAY)}
 function fresh(){return{v:1,updatedAt:0,xp:0,streak:0,best:0,freezes:0,lastDone:null,
-  day:{key:today(),done:0,correct:0,total:0,kin:false},quota:5,nextQuota:null,trigger:'',setup:false,
-  testDate:'2026-11-15',kin:{pos:1,pace:50},cards:{},hist:{},lastUnit:''}}
-function fix(s){const f=fresh();s=Object.assign(f,s||{});s.kin=Object.assign({pos:1,pace:50},s.kin);s.day=Object.assign({key:today(),done:0,correct:0,total:0,kin:false},s.day);return s}
+  day:{key:today(),done:0,correct:0,total:0,kin:false,w:0},quota:5,nextQuota:null,trigger:'',setup:false,
+  testDate:'2026-11-15',kinOn:false,kin:{pos:1,pace:50},cards:{},hist:{},lastUnit:''}}
+function fix(s){const f=fresh();s=Object.assign(f,s||{});s.kin=Object.assign({pos:1,pace:50},s.kin);s.day=Object.assign({key:today(),done:0,correct:0,total:0,kin:false,w:0},s.day);return s}
 let S=fresh(), view='home', sess=null, done=null, openTips={}, resetArm=false, syncState='この端末に保存しています';
 function loadLocal(){try{const t=localStorage.getItem(KEY);if(t)S=fix(JSON.parse(t))}catch(e){}}
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -435,7 +639,7 @@ function rollover(){const t=today();if(S.day.key===t)return;
   if(S.lastDone!=null&&S.lastDone<t-1){const gap=t-1-S.lastDone;
     if(gap<=S.freezes){S.freezes-=gap;S.lastDone=t-1}else S.streak=0}
   if(S.nextQuota){S.quota=S.nextQuota;S.nextQuota=null}
-  S.day={key:t,done:0,correct:0,total:0,kin:false}}
+  S.day={key:t,done:0,correct:0,total:0,kin:false,w:0}}
 function level(){let xp=S.xp,lv=1,need=150;while(xp>=need){xp-=need;lv++;need=100+lv*50}return{lv,cur:xp,need,title:TITLES[Math.min(lv-1,TITLES.length-1)]}}
 function locked(){return S.day.done>=S.quota}
 function daysToTest(){const p=(S.testDate||'').split('-').map(Number);if(p.length!==3||!p[0])return null;return Math.round(Date.UTC(p[0],p[1]-1,p[2])/DAY)-today()}
@@ -446,13 +650,18 @@ function recommend(){const pat=['g','p7s','g','p6','p7d','g','p7s','g'];let k=pa
   let best=null,bs=-1;UNITS.filter(u=>u.part===5).forEach(u=>{const s=ustat(u.id);let sc=s.due*2+s.unseen+(s.total-s.m)*0.1;if(u.id===S.lastUnit)sc-=3;if(sc>bs){bs=sc;best=u.id}});return best}
 function pick5(u){const t=today();const rank=id=>{const c=S.cards[id];if(!c)return 1000;if(c.d<=t)return c.b;return 2000+c.d};
   return shuffle(shuffle(BYUNIT[u]).sort((a,b)=>rank(a)-rank(b)).slice(0,5))}
+function pickWords(){const t=today();const rank=id=>{const c=S.cards[id];if(!c)return 1000+ITEM[id].idx;if(c.d<=t)return c.b;return 5000+c.d};
+  return shuffle(BYUNIT.word.slice().sort((a,b)=>rank(a)-rank(b)).slice(0,10))}
+function wordOpts(id){const q=ITEM[id];let pool=BYUNIT.word.map(x=>ITEM[x]).filter(x=>x.ja!==q.ja&&x.w!==q.w);const same=pool.filter(x=>x.pos===q.pos);if(same.length>=3)pool=same;
+  const out=[q.ja];shuffle(pool).some(x=>{if(!out.includes(x.ja))out.push(x.ja);return out.length===4});return out}
 function pickSet(u){const t=today();const rank=s=>{let r=0,un=0,mind=1e9;s.qs.forEach(q=>{const c=S.cards[q.id];if(!c)un++;else{if(c.d<=t&&c.b===0)r-=10;mind=Math.min(mind,c.d)}});if(r<0)return r;if(un)return 0;return mind};
   return shuffle(SETBY[u]).sort((a,b)=>rank(a)-rank(b))[0]}
 
 /* ===================== セッション ===================== */
-function start(u){rollover();if(locked())return;const unit=UNIT[u];let set=null,ids;
-  if(unit.part===5)ids=pick5(u);else{set=pickSet(u);ids=set.qs.map(q=>q.id)}
-  sess={u,set,i:0,items:ids.map(id=>({id,order:shuffle([0,1,2,3]),pick:null,ok:null,ms:0})),t0:Date.now()};done=null;render();window.scrollTo(0,0)}
+function start(u){rollover();const unit=UNIT[u];let set=null,ids;
+  if(u==='word'){if(S.day.w>=WSETS)return;ids=pickWords()}
+  else{if(locked())return;if(unit.part===5)ids=pick5(u);else{set=pickSet(u);ids=set.qs.map(q=>q.id)}}
+  sess={u,set,i:0,items:ids.map(id=>({id,opts:u==='word'?wordOpts(id):ITEM[id].o,order:shuffle([0,1,2,3]),pick:null,ok:null,ms:0})),t0:Date.now()};done=null;render();window.scrollTo(0,0)}
 function answer(k){const it=sess.items[sess.i];if(it.pick!=null)return;const t=today();
   it.pick=k;it.ok=it.order[k]===0;it.ms=Date.now()-sess.t0;
   const c=S.cards[it.id]||{b:0,d:t,n:0,w:0};c.n++;
@@ -461,9 +670,9 @@ function answer(k){const it=sess.items[sess.i];if(it.pick!=null)return;const t=t
   const fb=document.getElementById('fb');if(fb&&fb.scrollIntoView)fb.scrollIntoView({block:'nearest',behavior:'smooth'})}
 function next(){if(sess.i<sess.items.length-1){sess.i++;sess.t0=Date.now();render();if(!sess.set)window.scrollTo(0,0);else{const s=document.getElementById('qtop');if(s)s.scrollIntoView({block:'start'})}}else finish()}
 function finish(){const n=sess.items.length,ok=sess.items.filter(x=>x.ok).length;const before=level().lv;
-  let xp=ok*10+20;const bonus=Math.random()<0.2;if(bonus)xp*=2;let dayBonus=0,streakUp=false,freeze=false;
-  S.day.done++;S.lastUnit=sess.u;
-  if(S.day.done>=S.quota&&S.lastDone!==S.day.key){S.streak++;S.lastDone=S.day.key;S.best=Math.max(S.best,S.streak);dayBonus=50;streakUp=true;
+  const isW=sess.u==='word';let xp=isW?ok*3+10:ok*10+20;const bonus=Math.random()<0.2;if(bonus)xp*=2;let dayBonus=0,streakUp=false,freeze=false;
+  if(isW)S.day.w++;else{S.day.done++;S.lastUnit=sess.u}
+  if(!isW&&S.day.done>=S.quota&&S.lastDone!==S.day.key){S.streak++;S.lastDone=S.day.key;S.best=Math.max(S.best,S.streak);dayBonus=50;streakUp=true;
     if(S.streak%7===0&&S.freezes<2){S.freezes++;freeze=true}}
   S.xp+=xp+dayBonus;S.hist[S.day.key]={s:S.day.done,q:S.quota,c:S.day.correct,t:S.day.total};
   const keys=Object.keys(S.hist).map(Number).sort((a,b)=>a-b);while(keys.length>120)delete S.hist[keys.shift()];
@@ -488,16 +697,19 @@ function vHome(){const L=level(),dt=daysToTest(),lk=locked();let h='';
   else{h+=`<div class="card"><div class="slots">${Array.from({length:S.quota},()=>`<i class="on"></i>`).join('')}</div>
     <div class="ticket"><p class="sub">${dlabel(S.day.key)} 分</p><b>ゲーム解禁チケット</b><p>今日の ${S.quota} セッションは完了です。心おきなく休んでください。</p></div>
     <p class="sub">今日はこれ以上できません。続きは明日の朝4時から開きます。</p></div>`}
+  const ws=ustat('word'),wl=S.day.w>=WSETS;
+  h+=`<div class="card"><div class="row between"><div class="grow"><h2>単語　10語</h2><p class="sub">今日 <span class="num">${S.day.w}/${WSETS}</span> セット・1セット約1分半　身についた語 <span class="num">${ws.m}/${ws.total}</span>${ws.due?`　<span class="tag due">復習 ${ws.due}語</span>`:''}</p></div>
+    <button class="btn gold" data-act="start" data-v="word"${wl?' disabled':''}>${wl?'今日は完了':'始める'}</button></div></div>`;
   const a=S.kin.pos,b=Math.min(a+S.kin.pace-1,1000);
-  h+=`<div class="card"><div class="row between"><div class="grow"><h2>金フレ　No.<span class="num">${a}–${b}</span></h2><p class="sub">本と音声で確認してから押す。押すと明日は次の範囲に進みます。</p></div>
+  if(S.kinOn)h+=`<div class="card"><div class="row between"><div class="grow"><h2>金フレ　No.<span class="num">${a}–${b}</span></h2><p class="sub">本と音声で確認してから押す。押すと明日は次の範囲に進みます。</p></div>
     <button class="btn gold" data-act="kin"${S.day.kin?' disabled':''}>${S.day.kin?'今日は完了':'やった +15'}</button></div></div>`;
   h+=`<div class="card"><h2>この7日間</h2><div class="week">${Array.from({length:7},(_,i)=>{const k=S.day.key-6+i,r=k===S.day.key?{s:S.day.done,q:S.quota}:S.hist[k];const c=r?(r.s>=r.q?'full':r.s>0?'part':''):'';return `<div>${'日月火水木金土'[new Date(k*DAY).getUTCDay()]}<i class="${c}${k===S.day.key?' now':''}">${r&&r.s?r.s:''}</i></div>`}).join('')}</div>
     <p class="sub">お守り <b class="num">${S.freezes}</b> 個（1日休んでも連続記録を守ります。7日連続ごとに1個、最大2個）</p></div>`;
   return h}
-function vDone(){const d=done,un=UNIT[d.u];return `<div class="card center pop"><p class="sub">Part ${un.part} ${un.name}</p><div class="big">${d.ok}<span style="font-size:22px"> / ${d.n}</span></div>
+function vDone(){const d=done,un=UNIT[d.u];return `<div class="card center pop"><p class="sub">${uname(un)}</p><div class="big">${d.ok}<span style="font-size:22px"> / ${d.n}</span></div>
   <p><b class="num">+${d.xp+d.dayBonus}</b> XP${d.bonus?'　<span class="tag">ボーナス2倍</span>':''}${d.dayBonus?'　<span class="tag">1日達成 +50</span>':''}</p>
   ${d.streakUp?`<p><b>${S.streak}日連続</b>になりました。${d.freeze?'お守りを1個もらいました。':''}</p>`:''}${d.lvUp?`<p><b>Lv.${level().lv} ${level().title}</b> に上がりました。</p>`:''}
-  ${d.ok<d.n?'<p class="sub">まちがえた問題は、次のセッションでもう一度出ます。</p>':''}</div>`}
+  ${d.ok<d.n?`<p class="sub">まちがえた${d.u==='word'?'語':'問題'}は、次の回でもう一度出ます。</p>`:''}</div>`}
 
 function vUnits(){const lk=locked();let h=`<h1>ユニット</h1><p class="sub">${lk?'今日の分は終わりました。要点はいつでも読めます。':`ここから始めても、今日の ${S.quota} セッションのうち1つとして数えます。`}</p>`;
   [5,6,7].forEach(p=>{h+=`<div class="card"><h2>Part ${p}</h2>`;UNITS.filter(u=>u.part===p).forEach(u=>{const s=ustat(u.id);
@@ -505,13 +717,19 @@ function vUnits(){const lk=locked();let h=`<h1>ユニット</h1><p class="sub">$
     <div class="bar"><i style="width:${Math.round(s.m/s.total*100)}%"></i></div>
     <div class="row"><button class="btn" data-act="tips" data-v="${u.id}">${openTips[u.id]?'要点を閉じる':'要点を読む'}</button><button class="btn" data-act="start" data-v="${u.id}"${lk?' disabled':''}>この単元をやる</button></div>
     ${openTips[u.id]?`<ul class="tips">${u.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}</div>`});h+='</div>'});
+  const wu=UNIT.word,ws=ustat('word'),wl=S.day.w>=WSETS;
+  h+=`<div class="card"><h2>単語</h2><div class="unit"><div class="row between"><div class="grow"><b>頻出 ${ws.total} 語</b> ${ws.due?`<span class="tag due">復習 ${ws.due}</span>`:''}<p class="sub">身についた語 <span class="num">${ws.m}/${ws.total}</span>　今日 <span class="num">${S.day.w}/${WSETS}</span> セット</p></div></div>
+    <div class="bar gold"><i style="width:${Math.round(ws.m/ws.total*100)}%"></i></div>
+    <div class="row"><button class="btn" data-act="tips" data-v="word">${openTips.word?'要点を閉じる':'要点を読む'}</button><button class="btn" data-act="start" data-v="word"${wl?' disabled':''}>10語やる</button></div>
+    ${openTips.word?`<ul class="tips">${wu.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}
+    <p class="sub">語の選び方と順番は TOEIC Service List 1.2（Browne &amp; Culligan, CC BY-SA 4.0）に基づきます。訳と例文は独自に作成しました。</p></div></div>`;
   return h}
 
 function vRecord(){const L=level();let tot=0,w=0;Object.values(S.cards).forEach(c=>{tot+=c.n;w+=c.w});
   let h=`<h1>記録</h1><div class="stats"><div class="stat"><b>${S.best}</b><span>最長連続日数</span></div><div class="stat"><b>${tot}</b><span>解いた問題（のべ）</span></div><div class="stat"><b>${tot?Math.round((tot-w)/tot*100)+'%':'–'}</b><span>通算の正答率</span></div></div>`;
   h+=`<div class="card"><div class="row between"><h2>Lv.${L.lv} ${L.title}</h2><span class="sub num">${L.cur} / ${L.need} XP</span></div><div class="bar gold"><i style="width:${Math.round(L.cur/L.need*100)}%"></i></div></div>`;
   h+=`<div class="card"><h2>この4週間</h2><div class="cal">${Array.from({length:28},(_,i)=>{const k=S.day.key-27+i,r=k===S.day.key?{s:S.day.done,q:S.quota}:S.hist[k];return `<i class="${r?(r.s>=r.q?'full':r.s>0?'part':''):''}" title="${dlabel(k)}"></i>`}).join('')}</div><p class="sub">濃い色は1日分を達成した日、薄い色は途中までやった日です。右下が今日です。</p></div>`;
-  h+=`<div class="card"><h2>ユニット別の正答率</h2>${UNITS.map(u=>{let n=0,ww=0;BYUNIT[u.id].forEach(id=>{const c=S.cards[id];if(c){n+=c.n;ww+=c.w}});const r=n?Math.round((n-ww)/n*100):0;return `<div><div class="row between"><span>Part ${u.part} ${u.name}</span><span class="sub num">${n?r+'%（'+n+'問）':'まだ'}</span></div><div class="bar"><i style="width:${r}%"></i></div></div>`}).join('')}</div>`;
+  h+=`<div class="card"><h2>ユニット別の正答率</h2>${UNITS.map(u=>{let n=0,ww=0;BYUNIT[u.id].forEach(id=>{const c=S.cards[id];if(c){n+=c.n;ww+=c.w}});const r=n?Math.round((n-ww)/n*100):0;return `<div><div class="row between"><span>${uname(u)}</span><span class="sub num">${n?r+'%（'+n+'問）':'まだ'}</span></div><div class="bar"><i style="width:${r}%"></i></div></div>`}).join('')}</div>`;
   h+=`<div class="card"><h2>このアプリのしくみと根拠</h2>
    <div class="why"><b>読み直すより、思い出す</b>すべて問題形式です。答えを思い出す練習は、読み直すより1週間後の記憶に残ります。<small>Roediger &amp; Karpicke (2006)</small></div>
    <div class="why"><b>忘れかけたころに、もう一度</b>正解した問題は1日後、3日後、7日後、14日後と間をあけて出します。まちがえた問題はすぐに戻ってきます。<small>Cepeda ほか (2006) のメタ分析</small></div>
@@ -525,22 +743,23 @@ function vSetup(){let h=`<h1>設定</h1>`;
   h+=`<div class="card"><h2>きっかけ</h2><p class="sub">この行動の直後に1セッションやる、と決めます。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div></div>`;
   h+=`<div class="card"><h2>1日のセッション数</h2><p class="sub">今日は ${S.quota} セッションです。変更は明日から反映されます（今日の気分で増減できないようにしています）。</p><div class="chips">${[3,4,5,6,8].map(n=>`<button class="chip${(S.nextQuota||S.quota)===n?' on':''}" data-act="quota" data-v="${n}">${n}</button>`).join('')}</div></div>`;
   h+=`<div class="card"><h2>試験日</h2><div><label for="testdate">次に受ける日</label><input id="testdate" type="date" value="${esc(S.testDate)}"></div></div>`;
-  h+=`<div class="card"><h2>金フレ</h2><div class="row"><div><label for="kinpos">今日の開始番号</label><input id="kinpos" type="number" min="1" max="1000" value="${S.kin.pos}" style="width:110px"></div><div><label for="kinpace">1日の語数</label><select id="kinpace">${[30,50,100].map(n=>`<option${S.kin.pace===n?' selected':''}>${n}</option>`).join('')}</select></div></div></div>`;
+  h+=`<div class="card"><h2>金フレ</h2><p class="sub">本で進めた範囲をホームに記録したいときだけオンにします。</p><div class="chips"><button class="chip${S.kinOn?' on':''}" data-act="kinon" data-v="1">使う</button><button class="chip${S.kinOn?'':' on'}" data-act="kinon" data-v="0">使わない</button></div><div class="row"><div><label for="kinpos">今日の開始番号</label><input id="kinpos" type="number" min="1" max="1000" value="${S.kin.pos}" style="width:110px"></div><div><label for="kinpace">1日の語数</label><select id="kinpace">${[30,50,100].map(n=>`<option${S.kin.pace===n?' selected':''}>${n}</option>`).join('')}</select></div></div></div>`;
   h+=`<div class="card"><h2>データ</h2><p class="sub">${esc(syncState)}</p><button class="btn" data-act="reset">${resetArm?'本当に消す（もう一度押す）':'記録をすべて消す'}</button></div>`;
   return h}
 
 function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=it.pick!=null;let h='';
-  h+=`<div class="shead"><button class="btn" data-act="quit">やめる</button><b>Part ${un.part} ${un.name}</b><div class="dots">${sess.items.map((x,i)=>`<i class="${x.ok===true?'ok':x.ok===false?'ng':i===sess.i?'cur':''}"></i>`).join('')}</div></div>`;
+  h+=`<div class="shead"><button class="btn" data-act="quit">やめる</button><b>${uname(un)}</b><div class="dots">${sess.items.map((x,i)=>`<i class="${x.ok===true?'ok':x.ok===false?'ng':i===sess.i?'cur':''}"></i>`).join('')}</div></div>`;
   if(sess.set){sess.set.docs.forEach(d=>{let t=esc(d.t);
     if(un.part===6)t=t.replace(/\[(\d)\]/g,(m,n)=>{n=+n;const x=sess.items[n-1];if(x.pick!=null)return `<span class="filled">${esc(ITEM[x.id].o[0])}</span>`;return `<span class="blank${n-1===sess.i?' cur':''}">(${n}) -------</span>`});
     h+=`<div class="doc"><span class="dh">${esc(d.h)}</span>${t}</div>`})}
   h+=`<div id="qtop"></div>`;
   if(!ans)h+=`<div class="timer" title="目安の時間"><i style="animation-duration:${un.per}s"></i></div>`;
-  if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
+  if(un.part===0)h+=`<p class="stem"><b style="font-size:30px">${esc(q.w)}</b><br><span class="sub" style="font-size:16px">${esc(q.ex)}</span></p>`;
+  else if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
   else if(un.part===6)h+=`<p class="stem jp">空所 (${q.n}) に入るものを選ぶ</p>`;
   else h+=`<p class="stem">${esc(q.q)}</p>`;
-  h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c=' right';else if(k===it.pick)c=' wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><em>(${'ABCD'[k]})</em><span>${esc(q.o[oi])}</span></button>`}).join('')}</div>`;
-  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb${it.ok?'':' ng'}"><b>${it.ok?'正解':'不正解'}　<span class="sub num">${sec}秒（目安 ${un.per}秒）</span></b>${esc(q.ex)}</div>
+  h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c=' right';else if(k===it.pick)c=' wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><em>(${'ABCD'[k]})</em><span${un.part===0?' style="font-family:var(--f-body)"':''}>${esc(it.opts[oi])}</span></button>`}).join('')}</div>`;
+  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb${it.ok?'':' ng'}"><b>${it.ok?'正解':'不正解'}　<span class="sub num">${sec}秒（目安 ${un.per}秒）</span></b>${un.part===0?`<b>${esc(q.w)}</b>${esc(q.ja)}<br>${esc(q.ex)}<br>${esc(q.exj)}`:esc(q.ex)}</div>
     <button class="btn pri wide" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果を見る'}</button>`}
   return h}
 
@@ -562,6 +781,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   else if(a==='trig'){S.trigger=TRIGGERS[+v];save();render()}
   else if(a==='setupdone'){S.setup=true;save();render()}
   else if(a==='quota'){const n=+v;S.nextQuota=n===S.quota?null:n;save();render()}
+  else if(a==='kinon'){S.kinOn=v==='1';save();render()}
   else if(a==='kin'){if(!S.day.kin){S.day.kin=true;S.xp+=15;save();render()}}
   else if(a==='reset'){if(resetArm){S=fresh();resetArm=false;save();view='home'}else resetArm=true;render()}});
 document.addEventListener('change',e=>{const t=e.target;
