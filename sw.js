@@ -1,5 +1,5 @@
 // オフライン対応。アプリ本体はネットワーク優先（更新がすぐ届く）、つながらないときは保存分を使う。
-const CACHE = 'reading-dojo-v1';
+const CACHE = 'reading-dojo-v2';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
