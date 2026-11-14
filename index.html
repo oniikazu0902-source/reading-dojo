@@ -994,7 +994,11 @@ function rollover(){const t=today();if(S.day.key===t)return;
   if(S.nextQuota){S.quota=S.nextQuota;S.nextQuota=null}
   S.day={key:t,done:0,correct:0,total:0,kin:false,w:0}}
 function level(){let xp=S.xp,lv=1,need=150;while(xp>=need){xp-=need;lv++;need=100+lv*50}return{lv,cur:xp,need,title:TITLES[Math.min(lv-1,TITLES.length-1)]}}
-function locked(){return S.day.done>=S.quota}
+/* URL に ?free を付けて開くと上限なし（この端末で覚える）。?free=0 で元に戻す */
+const FREE=(()=>{let f=false;try{f=localStorage.getItem('reading-dojo-free')==='1'}catch(e){}
+  const m=/[?#&]free(=([^&#]*))?/.exec(location.search+location.hash);if(m){f=m[2]!=='0'&&m[2]!=='off';try{localStorage.setItem('reading-dojo-free',f?'1':'0')}catch(e){}}return f})();
+function locked(){return !FREE&&S.day.done>=S.quota}
+function wLocked(){return !FREE&&S.day.w>=WSETS}
 function daysToTest(){const p=(S.testDate||'').split('-').map(Number);if(p.length!==3||!p[0])return null;return Math.round(Date.UTC(p[0],p[1]-1,p[2])/DAY)-today()}
 function ustat(u){const ids=BYUNIT[u],t=today();let m=0,due=0,seen=0;ids.forEach(id=>{const c=S.cards[id];if(c){seen++;if(c.b>=2)m++;if(c.d<=t)due++}});return{total:ids.length,m,due,seen,unseen:ids.length-seen}}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -1012,7 +1016,7 @@ function pickSet(u){const t=today();const rank=s=>{let r=0,un=0,mind=1e9;s.qs.fo
 
 /* ===================== セッション ===================== */
 function start(u){rollover();const unit=UNIT[u];let set=null,ids;
-  if(u==='word'){if(S.day.w>=WSETS)return;ids=pickWords()}
+  if(u==='word'){if(wLocked())return;ids=pickWords()}
   else{if(locked())return;if(unit.part===5)ids=pick5(u);else{set=pickSet(u);ids=set.qs.map(q=>q.id)}}
   sess={u,set,i:0,items:ids.map(id=>({id,opts:u==='word'?wordOpts(id):ITEM[id].o,order:shuffle([0,1,2,3]),pick:null,ok:null,ms:0})),t0:Date.now()};done=null;render();window.scrollTo(0,0)}
 function answer(k){const it=sess.items[sess.i];if(it.pick!=null)return;const t=today();
@@ -1037,19 +1041,19 @@ const blank=s=>esc(s).replace(/-{5,}/g,'<span class="blank">-------</span>');
 function dlabel(k){const d=new Date(k*DAY);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+'（'+'日月火水木金土'[d.getUTCDay()]+'）'}
 function est(u){const p=UNIT[u].part;return p===5?'5問・2分':p===6?'1文書4問・2分':u==='p7d'?'2文書4問・5分':'1文書3〜4問・3分'}
 
-function slots(){return `<div class="slots">${Array.from({length:S.quota},(_,i)=>`<i>${i<S.day.done?`<span class="hanko${done&&!done.w&&i===S.day.done-1?' pop':''}">済</span>`:''}</i>`).join('')}</div>`}
+function slots(){return `<div class="slots">${Array.from({length:Math.max(S.quota,S.day.done)},(_,i)=>`<i>${i<S.day.done?`<span class="hanko${done&&!done.w&&i===S.day.done-1?' pop':''}">済</span>`:''}</i>`).join('')}</div>`}
 function vHome(){const L=level(),dt=daysToTest(),lk=locked();let h='';
   h+=`<div class="head"><div><h1>リーディング道場</h1><p class="sub">${dlabel(S.day.key)}${dt!=null&&dt>=0?(dt===0?'　今日が本番':`　本番まであと${dt}日`):''}</p></div><div class="rank">${L.title}<br><span class="lab">Lv.${L.lv}</span></div></div>`;
   if(done)h+=vDone();
   if(!S.setup){h+=`<div class="sec"><h2>いつやるか、先に決める</h2><p class="sub">毎日かならずやっていることの直後がおすすめです。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><div><button class="btn" data-act="setupdone"${S.trigger?'':' disabled'}>決定</button></div></div>`}
-  h+=`<div class="sec"><div class="row between"><span class="lab">今日の分</span><span class="sub">連続 <b class="num">${S.streak}</b> 日</span></div>${slots()}`;
+  h+=`<div class="sec"><div class="row between"><span class="lab">今日の分${FREE?'　<span class="red">上限なし</span>':''}</span><span class="sub">連続 <b class="num">${S.streak}</b> 日</span></div>${slots()}`;
   if(!lk){const u=recommend(),un=UNIT[u],st=ustat(u);
     h+=`<div style="margin-top:8px"><p class="lab">${S.day.done+1}本目</p><h2>${uname(un)}</h2><p class="sub">${est(u)}${st.due?`　<span class="red">復習${st.due}問</span>`:''}</p></div>
     <button class="btn pri" data-act="start" data-v="${u}">始める</button>
     ${S.trigger?`<p class="sub">${esc(S.trigger)}、1本。</p>`:''}`}
   else{h+=`<div class="row" style="margin-top:8px"><span class="hanko big${done&&done.streakUp?' pop':''}">済</span><div><h2>今日はここまで</h2><p class="sub">ゲーム解禁。続きは明日の朝4時から。</p></div></div>`}
   h+=`</div>`;
-  const ws=ustat('word'),wl=S.day.w>=WSETS;
+  const ws=ustat('word'),wl=wLocked();
   h+=`<div class="sec line"><div class="row between"><div class="grow"><h2>単語</h2><p class="sub">10語ずつ・今日 <span class="num">${S.day.w}/${WSETS}</span>${ws.due?`　<span class="red">復習${ws.due}語</span>`:''}</p></div>
     <button class="btn" data-act="start" data-v="word"${wl?' disabled':''}>${wl?'済み':'始める'}</button></div></div>`;
   if(S.kinOn){const a=S.kin.pos,b=Math.min(a+S.kin.pace-1,1000);
@@ -1070,7 +1074,7 @@ function vUnits(){const lk=locked();let h=`<div class="head"><h1>ユニット</h
     <div class="bar"><i style="width:${Math.round(s.m/s.total*100)}%"></i></div>
     <div class="row between"><button class="link" data-act="tips" data-v="${u.id}">${openTips[u.id]?'要点を閉じる':'要点'}</button><button class="btn" data-act="start" data-v="${u.id}"${lk?' disabled':''}>解く</button></div>
     ${openTips[u.id]?`<ul class="tips">${u.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}</div>`});h+='</div></div>'});
-  const wu=UNIT.word,ws=ustat('word'),wl=S.day.w>=WSETS;
+  const wu=UNIT.word,ws=ustat('word'),wl=wLocked();
   h+=`<div class="sec"><p class="lab">単語</p><div><div class="unit"><div class="row between"><h2>頻出${ws.total}語</h2><span class="sub num">${ws.m}/${ws.total}${ws.due?`　<span class="red">復習${ws.due}</span>`:''}</span></div>
     <div class="bar"><i style="width:${Math.round(ws.m/ws.total*100)}%"></i></div>
     <div class="row between"><button class="link" data-act="tips" data-v="word">${openTips.word?'要点を閉じる':'要点'}</button><button class="btn" data-act="start" data-v="word"${wl?' disabled':''}>10語</button></div>
