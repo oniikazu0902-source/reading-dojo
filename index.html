@@ -108,7 +108,16 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sfx{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 .pl{display:block;font-family:var(--f-body);font-size:12px;line-height:1.5;margin-top:2px}
 .pl b{font-weight:700;margin-right:8px}
-.k-n{color:var(--k-n)} .k-v{color:var(--k-v)} .k-a{color:var(--k-a)} .k-d{color:var(--k-d)}
+.k-n{color:var(--k-n)} .k-v{color:var(--k-v)} .k-a{color:var(--k-a)} .k-d{color:var(--k-d)} .k-o{color:var(--sub)}
+.tw{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.cex{font-family:var(--f-en);font-size:19px;line-height:1.6}
+.leg{display:flex;gap:12px;font-size:12px;font-weight:700}
+.hk,.fam{border-top:1px solid var(--rule);padding-top:10px;margin-top:6px}
+.hk .lab,.fam .lab{display:block;margin-bottom:2px}
+.fam ul{list-style:none;margin:0;padding:0}
+.fam li{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;padding:3px 0}
+.fam .en{font-family:var(--f-en);font-size:17px;font-weight:600}
+.fam small{font-size:11px;color:var(--sub)}
 .fb{display:flex;flex-direction:column;gap:4px}
 .fb .res{font-family:var(--f-head);font-size:20px;font-weight:700;color:var(--red)}
 .fb .res small{font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--sub);margin-left:8px}
@@ -199,7 +208,8 @@ const UNITS=[
   'TOEICによく出る語を、出やすい順に並べています。',
   '例文ごと声に出して読むと、Part 5 の語彙問題にも効きます。',
   '正解した語は1日後、3日後、7日後と間をあけて出ます。まちがえた語はすぐ戻ります。',
-  '1日3セット（30語）まで。新しい語は1セットに最大10語です。']}
+  '1日3セット（30語）まで。新しい語は1セットに最大10語です。',
+  '答えたあと、例文が品詞ごとに色分けされ、なりたちと仲間の語が出ます。']}
 ];
 /* 単語の選定と並び順は TOEIC Service List 1.2（Browne, C. & Culligan, B., 2016, CC BY-SA 4.0）の頻度順位に基づく。
    日本語訳と例文は独自に作成。この単語データは CC BY-SA 4.0 で利用できる。途中に挿入せず、末尾に追加すること。 */
@@ -297,7 +307,7 @@ const WORDS=[
 [`submission`,'n',`提出（物）`,`The submission deadline is noon on Friday.`,`提出の締め切りは金曜日の正午です。`],
 [`bulletin`,'n',`掲示・公報`,`The schedule is posted on the bulletin board.`,`予定表は掲示板に貼ってあります。`],
 [`certificate`,'n',`証明書・修了証`,`You will receive a certificate after the course.`,`講座のあとに修了証がもらえます。`],
-[`overtime`,'n',`残業・時間外労働`,`She worked overtime to finish the project.`,`彼女は企画を終えるために残業しました。`],
+[`overtime`,'n',`残業・時間外労働`,`Overtime is paid at a higher rate.`,`残業には割増の賃金が支払われます。`],
 [`donate`,'v',`寄付する`,`He donated money to the local hospital.`,`彼は地元の病院にお金を寄付しました。`],
 [`outstanding`,'a',`とても優れた・未払いの`,`She won an award for outstanding service.`,`彼女は優れた接客で賞を取りました。`],
 [`briefcase`,'n',`書類かばん`,`He left his briefcase in the taxi.`,`彼は書類かばんをタクシーに置き忘れました。`],
@@ -355,7 +365,7 @@ const WORDS=[
 [`signature`,'n',`署名`,`Your signature is required on page 2.`,`2ページ目に署名が必要です。`],
 [`worldwide`,'d',`世界中で`,`The product is sold worldwide.`,`その製品は世界中で売られています。`],
 [`carrier`,'n',`運送会社・航空会社`,`The carrier lost two of the boxes.`,`運送会社が箱を2つ紛失しました。`],
-[`designate`,'v',`指定する・指名する`,`Park only in designated areas.`,`指定された場所にだけ駐車してください。`],
+[`designate`,'v',`指定する・指名する`,`The manager designated a room for interviews.`,`部長は面接用の部屋を指定しました。`],
 [`exclusive`,'a',`独占的な・限定の`,`Members get exclusive discounts.`,`会員は限定の割引を受けられます。`],
 [`grocery`,'n',`食料品（店）`,`She stopped at a grocery store on the way home.`,`彼女は帰りに食料品店に寄りました。`],
 [`memorandum`,'n',`社内連絡メモ・覚え書き`,`A memorandum was sent to all staff.`,`全社員に連絡メモが送られました。`],
@@ -626,6 +636,208 @@ const KIND={n:['n','名詞','ヒト・モノ・コト'],npl:['n','名詞（複�
  d:['d','副詞','どのように（動詞などを説明）']};
 function afxOn(opts){return opts.every(o=>AFX[o])}
 function afxHtml(w){const a=AFX[w],k=KIND[a[1]],n=a[0];return `<span>${esc(w.slice(0,w.length-n))}${n?`<span class="sfx k-${k[0]}">${esc(w.slice(-n))}</span>`:''}<span class="pl k-${k[0]}"><b>${k[1]}</b>${k[2]}</span></span>`}
+/* 単語ごとの追加情報。[例文の品詞（1語1文字：n名詞 v動詞 a形容詞 d副詞 oその他）, 仲間の語（語:品詞:意味 を | で区切る。≒は類義語、⇔は反対語）, なりたち] */
+const WX={
+'vacation':['ovonon','vacate:v:立ち退く・空ける|vacant:a:空いている','vac（空っぽ）。仕事を空けるのが休暇'],
+'client':['ovoanon','clientele:n:顧客層|≒ customer:n:客',''],
+'reservation':['ovonoooo','reserve:v:予約する・取っておく|reserved:a:予約済みの',''],
+'sincerely':['odvoon','sincere:a:心からの|sincerity:n:誠実さ',''],
+'supervisor':['vonovd','supervise:v:監督する|supervision:n:監督','super（上から）＋ vis（見る）'],
+'refund':['ovvoanoon','fund:n:資金|refundable:a:返金できる','re（戻す）＋ fund（お金）'],
+'goods':['onvvon','good:a:よい','複数形の s が付くと「商品」'],
+'workshop':['onvooo','work:v:働く|shop:n:店・作業場','work ＋ shop（作業場）'],
+'downtown':['onvvd','town:n:町|⇔ uptown:d:住宅地区に','down ＋ town'],
+'deadline':['ononvno','line:n:線','dead ＋ line。越えたら終わりの線'],
+'invoice':['dvonoonoon','≒ bill:n:請求書',''],
+'brochure':['onvooon','≒ pamphlet:n:小冊子|≒ leaflet:n:ちらし',''],
+'accountant':['onvon','account:n:口座・会計|accounting:n:会計の仕事','account ＋ ant（する人）'],
+'clerk':['onvovoan','clerical:a:事務の',''],
+'publish':['onvvvan','publisher:n:出版社|publication:n:出版物','public（公の）にする'],
+'résumé':['vonoonn','resume:v:再開する（つづりが似た別の語）',''],
+'enclose':['ovvonoon','close:v:閉じる|enclosure:n:同封物','en（中に）＋ close（閉じる）'],
+'applicant':['onvvvd','apply:v:応募する|application:n:応募・申込書','apply ＋ ant（する人）'],
+'seminar':['ovonon','≒ workshop:n:研修会',''],
+'technician':['onvvond','technical:a:技術の|technique:n:技術・手法','techn（技術）＋ ian（人）'],
+'fare':['onnvvan','≒ fee:n:料金|≒ charge:n:請求額','乗り物の料金に使う'],
+'receipt':['vonooovon','receive:v:受け取る|recipient:n:受取人','receive（受け取る）の名詞'],
+'luggage':['ovvononon','≒ baggage:n:手荷物','lug（引きずる）＋ age'],
+'shipment':['onvond','ship:v:発送する|shipping:n:配送','ship ＋ ment（名詞にする）'],
+'rental':['onnvn','rent:v:賃借りする|rent:n:家賃',''],
+'warranty':['onvooan','warrant:v:保証する|≒ guarantee:n:保証',''],
+'reception':['dvdoonn','receive:v:受け取る・迎える|receptionist:n:受付係','receive（迎える）の名詞'],
+'lease':['onoonvon','≒ rent:v:賃借りする|tenant:n:借り主',''],
+'notify':['dvooonon','notice:n:通知|notification:n:通知','not（知る）＋ ify（〜にする）'],
+'preview':['nvvoonoon','view:v:見る|review:v:見直す','pre（前もって）＋ view（見る）'],
+'attendant':['onnvn','attend:v:出席する・世話をする|attendance:n:出席|attendee:n:出席者','attend ＋ ant（する人）'],
+'subscription':['onnvon','subscribe:v:定期購読する|subscriber:n:購読者',''],
+'convenient':['onvaoo','convenience:n:便利さ|⇔ inconvenient:a:不便な',''],
+'manual':['vonovon','manually:d:手作業で','manu（手）。手引き書'],
+'obtain':['ovvonovd','contain:v:含む|maintain:v:維持する','tain（持つ）'],
+'inventory':['ovonon','≒ stock:n:在庫',''],
+'destination':['onvond','destined:a:〜行きの',''],
+'occupation':['dvonon','occupy:v:占める|occupied:a:使用中の','時間を占めるもの＝職業'],
+'postpone':['onvvon','⇔ advance:v:早める','post（後に）＋ pone（置く）'],
+'compact':['oanvoon','⇔ bulky:a:かさばる',''],
+'merchandise':['onvonod','merchant:n:商人',''],
+'receptionist':['onvvoonn','reception:n:受付|receive:v:迎える','reception ＋ ist（人）'],
+'identification':['dvnnoon','identify:v:特定する|identity:n:身元','略して ID'],
+'depart':['onvono','departure:n:出発|department:n:部門','de（離れて）＋ part（分かれる）'],
+'reschedule':['vovonon','schedule:v:予定に入れる','re（再び）＋ schedule'],
+'renovation':['onvaon','renovate:v:改装する','re（再び）＋ nov（新しい）'],
+'upgrade':['ovonan','grade:n:等級|⇔ downgrade:v:格下げする','up ＋ grade'],
+'precede':['oanvvon','proceed:v:進む|preceding:a:前の','pre（前に）＋ cede（行く）'],
+'replacement':['ovvonoon','replace:v:取り替える|place:v:置く','re（再び）＋ place（置く）'],
+'dine':['nvvoon','dinner:n:夕食|dining:n:食事',''],
+'coworker':['onvon','≒ colleague:n:同僚','co（一緒に）＋ worker'],
+'upcoming':['nooanvv','≒ forthcoming:a:今度の','up ＋ coming'],
+'cabinet':['onvvooan','cabin:n:小屋・客室',''],
+'appliance':['onvnn','apply:v:当てはめる・使う',''],
+'instructor':['onvon','instruct:v:指導する|instruction:n:指示・説明','instruct ＋ or（する人）'],
+'valid':['onvaoon','⇔ invalid:a:無効な|validate:v:有効にする',''],
+'admission':['noonvaon','admit:v:入ることを認める','admit の名詞'],
+'electrical':['oanvon','electric:a:電気で動く|electricity:n:電気|electrician:n:電気技師',''],
+'assignment':['oanvovon','assign:v:割り当てる','assign ＋ ment（名詞にする）'],
+'attendee':['onvvonn','attend:v:出席する|attendance:n:出席','attend ＋ ee（する人）'],
+'medication':['vonon','medical:a:医療の|medicine:n:薬','medic（医療）'],
+'renew':['ovvond','new:a:新しい|renewal:n:更新','re（再び）＋ new'],
+'tenant':['nvvnoon','⇔ landlord:n:家主',''],
+'departure':['vdonon','depart:v:出発する|⇔ arrival:n:到着',''],
+'inconvenience':['ovaoon','convenience:n:便利さ|inconvenient:a:不便な','in（否定）＋ convenience'],
+'banquet':['onnvvvoon','≒ reception:n:歓迎会',''],
+'expire':['onvan','expiration:n:期限切れ','ex（外へ）＋ spire（息）。息が切れる'],
+'photocopy':['dvonoo','copy:n:写し|photocopier:n:コピー機','photo ＋ copy'],
+'renovate':['onvvan','renovation:n:改装','re（再び）＋ nov（新しい）'],
+'donation':['onvnon','donate:v:寄付する|donor:n:寄付者','don（与える）'],
+'feedback':['ovnoon','','feed（与える）＋ back（戻す）'],
+'shortly':['onvvood','short:a:短い|≒ soon:d:まもなく','short ＋ ly。短い時間のうちに'],
+'warehouse':['onvvoon','≒ storage:n:保管場所','ware（品物）＋ house'],
+'copier':['onooanva','copy:v:複写する|photocopier:n:コピー機','copy ＋ er（するもの）'],
+'provider':['ovonn','provide:v:提供する|provision:n:提供','provide ＋ er（する人）'],
+'beverage':['nvvaon','≒ drink:n:飲み物',''],
+'inspection':['onnvvon','inspect:v:点検する|inspector:n:検査官',''],
+'recipient':['onvvoon','receive:v:受け取る|receipt:n:領収書','receive ＋ ent（する人）'],
+'aisle':['ovvonnd','⇔ window seat:n:窓側の席','s は読まない（アイル）'],
+'inspect':['nvonon','inspection:n:点検|inspector:n:検査官','in（中を）＋ spect（見る）'],
+'mechanic':['onvon','mechanical:a:機械の|mechanism:n:仕組み',''],
+'merger':['onooonvv','merge:v:合併する',''],
+'ingredient':['ovdan','≒ component:n:部品・成分',''],
+'itinerary':['ovvoonoon','≒ schedule:n:予定',''],
+'workplace':['noonva','','work ＋ place'],
+'architect':['onvoan','architecture:n:建築',''],
+'convenience':['dvooan','convenient:a:便利な|conveniently:d:便利に',''],
+'eligible':['anvaoon','eligibility:n:資格|⇔ ineligible:a:資格のない','be eligible for の形で使う'],
+'baggage':['vonooan','bag:n:かばん|≒ luggage:n:手荷物','bag ＋ age'],
+'container':['vonooan','contain:v:含む・入れる','contain ＋ er（するもの）'],
+'submission':['onnvnon','submit:v:提出する','submit の名詞'],
+'bulletin':['onvvoonn','≒ notice:n:お知らせ',''],
+'certificate':['ovvonoon','certify:v:証明する|certified:a:認定された','cert（確かな）'],
+'overtime':['nvvooan','','over（超えて）＋ time'],
+'donate':['ovnooan','donation:n:寄付|donor:n:寄付者','don（与える）'],
+'outstanding':['ovonoan','','stand out（目立つ）から'],
+'briefcase':['ovonoon','brief:n:要約・書類|case:n:入れ物','brief ＋ case'],
+'impact':['oanvoanon','≒ effect:n:影響',''],
+'innovative':['onvvoan','innovate:v:革新する|innovation:n:革新','in ＋ nov（新しい）'],
+'inquire':['ovvovoon','inquiry:n:問い合わせ',''],
+'overnight':['onvvd','','over ＋ night'],
+'venue':['onvvon','≒ site:n:場所',''],
+'commuter':['onvaon','commute:v:通勤する','commute ＋ er（する人）'],
+'newsletter':['oanvvon','','news ＋ letter'],
+'advisor':['oanvon','advise:v:助言する|advice:n:助言','advise ＋ or（する人）'],
+'cartridge':['onvoann','',''],
+'aspect':['nvdonoon','≒ side:n:側面','spect（見る）。見える面'],
+'audit':['oanvan','auditor:n:監査人',''],
+'contractor':['onvvovon','contract:n:契約|subcontractor:n:下請け業者','contract ＋ or（する人）'],
+'prohibit':['nvvoon','prohibition:n:禁止|≒ ban:v:禁止する',''],
+'terminal':['anvono','terminate:v:終わらせる','term（終わり）。路線の終点'],
+'supervise':['ovonoo','supervisor:n:監督者|supervision:n:監督','super（上から）＋ vise（見る）'],
+'developer':['onvovnd','develop:v:開発する|development:n:開発','develop ＋ er（する人）'],
+'headquarters':['onnvon','≒ head office:n:本社','head ＋ quarters（部署）'],
+'shuttle':['oanvoon','',''],
+'stationery':['vnoonn','stationary:a:動かない（つづりが似た別の語）',''],
+'subscribe':['voonon','subscription:n:定期購読|subscriber:n:購読者','sub（下に）＋ scribe（書く）。申込書の下に署名する'],
+'flavor':['onnvoon','flavored:a:〜味の',''],
+'recipe':['onvdon','receipt:n:領収書（つづりが似た別の語）',''],
+'refreshment':['nvvvoon','refresh:v:元気を回復させる|fresh:a:新鮮な','re ＋ fresh'],
+'administrative':['ovan','administer:v:管理する|administration:n:管理・運営',''],
+'authorize':['dnvvn','authority:n:権限|authorization:n:許可','author（権限のもと）＋ ize（〜にする）'],
+'commonly':['onvdvon','common:a:よくある・共通の',''],
+'distribution':['onvnon','distribute:v:配る|distributor:n:販売業者',''],
+'accommodate':['onvvon','accommodation:n:宿泊施設',''],
+'affordable':['ovanoon','afford:v:買う余裕がある','afford ＋ able（できる）'],
+'commute':['ovonon','commuter:n:通勤者',''],
+'coordinate':['ovonn','coordinator:n:調整役|coordination:n:調整','co（一緒に）＋ order（順序）'],
+'paperwork':['ovononov','','paper ＋ work'],
+'quit':['ovonovon','≒ resign:v:辞職する',''],
+'authority':['ovonovn','authorize:v:許可する|author:n:著者',''],
+'installation':['noonvon','install:v:設置する','install の名詞'],
+'availability':['dvonon','available:a:利用できる|⇔ unavailable:a:利用できない',''],
+'bargain':['onvoan','≒ deal:n:取引・お買い得',''],
+'complimentary':['nvoan','compliment:n:ほめ言葉|complementary:a:補い合う（つづりが似た別の語）',''],
+'productivity':['oanvn','produce:v:生産する|productive:a:生産的な|product:n:製品',''],
+'relocate':['onvvooan','locate:v:位置を定める|location:n:場所','re（再び）＋ locate'],
+'trainee':['nvooan','train:v:訓練する|trainer:n:指導者','train ＋ ee（される人）'],
+'transaction':['onvvd','transact:v:取引する','trans（越えて）＋ action'],
+'verify':['dvonn','verification:n:確認','ver（本当の）＋ ify（〜にする）'],
+'automobile':['onnvvd','≒ vehicle:n:乗り物','auto（自ら）＋ mobile（動く）'],
+'courier':['onvvon','≒ carrier:n:運送会社',''],
+'incomplete':['anvvv','complete:a:完全な|completion:n:完了','in（否定）＋ complete'],
+'questionnaire':['dvdoan','question:n:質問|≒ survey:n:調査',''],
+'lately':['nvvad','late:a:遅い|≒ recently:d:最近','late（遅い）とは意味が違う'],
+'machinery':['onvan','machine:n:機械','機械をまとめて指す。数えない'],
+'presenter':['onvon','present:v:発表する|presentation:n:発表','present ＋ er（する人）'],
+'seldom':['ovdaon','≒ rarely:d:めったに〜ない|⇔ often:d:よく',''],
+'signature':['onvvono','sign:v:署名する','sign の名詞'],
+'worldwide':['onvvd','≒ globally:d:世界的に','world ＋ wide'],
+'carrier':['onvooon','carry:v:運ぶ','carry ＋ er（するもの）'],
+'designate':['onvonon','designated:a:指定された|designation:n:指定',''],
+'exclusive':['nvan','exclude:v:除外する|exclusively:d:もっぱら|⇔ inclusive:a:含めた','ex（外に）＋ clude（閉じる）'],
+'grocery':['ovoonnoond','grocer:n:食料品店の店主',''],
+'memorandum':['onvvoon','memo:n:メモ（短縮形）|memory:n:記憶','mem（記憶）'],
+'photocopier':['onvoon','photocopy:v:コピーする',''],
+'suite':['ovonoon','suit:n:スーツ（つづりが似た別の語）','読みはスイート'],
+'thorough':['ovoanoon','thoroughly:d:徹底的に|through:p:〜を通って（つづりが似た別の語）',''],
+'cater':['oanvvon','catering:n:仕出し|caterer:n:仕出し業者',''],
+'dental':['onvan','dentist:n:歯科医','dent（歯）'],
+'duration':['dvaoonoon','during:p:〜の間|durable:a:長持ちする','dur（続く）'],
+'lounge':['ovvoon','',''],
+'patron':['nvvoon','patronage:n:ひいき・愛顧',''],
+'prescription':['ovonoon','prescribe:v:処方する','pre（前もって）＋ script（書く）'],
+'productive':['ovodan','productivity:n:生産性|product:n:製品',''],
+'stack':['nvvoon','≒ pile:v:積み上げる',''],
+'delegate':['noonv','delegation:n:代表団',''],
+'salesperson':['onvooan','sale:n:販売','sales ＋ person'],
+'completion':['nvaonoon','complete:v:完了する|⇔ incomplete:a:不完全な',''],
+'defect':['onvvooon','defective:a:欠陥のある',''],
+'omit':['vdvonn','omission:n:省略',''],
+'correspondence':['vnoon','correspond:v:文通する・一致する|correspondent:n:特派員',''],
+'anniversary':['onvvoan','annual:a:年1回の','ann（年）＋ vers（回る）'],
+'buffet':['nvvvoon','','t は読まない（バフェイ）'],
+'defective':['vanoon','defect:n:欠陥',''],
+'leak':['ovonnoon','leakage:n:漏れ（の量）',''],
+'occupancy':['onnvaon','occupy:v:占める|occupant:n:入居者',''],
+'proficiency':['onvnon','proficient:a:熟達した',''],
+'renewal':['onnvon','renew:v:更新する','renew の名詞'],
+'urgent':['ovoanoon','urgency:n:緊急|urgently:d:緊急に','urge（せきたてる）'],
+'annually':['onvvd','annual:a:年1回の|anniversary:n:記念日','ann（年）'],
+'accurately':['dvdond','accurate:a:正確な|accuracy:n:正確さ|⇔ inaccurate:a:不正確な',''],
+'inspector':['onvon','inspect:v:点検する|inspection:n:点検','inspect ＋ or（する人）'],
+'intern':['ovoonan','internship:n:実習（の期間）',''],
+'confirmation':['ovvonon','confirm:v:確認する','confirm の名詞'],
+'expertise':['ovoonon','expert:n:専門家',''],
+'utility':['nvdvn','utilize:v:利用する','複数形で電気・ガス・水道'],
+'voucher':['vonooan','≒ coupon:n:割引券',''],
+'behalf':['ovvonoon','','on behalf of ＋ 人 の形で使う'],
+'minimize':['ovovn','minimum:n:最小限|⇔ maximize:v:最大にする','mini（小さい）＋ ize（〜にする）'],
+'optional':['onnva','option:n:選択肢|⇔ mandatory:a:必須の',''],
+'paycheck':['nvvoon','payroll:n:給与（の台帳）','pay ＋ check（小切手）']
+};
+const PN={n:'名詞',v:'動詞',a:'形容詞',d:'副詞',p:'前置詞'};
+function exHtml(q){const x=WX[q.w],toks=q.ex.split(' '),key=q.w.toLowerCase().slice(0,Math.max(4,q.w.length-3));
+  return toks.map((t,i)=>{const k=x&&x[0][i];const c=(k&&k!=='o'?'k-'+k:'k-o')+(t.toLowerCase().includes(key)?' tw':'');return `<span class="${c}">${esc(t)}</span>`}).join(' ')}
+function famHtml(q){const x=WX[q.w];if(!x)return '';let h='';
+  if(x[2])h+=`<p class="hk"><span class="lab">なりたち</span>${esc(x[2])}</p>`;
+  if(x[1])h+=`<div class="fam"><span class="lab">仲間の語</span><ul>${x[1].split('|').map(e=>{const [w,k,j]=e.split(':');return `<li><span class="en k-${k==='p'?'o':k}">${esc(w)}</span><small>${PN[k]||''}</small><span>${esc(j)}</span></li>`}).join('')}</ul></div>`;
+  return h}
 const TITLES=['見習い','門下生','初段','二段','三段','四段','師範代','師範'];
 const TRIGGERS=['朝食を食べ終えたら','8:20の英単語の前に','昼食を食べ終えたら','夕食を食べ終えたら','ゲームを始める前に','布団に入る前に'];
 const IV=[0,1,3,7,14,30];
@@ -785,7 +997,7 @@ function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=i
   else h+=`<p class="stem">${esc(q.q)}</p>`;
   const afx=ans&&un.part!==0&&afxOn(it.opts);
   h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c+=' right';if(k===it.pick)c+=oi===0?' picked':' picked wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><span class="mark">${'ABCD'[k]}</span>${afx?afxHtml(it.opts[oi]):`<span${un.part===0?' class="ja"':''}>${esc(it.opts[oi])}</span>`}</button>`}).join('')}</div>`;
-  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b></p><p class="en">${esc(q.ex)}</p><p class="sub">${esc(q.exj)}</p>`:`<p>${esc(q.ex)}</p>`}</div>
+  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b>　<small class="k-${q.pos}">${PN[q.pos]}</small></p><p class="cex">${exHtml(q)}</p><p class="sub">${esc(q.exj)}</p><p class="leg"><span class="k-n">名詞</span><span class="k-v">動詞</span><span class="k-a">形容詞</span><span class="k-d">副詞</span></p>${famHtml(q)}`:`<p>${esc(q.ex)}</p>`}</div>
     <button class="btn pri" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果'}</button>`}
   return h}
 
