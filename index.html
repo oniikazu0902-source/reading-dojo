@@ -95,7 +95,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .stem .ex{display:block;font-size:16px;color:var(--sub);margin-top:4px}
 .blank{letter-spacing:.05em;white-space:nowrap}
 .blank.cur{border-bottom:2px solid var(--pen);color:var(--pen)}
-.filled{text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px}
+.filled{color:var(--pen);font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 .opts{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
 .opt{display:flex;gap:14px;align-items:center;text-align:left;border:0;border-bottom:1px solid var(--rule);background:none;padding:13px 2px;font-family:var(--f-en);font-size:16px;line-height:1.45;color:var(--ink)}
 .opt:disabled{color:var(--ink);cursor:default}
@@ -109,6 +109,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .pl{display:block;font-family:var(--f-body);font-size:12px;line-height:1.5;margin-top:2px}
 .pl b{font-weight:700;margin-right:8px}
 .k-n{color:var(--k-n)} .k-v{color:var(--k-v)} .k-a{color:var(--k-a)} .k-d{color:var(--k-d)} .k-o{color:var(--sub)}
+.clue{text-decoration:underline wavy var(--red);text-decoration-thickness:1.5px;text-underline-offset:5px;text-decoration-skip-ink:none}
+.clue sup{font-family:var(--f-body);font-size:10px;font-weight:700;color:var(--red);margin-left:1px}
+.ans{color:var(--pen);font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.clues{list-style:none;padding:0;margin:10px 0 12px;display:grid;gap:8px}
+.clues li{display:flex;gap:10px;align-items:baseline}
+.clues .cn{flex:none;width:20px;height:20px;border:1.5px solid var(--red);border-radius:50%;color:var(--red);font-size:11px;font-weight:700;display:inline-grid;place-items:center}
+.clues .en{font-family:var(--f-en);font-size:15px;margin-right:8px}
+.clues small{font-size:13px;color:var(--sub)}
 .tw{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 .cex{font-family:var(--f-en);font-size:19px;line-height:1.6}
 .stem .leg{font-family:var(--f-body);margin-top:6px}
@@ -832,6 +840,114 @@ const WX={
 'optional':['onnva','option:n:選択肢|⇔ mandatory:a:必須の',''],
 'paycheck':['nvvoon','payroll:n:給与（の台帳）','pay ＋ check（小切手）']
 };
+/* 答え合わせで文中に付ける印。[語句, 説明]。語句は文や本文にそのまま出てくる形で書く。 */
+const CLUE={
+'pos-1':[['reviewed','動詞。動詞を飾るのは副詞']],
+'pos-2':[['a very','冠詞＋very'],['presentation','名詞。名詞の前は形容詞']],
+'pos-3':[['The','冠詞'],['of','前置詞。冠詞と前置詞の間は名詞']],
+'pos-4':[['have increased','動詞。動詞を飾るのは副詞']],
+'pos-5':[['are','be動詞のあとは形容詞'],['for','be responsible for の形']],
+'pos-6':[['a','冠詞'],['candidate','名詞。名詞の前は形容詞']],
+'pos-7':[['Customer','名詞と組んで1つの名詞'],['is','動詞。前に主語（名詞）が要る']],
+'pos-8':[['will','助動詞のあとは動詞の原形'],['the process','目的語']],
+'pos-9':[['was','be動詞'],['accepted','過去分詞。間に入るのは副詞']],
+'pos-10':[['is','be動詞'],['located','過去分詞。間に入るのは副詞']],
+'verb-1':[['yesterday afternoon','過去の一時点なので過去形']],
+'verb-2':[['since 2015','〜からずっと。現在完了']],
+'verb-3':[['The annual meeting','会議は開かれる側。受動態'],['next Monday','未来']],
+'verb-4':[['are required','be required to do の形']],
+'verb-5':[['The invoices','請求書は送られる側'],['to all customers','目的語がない。受動態'],['last week','過去']],
+'verb-6':[['Each','単数あつかい'],['employees','複数形につられない']],
+'verb-7':[['look forward to','この to は前置詞。うしろは -ing']],
+'verb-8':[['If','条件の if。未来でも現在形']],
+'verb-9':[['suggested','suggest のあとは -ing']],
+'verb-10':[['By the time','その時までに'],['arrives','現在形で未来を表す。だから未来完了']],
+'pron-1':[['directly to','前置詞 to のあとは目的格'],['Ms. Kim','her が指す人。主語の staff とは別']],
+'pron-2':[['by','by oneself「ひとりで」'],['Mr. Brown','himself が指す人']],
+'pron-3':[['profits','名詞。前は所有格'],['The company','its が指すもの']],
+'pron-4':[['who wish','複数形の動詞。those who 〜']],
+'pron-5':[['of the two forms','2つのうちの'],['is','単数の動詞。だから each']],
+'pron-6':[['a colleague','hers が指す人'],['lent me','うしろに名詞がない。所有代名詞']],
+'pron-7':[['one','one another「お互い」']],
+'pron-8':[['Some','some 〜, others 〜 の組'],['prefer to','複数形の動詞']],
+'prep-1':[['the heavy rain','名詞のかたまり。だから前置詞']],
+'prep-2':[['the flight was delayed','主語＋動詞。だから接続詞']],
+'prep-3':[['the renovation','名詞。だから前置詞']],
+'prep-4':[['submit','提出は1回で終わる行為。期限の by']],
+'prep-5':[['remain open','続く状態。継続の until']],
+'prep-6':[['a scheduling conflict','名詞のかたまり。だから前置詞']],
+'prep-7':[['three business days','期間。〜以内に']],
+'prep-8':[['we cannot offer a refund','否定の結果。〜しない限り']],
+'prep-9':[['he sends','主語＋動詞。だから接続詞']],
+'prep-10':[['and','both A and B']],
+'rel-1':[['The employee','先行詞は人'],['won','won の主語が欠けている']],
+'rel-2':[['team','名詞が続く。だから whose']],
+'rel-3':[['The report','先行詞は物'],['wrote','目的語が欠けている']],
+'rel-4':[['The hotel','先行詞は場所'],['the conference will take place','欠けのない文。だから where']],
+'rel-5':[['than','比較級の合図']],
+'rel-6':[['Of all the candidates','〜の中で。最上級の合図'],['is the','the＋最上級']],
+'rel-7':[['as','as 〜 as の間は原級'],['works','動詞。飾るのは副詞']],
+'rel-8':[['surprised','主語がない。先行詞なしの What'],['was','What 〜 のかたまりが主語']],
+'vocab-1':[['to the attached file','refer to 〜']],
+'vocab-2':[['into Asian markets','expand A into B']],
+'vocab-3':[['scheduling','scheduling conflict で1語'],['moved to Thursday','重なったので移動']],
+'vocab-4':[['the Tokyo branch','代表する対象'],['at the trade fair','展示会で']],
+'vocab-5':[['with','with をとるのは comply']],
+'vocab-6':[['to customers','be available to 人']],
+'vocab-7':[['apologize for','おわびの定番'],['the delay','遅れが不便を生む']],
+'vocab-8':[['The warranty','保証は期限が切れるもの']],
+'vocab-9':[['your seat','席は予約するもの'],['in advance','前もって']],
+'vocab-10':[['Prices have risen','どう上がったか'],['over the past year','1年かけて。着実に']],
+'p6-1-1':[['Our technicians will be','will be ＋ -ing'],['routine maintenance','目的語がある。能動']],
+'p6-1-2':[['will be out of service','東棟は止まる'],['will operate as usual','西棟は動く。逆の内容']],
+'p6-1-3':[['recommend that','recommend that ＋ 原形'],['tenants with heavy deliveries','that 節の主語']],
+'p6-1-4':[['Thank you for your understanding.','直後の文。おわびとつながる']],
+'p6-2-1':[['out of','out of stock'],['a new shipment','入荷の話。在庫切れとつながる']],
+'p6-2-2':[['you would like to wait','条件'],['we will send','そのときの結果']],
+'p6-2-3':[['which option','どちらの選択肢。2つめの案が要る']],
+'p6-2-4':[['appreciate your','所有格のあとは名詞']],
+'p6-3-1':[['Starting next month','来月。未来'],['training sessions','研修は開かれる側。受動態']],
+'p6-3-2':[['Staff members who cannot attend','出られない人は連絡。出席が必須']],
+'p6-3-3':[['session should','単数形。だから either']],
+'p6-3-4':[['training is completed','主語＋動詞。接続詞'],['you will receive','終わったら受け取る']],
+'p7s-1-1':[['Fitness Center','fitness facility の言い換え'],['access to our gym, swimming pool','会員が使える施設']],
+'p7s-1-2':[['Personal training sessions','Personal training'],['for an additional charge','costs extra の言い換え']],
+'p7s-1-3':[['Bring this advertisement','presenting the advertisement の言い換え'],['free one-day trial pass','free trial pass']],
+'p7s-2-1':[['During this period, please park in the visitor lot','工事中だけの駐車の案内。temporary']],
+'p7s-2-2':[['A parking permit for the visitor lot is required','許可証が必要'],['pick one up','obtain の言い換え']],
+'p7s-2-3':[['it may be extended','take longer の言い換え'],['in case of rain','bad weather の言い換え']],
+'p7s-3-1':[['I left the product samples on my desk','forgot to bring some items の言い換え']],
+'p7s-3-2':[['Do you want me to bring them over?','持っていこうか'],['That would be great.','お願いされた。No problem は引き受け']],
+'p7s-3-3':[["I'll wait for you in the lobby",'In a lobby']],
+'p7s-4-1':[['open a second location','expansion の言い換え']],
+'p7s-4-2':[['selling bread at a weekend market','began by selling at a market の言い換え']],
+'p7s-4-3':[['seating for 40 customers','A seating area の言い換え']],
+'p7s-4-4':[['Job applications','applying for jobs'],['starting May 1','On May 1']],
+'p7s-5-1':[['reserve books, renew borrowed items, and check due dates','書いてあるのは3つ。残りが答え']],
+'p7s-5-2':[['please bring photo identification','Photo identification']],
+'p7s-5-3':[['free 15-minute demonstrations every Saturday in September','Demonstrations will be given']],
+'p7s-6-1':[['which took forever to boil','was slow の言い換え']],
+'p7s-6-2':[['My only complaint is the cord','不満。dislike'],['too short','length（長さ）の問題']],
+'p7s-6-3':[['Rating: 4 out of 5','高い評価'],['I would recommend it to friends','すすめたい。満足している']],
+'p7d-1-1':[['November 14','メールの日付'],['Home Cooking: Italian: Nov. 14','お知らせで同じ日を探す']],
+'p7d-1-2':[['$45','料理の料金'],['I am a member of the center','グラントさんは会員'],['Members receive a 10% discount','会員は10%引き。45 − 4.50']],
+'p7d-1-3':[['allergic to nuts','ナッツのアレルギー'],['whether the recipes use any','ingredients の言い換え']],
+'p7d-1-4':[['register at least three days before each workshop','advance registration の言い換え']],
+'p7d-2-1':[['change the delivery to standard shipping','change a delivery method の言い換え']],
+'p7d-2-2':[['Express shipping (2 business days): $12','速達は12ドル'],['a desk lamp ($38)','38ドル。50ドルを超えない'],['Standard shipping (5-7 business days): $5','通常は5ドル。差額は7ドル']],
+'p7d-2-3':[['available only for orders placed before noon','before noon は in the morning']],
+'p7d-2-4':[['Return shipping is free if the item is defective','defective は has a fault']]
+};
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+/* raw の中で clues を探し、印を付けた HTML を返す。found に番号つきの説明を積む。post は印付け後の HTML に施す置換 */
+function markup(raw,clues,found,post){const rs=[];
+  clues.forEach((c,i)=>{if(found.some(f=>f.i===i))return;const m=new RegExp('(?<![A-Za-z0-9])'+reEsc(c[0])+'(?![A-Za-z0-9])').exec(raw);if(!m)return;
+    const s=m.index,e=s+c[0].length;if(rs.some(r=>s<r.e&&e>r.s))return;rs.push({s,e,i});found.push({i,c})});
+  rs.sort((a,b)=>a.s-b.s);let h='',p=0;
+  rs.forEach(r=>{h+=esc(raw.slice(p,r.s))+`<span class="clue">${esc(raw.slice(r.s,r.e))}<sup>${r.i+1}</sup></span>`;p=r.e});
+  h+=esc(raw.slice(p));return post?post(h):h}
+function clueList(found){if(!found.length)return '';found.sort((a,b)=>a.i-b.i);
+  return `<ol class="clues">${found.map(f=>`<li><span class="cn">${f.i+1}</span><span><span class="en">${esc(f.c[0])}</span><small>${esc(f.c[1])}</small></span></li>`).join('')}</ol>`}
 const PN={n:'名詞',v:'動詞',a:'形容詞',d:'副詞',p:'前置詞'};
 function exHtml(q){const x=WX[q.w],toks=q.ex.split(' '),key=q.w.toLowerCase().slice(0,Math.max(4,q.w.length-3));
   return toks.map((t,i)=>{const k=x&&x[0][i];const c=(k&&k!=='o'?'k-'+k:'k-o')+(t.toLowerCase().includes(key)?' tw':'');return `<span class="${c}">${esc(t)}</span>`}).join(' ')}
@@ -987,18 +1103,19 @@ function vSetup(){let h=`<div class="head"><h1>設定</h1></div>`;
 
 function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=it.pick!=null;let h='';
   h+=`<div class="shead"><button class="link" data-act="quit">やめる</button><span class="lab">${uname(un)}</span><div class="dots">${sess.items.map((x,i)=>`<i class="${x.ok===true?'ok':x.ok===false?'ng':i===sess.i?'cur':''}"></i>`).join('')}</div></div>`;
-  if(sess.set){sess.set.docs.forEach(d=>{let t=esc(d.t);
-    if(un.part===6)t=t.replace(/\[(\d)\]/g,(m,n)=>{n=+n;const x=sess.items[n-1];if(x.pick!=null)return `<span class="filled">${esc(ITEM[x.id].o[0])}</span>`;return `<span class="blank${n-1===sess.i?' cur':''}">(${n}) -------</span>`});
+  const cl=ans&&CLUE[it.id],found=[];
+  if(sess.set){sess.set.docs.forEach(d=>{const b6=h=>un.part!==6?h:h.replace(/\[(\d)\]/g,(m,n)=>{n=+n;const x=sess.items[n-1];if(x.pick!=null)return `<span class="filled">${esc(ITEM[x.id].o[0])}</span>`;return `<span class="blank${n-1===sess.i?' cur':''}">(${n}) -------</span>`});
+    const t=cl?markup(d.t,cl,found,b6):b6(esc(d.t));
     h+=`<div class="doc"><span class="dh">${esc(d.h)}</span>${t}</div>`})}
   h+=`<div id="qtop"></div>`;
   if(!ans)h+=`<div class="timer" title="目安の時間"><i style="animation-duration:${un.per}s"></i></div>`;
   if(un.part===0)h+=`<p class="stem"><span class="w">${esc(q.w)}</span><span class="ex cex">${exHtml(q)}</span><span class="leg"><span class="k-n">名詞</span><span class="k-v">動詞</span><span class="k-a">形容詞</span><span class="k-d">副詞</span></span></p>`;
-  else if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
+  else if(un.part===5)h+=`<p class="stem">${ans?markup(q.q.replace(/-{5,}/,'\u0001'),cl||[],found,x=>x.replace('\u0001',`<span class="ans">${esc(q.o[0])}</span>`)):blank(q.q)}</p>`;
   else if(un.part===6)h+=`<p class="stem jp">(${q.n}) に入るのは</p>`;
   else h+=`<p class="stem">${esc(q.q)}</p>`;
   const afx=ans&&un.part!==0&&afxOn(it.opts);
   h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c+=' right';if(k===it.pick)c+=oi===0?' picked':' picked wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><span class="mark">${'ABCD'[k]}</span>${afx?afxHtml(it.opts[oi]):`<span${un.part===0?' class="ja"':''}>${esc(it.opts[oi])}</span>`}</button>`}).join('')}</div>`;
-  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b>　<small class="k-${q.pos}">${PN[q.pos]}</small></p><p class="sub">${esc(q.exj)}</p>${famHtml(q)}`:`<p>${esc(q.ex)}</p>`}</div>
+  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b>　<small class="k-${q.pos}">${PN[q.pos]}</small></p><p class="sub">${esc(q.exj)}</p>${famHtml(q)}`:`${clueList(found)}<p>${esc(q.ex)}</p>`}</div>
     <button class="btn pri" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果'}</button>`}
   return h}
 
