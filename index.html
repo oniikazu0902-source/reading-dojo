@@ -19,14 +19,15 @@
 /* Layout: 紙の答案用紙。枠で囲まず余白と細い罫線で区切る。丸は赤ペン、選択はマークシートの楕円、達成は出席カードのはんこ。 */
 :root{
   --paper:#fbfbf8; --ink:#1c1e24; --sub:#6a6f7b; --rule:#d9d9d2; --pen:#1d4f9f; --red:#c8321f; --pencil:#3a3d45; --box:#ffffff;
+  --k-n:#1d4f9f; --k-v:#19703f; --k-a:#b25a00; --k-d:#7a3fa0;
   --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
   --f-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
   --f-en:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --paper:#16181d; --ink:#e9e7e1; --sub:#9b9fa9; --rule:#33363e; --pen:#8fb2f0; --red:#ff7461; --pencil:#c9ccd4; --box:#1d2026; color-scheme:dark } }
+  --paper:#16181d; --ink:#e9e7e1; --sub:#9b9fa9; --rule:#33363e; --pen:#8fb2f0; --red:#ff7461; --pencil:#c9ccd4; --box:#1d2026; --k-n:#8fb2f0; --k-v:#6fcf97; --k-a:#f0a95a; --k-d:#c9a0e8; color-scheme:dark } }
 :root[data-theme="dark"]{
-  --paper:#16181d; --ink:#e9e7e1; --sub:#9b9fa9; --rule:#33363e; --pen:#8fb2f0; --red:#ff7461; --pencil:#c9ccd4; --box:#1d2026; color-scheme:dark }
+  --paper:#16181d; --ink:#e9e7e1; --sub:#9b9fa9; --rule:#33363e; --pen:#8fb2f0; --red:#ff7461; --pencil:#c9ccd4; --box:#1d2026; --k-n:#8fb2f0; --k-v:#6fcf97; --k-a:#f0a95a; --k-d:#c9a0e8; color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
 #app{max-width:520px;margin:0 auto;padding-block:22px 100px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:30px}
@@ -104,6 +105,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .opt.right .mark::after{content:"";position:absolute;inset:-8px -7px;border:2.5px solid var(--red);border-radius:52% 48% 50% 50%/46% 54% 46% 54%;transform:rotate(-7deg)}
 .opt.wrong::after{content:"✕";margin-left:auto;color:var(--red);font-weight:700;font-family:var(--f-body)}
 .opt>span:last-child{min-width:0}
+.sfx{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.pl{display:block;font-family:var(--f-body);font-size:12px;line-height:1.5;margin-top:2px}
+.pl b{font-weight:700;margin-right:8px}
+.k-n{color:var(--k-n)} .k-v{color:var(--k-v)} .k-a{color:var(--k-a)} .k-d{color:var(--k-d)}
 .fb{display:flex;flex-direction:column;gap:4px}
 .fb .res{font-family:var(--f-head);font-size:20px;font-weight:700;color:var(--red)}
 .fb .res small{font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--sub);margin-left:8px}
@@ -601,6 +606,26 @@ UNITS.forEach(u=>{BYUNIT[u.id]=[];SETBY[u.id]=[]});
 (function(){const c={};Q5.forEach(r=>{c[r[0]]=(c[r[0]]||0)+1;const id=r[0]+'-'+c[r[0]];ITEM[id]={id,u:r[0],q:r[1],o:r[2],ex:r[3]};BYUNIT[r[0]].push(id)});
  WORDS.forEach((r,i)=>{const id='word-'+(i+1);ITEM[id]={id,u:'word',idx:i,w:r[0],pos:r[1],ja:r[2],ex:r[3],exj:r[4]};BYUNIT.word.push(id)});
  SETS.forEach(s=>{SETBY[s.u].push(s);s.qs.forEach((q,i)=>{const id=s.id+'-'+(i+1);q.id=id;q.u=s.u;q.n=i+1;ITEM[id]=q;BYUNIT[s.u].push(id)})})})();
+/* 語尾と品詞。値は [語尾の文字数, 種類]。4つの選択肢がすべてここにある問題だけ、解説で表示する。 */
+const AFX={carefully:[2,'d'],careful:[3,'a'],care:[0,'nv'],caring:[3,'ving'],
+ impressive:[3,'a'],impress:[0,'v'],impressively:[2,'d'],impression:[3,'n'],
+ installation:[5,'n'],install:[0,'v'],installed:[2,'ved'],installs:[1,'vs'],
+ significantly:[2,'d'],significant:[3,'a'],significance:[4,'n'],signify:[3,'v'],
+ responsible:[4,'a'],responsibly:[2,'d'],responsibility:[3,'n'],respond:[0,'v'],
+ qualified:[2,'eda'],qualify:[3,'v'],qualification:[4,'n'],qualifies:[2,'vs'],
+ satisfaction:[4,'n'],satisfy:[2,'v'],satisfied:[2,'eda'],satisfactory:[3,'a'],
+ simplify:[3,'v'],simple:[0,'a'],simply:[2,'d'],simplicity:[3,'n'],
+ finally:[2,'d'],final:[2,'a'],finalize:[3,'v'],finals:[1,'npl'],
+ conveniently:[2,'d'],convenient:[3,'a'],convenience:[4,'n'],conveniences:[1,'npl'],
+ performing:[3,'ving'],performed:[2,'ved'],performance:[4,'n'],perform:[0,'v'],
+ patience:[4,'n'],patient:[3,'a'],patiently:[2,'d'],patients:[1,'npl'],
+ high:[0,'a'],higher:[2,'cmp'],highest:[3,'sup'],highly:[2,'d']};
+const KIND={n:['n','名詞','ヒト・モノ・コト'],npl:['n','名詞（複数）','ヒト・モノ・コト'],nv:['n','名詞・動詞','語尾なし。どちらにもなる'],
+ v:['v','動詞','ウゴキ・状態'],vs:['v','動詞（主語が単数）','ウゴキ・状態'],ving:['v','動詞の -ing 形','〜している・〜すること'],ved:['v','動詞の -ed 形','〜した・〜された'],
+ a:['a','形容詞','どんな（名詞を説明）'],eda:['a','形容詞の働き','-ed 形が名詞を説明'],cmp:['a','比較級','より〜'],sup:['a','最上級','いちばん〜'],
+ d:['d','副詞','どのように（動詞などを説明）']};
+function afxOn(opts){return opts.every(o=>AFX[o])}
+function afxHtml(w){const a=AFX[w],k=KIND[a[1]],n=a[0];return `<span>${esc(w.slice(0,w.length-n))}${n?`<span class="sfx k-${k[0]}">${esc(w.slice(-n))}</span>`:''}<span class="pl k-${k[0]}"><b>${k[1]}</b>${k[2]}</span></span>`}
 const TITLES=['見習い','門下生','初段','二段','三段','四段','師範代','師範'];
 const TRIGGERS=['朝食を食べ終えたら','8:20の英単語の前に','昼食を食べ終えたら','夕食を食べ終えたら','ゲームを始める前に','布団に入る前に'];
 const IV=[0,1,3,7,14,30];
@@ -758,7 +783,8 @@ function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=i
   else if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
   else if(un.part===6)h+=`<p class="stem jp">(${q.n}) に入るのは</p>`;
   else h+=`<p class="stem">${esc(q.q)}</p>`;
-  h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c+=' right';if(k===it.pick)c+=oi===0?' picked':' picked wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><span class="mark">${'ABCD'[k]}</span><span${un.part===0?' class="ja"':''}>${esc(it.opts[oi])}</span></button>`}).join('')}</div>`;
+  const afx=ans&&un.part!==0&&afxOn(it.opts);
+  h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c+=' right';if(k===it.pick)c+=oi===0?' picked':' picked wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><span class="mark">${'ABCD'[k]}</span>${afx?afxHtml(it.opts[oi]):`<span${un.part===0?' class="ja"':''}>${esc(it.opts[oi])}</span>`}</button>`}).join('')}</div>`;
   if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b></p><p class="en">${esc(q.ex)}</p><p class="sub">${esc(q.exj)}</p>`:`<p>${esc(q.ex)}</p>`}</div>
     <button class="btn pri" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果'}</button>`}
   return h}
