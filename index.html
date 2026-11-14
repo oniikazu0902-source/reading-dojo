@@ -111,6 +111,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .k-n{color:var(--k-n)} .k-v{color:var(--k-v)} .k-a{color:var(--k-a)} .k-d{color:var(--k-d)} .k-o{color:var(--sub)}
 .tw{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 .cex{font-family:var(--f-en);font-size:19px;line-height:1.6}
+.stem .leg{font-family:var(--f-body);margin-top:6px}
 .leg{display:flex;gap:12px;font-size:12px;font-weight:700}
 .hk,.fam{border-top:1px solid var(--rule);padding-top:10px;margin-top:6px}
 .hk .lab,.fam .lab{display:block;margin-bottom:2px}
@@ -991,13 +992,13 @@ function vSess(){const it=sess.items[sess.i],q=ITEM[it.id],un=UNIT[sess.u],ans=i
     h+=`<div class="doc"><span class="dh">${esc(d.h)}</span>${t}</div>`})}
   h+=`<div id="qtop"></div>`;
   if(!ans)h+=`<div class="timer" title="目安の時間"><i style="animation-duration:${un.per}s"></i></div>`;
-  if(un.part===0)h+=`<p class="stem"><span class="w">${esc(q.w)}</span><span class="ex">${esc(q.ex)}</span></p>`;
+  if(un.part===0)h+=`<p class="stem"><span class="w">${esc(q.w)}</span><span class="ex cex">${exHtml(q)}</span><span class="leg"><span class="k-n">名詞</span><span class="k-v">動詞</span><span class="k-a">形容詞</span><span class="k-d">副詞</span></span></p>`;
   else if(un.part===5)h+=`<p class="stem">${blank(q.q)}</p>`;
   else if(un.part===6)h+=`<p class="stem jp">(${q.n}) に入るのは</p>`;
   else h+=`<p class="stem">${esc(q.q)}</p>`;
   const afx=ans&&un.part!==0&&afxOn(it.opts);
   h+=`<div class="opts">${it.order.map((oi,k)=>{let c='';if(ans){if(oi===0)c+=' right';if(k===it.pick)c+=oi===0?' picked':' picked wrong'}return `<button class="opt${c}" data-act="ans" data-v="${k}"${ans?' disabled':''}><span class="mark">${'ABCD'[k]}</span>${afx?afxHtml(it.opts[oi]):`<span${un.part===0?' class="ja"':''}>${esc(it.opts[oi])}</span>`}</button>`}).join('')}</div>`;
-  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b>　<small class="k-${q.pos}">${PN[q.pos]}</small></p><p class="cex">${exHtml(q)}</p><p class="sub">${esc(q.exj)}</p><p class="leg"><span class="k-n">名詞</span><span class="k-v">動詞</span><span class="k-a">形容詞</span><span class="k-d">副詞</span></p>${famHtml(q)}`:`<p>${esc(q.ex)}</p>`}</div>
+  if(ans){const sec=Math.round(it.ms/1000);h+=`<div id="fb" class="fb"><p class="res">${it.ok?'正解':'不正解'}<small>${sec}秒（目安${un.per}秒）</small></p>${un.part===0?`<p><b>${esc(q.ja)}</b>　<small class="k-${q.pos}">${PN[q.pos]}</small></p><p class="sub">${esc(q.exj)}</p>${famHtml(q)}`:`<p>${esc(q.ex)}</p>`}</div>
     <button class="btn pri" data-act="next">${sess.i<sess.items.length-1?'次へ':'結果'}</button>`}
   return h}
 
