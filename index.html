@@ -1045,7 +1045,7 @@ function slots(){return `<div class="slots">${Array.from({length:Math.max(S.quot
 function vHome(){const L=level(),dt=daysToTest(),lk=locked();let h='';
   h+=`<div class="head"><div><h1>リーディング道場</h1><p class="sub">${dlabel(S.day.key)}${dt!=null&&dt>=0?(dt===0?'　今日が本番':`　本番まであと${dt}日`):''}</p></div><div class="rank">${L.title}<br><span class="lab">Lv.${L.lv}</span></div></div>`;
   if(done)h+=vDone();
-  if(!S.setup){h+=`<div class="sec"><h2>いつやるか、先に決める</h2><p class="sub">毎日かならずやっていることの直後がおすすめです。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><div><button class="btn" data-act="setupdone"${S.trigger?'':' disabled'}>決定</button></div></div>`}
+  if(!S.setup){h+=`<div class="sec"><h2>いつやるか、先に決めよう</h2><p class="sub">毎日かならずやっていることの直後がおすすめです。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><div><button class="btn" data-act="setupdone"${S.trigger?'':' disabled'}>決定</button></div></div>`}
   h+=`<div class="sec"><div class="row between"><span class="lab">今日の分${FREE?'　<span class="red">上限なし</span>':''}</span><span class="sub">連続 <b class="num">${S.streak}</b> 日</span></div>${slots()}`;
   if(!lk){const u=recommend(),un=UNIT[u],st=ustat(u);
     h+=`<div style="margin-top:8px"><p class="lab">${S.day.done+1}本目</p><h2>${uname(un)}</h2><p class="sub">${est(u)}${st.due?`　<span class="red">復習${st.due}問</span>`:''}</p></div>
