@@ -15,8 +15,10 @@ TOEIC Reading（Part 5〜7）を、1日決まった回数だけ解く練習ア�
 | `manifest.webmanifest` | ホーム画面に追加するための設定 |
 | `sw.js` | オフライン用のキャッシュ |
 | `icon-*.png`, `apple-touch-icon.png` | アイコン |
+| `CHANGELOG.md` | 版ごとの変更点と、確かめたことの記録 |
 
 ビルドは不要です。`main` に入った内容がそのまま GitHub Pages で配信されます。
+新しい版を出すときは、`sw.js` のキャッシュ名（`reading-dojo-vN`）の番号を上げ、CHANGELOG に追記してください。
 
 ## 問題を追加するとき
 
