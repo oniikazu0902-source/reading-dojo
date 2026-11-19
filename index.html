@@ -198,6 +198,12 @@ const UNITS=[
   '空所の直後の前置詞がヒントになることが多い。',
   'つづりが似た語（expand / expend / expose）は引っかけ。意味で区別する。',
   '金フレのフレーズごと音読すると、この単元の正答率が上がる。']},
+ {id:'link',part:5,name:'つなぎ言葉・同じ仲間の語',per:20,tips:[
+  '4つとも同じ仲間の語なので、形ではなく意味で選ぶ。空所の前と後ろの関係を先に決める。',
+  '前と後ろが「理由→結果」なら Therefore、「逆」なら However・Nevertheless、「付け足し」なら Moreover・In addition。',
+  '「〜しないと」は Otherwise、「代わりに」は Instead、「同様に」は Likewise、「一方」は Meanwhile・whereas。',
+  'うしろが名詞なら because of・instead of・in addition to などの前置詞のかたまり。主語＋動詞なら接続詞。',
+  '数えられない名詞には little・much、複数形には few・many・most。比較級を強めるのは much。']},
  {id:'p6',part:6,name:'長文穴埋め',per:30,tips:[
   '品詞・動詞の形の問題は、空所のある文だけで解く。',
   'つなぎ言葉（However, Therefore）と文を入れる問題は、前後の文を読む。',
@@ -1631,7 +1637,31 @@ const Q5=[
 ['vocab',`Our sales team ------- exceeded its target this quarter.`,[`easily`,`early`,`eagerly`,`evenly`],`easily exceeded「楽に超えた」。`],
 ['vocab',`Please ------- me if you have any questions.`,[`contact`,`connect`,`contract`,`conduct`],`contact 人「人に連絡する」。`],
 ['vocab',`The building is under ------- and will open next year.`,[`construction`,`instruction`,`destruction`,`obstruction`],`under construction「建設中」。`],
-['vocab',`The manager ------- the proposal and decided to approve it.`,[`reviewed`,`renewed`,`revealed`,`reversed`],`提案を「よく見て」承認を決めた。review「検討する」。`]
+['vocab',`The manager ------- the proposal and decided to approve it.`,[`reviewed`,`renewed`,`revealed`,`reversed`],`提案を「よく見て」承認を決めた。review「検討する」。`],
+['link',`The store was very busy last month. -------, we hired two more staff.`,[`Therefore`,`However`,`Otherwise`,`Instead`],`前が理由、後ろがその結果。Therefore「だから」。`],
+['link',`The hotel is expensive. -------, it is always fully booked.`,[`However`,`Therefore`,`Moreover`,`Similarly`],`「高い」のに「いつも満室」。逆の内容をつなぐ However。`],
+['link',`Please submit the form by Friday. -------, your request may be delayed.`,[`Otherwise`,`Moreover`,`Therefore`,`Meanwhile`],`「金曜までに出して。そうしないと遅れる」。Otherwise「さもないと」。`],
+['link',`The software is easy to use. -------, it is free.`,[`Moreover`,`However`,`Otherwise`,`Instead`],`よい点にもう1つよい点を足す。Moreover「さらに」。`],
+['link',`The meeting was canceled. -------, we discussed the issue by e-mail.`,[`Instead`,`Moreover`,`Similarly`,`Otherwise`],`会議の代わりにメールで話した。Instead「代わりに」。`],
+['link',`Ms. Lee will prepare the slides. -------, Mr. Ito will book the room.`,[`Meanwhile`,`Otherwise`,`Therefore`,`Instead`],`同じころ別の人が別の作業をする。Meanwhile「その間に・一方」。`],
+['link',`Sales fell in May. -------, profits rose because costs were lower.`,[`Nevertheless`,`Therefore`,`Furthermore`,`Likewise`],`売上は落ちたのに利益は上がった。逆接の Nevertheless「それでも」。`],
+['link',`The Tokyo office closes at 6 P.M. -------, the Osaka office closes at 6 P.M.`,[`Likewise`,`However`,`Otherwise`,`Instead`],`東京も大阪も同じ。Likewise「同様に」。`],
+['link',`We offer many services, ------- printing, copying, and shipping.`,[`such as`,`as well`,`so that`,`even if`],`多くのサービスの具体例を挙げる。such as「たとえば〜のような」。`],
+['link',`------- the rain stops, the game will start.`,[`As soon as`,`Even though`,`Whereas`,`So that`],`「雨がやんだらすぐ始まる」。As soon as「〜するとすぐ」。`],
+['link',`The project was successful ------- it was short of staff.`,[`even though`,`because`,`so that`,`as soon as`],`人手不足なのに成功した。逆接の even though「〜にもかかわらず」。`],
+['link',`Mr. Kim prefers e-mail, ------- Ms. Ota prefers phone calls.`,[`whereas`,`because`,`unless`,`so that`],`2人の好みを比べている。対比の whereas「一方」。`],
+['link',`Please speak clearly ------- everyone can hear you.`,[`so that`,`even though`,`whereas`,`unless`],`「全員に聞こえるように」。目的を表す so that。`],
+['link',`You cannot enter the lab ------- you have a pass.`,[`unless`,`because`,`whereas`,`so that`],`「許可証がない限り入れない」。unless「〜しない限り」。`],
+['link',`The event was postponed ------- the heavy snow.`,[`because of`,`in spite of`,`instead of`,`in addition to`],`大雪が原因で延期。because of「〜のために」。`],
+['link',`------- coffee, the café also serves light meals.`,[`In addition to`,`Instead of`,`Because of`,`In spite of`],`also がある。コーヒーに加えて軽食も。In addition to「〜に加えて」。`],
+['link',`Ms. Ito will attend the meeting ------- the manager, who is sick.`,[`instead of`,`in addition to`,`because of`,`in spite of`],`部長が病気なので代わりに出る。instead of「〜の代わりに」。`],
+['link',`There is ------- time left before the deadline.`,[`little`,`few`,`many`,`several`],`time は数えられない名詞。「ほとんどない」は little。few・many・several は数えられる名詞に使う。`],
+['link',`------- employees attended the year-end party.`,[`Most`,`Much`,`Little`,`Every`],`employees は複数形。数えられる複数名詞に使えるのは Most。Every のあとは単数形。`],
+['link',`The new printer is ------- faster than the old one.`,[`much`,`very`,`so`,`too`],`比較級 faster を強めるのは much。very は原級に使う。`],
+['link',`I have ------- finished the report, so I can help you now.`,[`already`,`yet`,`still`,`ever`],`肯定文で「もう終えた」は already。yet は否定文と疑問文。`],
+['link',`Mr. Sato has not replied to my e-mail -------.`,[`yet`,`already`,`still`,`ever`],`否定文の文末で「まだ」は yet。`],
+['link',`It is 9 P.M., but the store is ------- open.`,[`still`,`yet`,`already`,`ever`],`夜9時なのに「まだ」開いている。肯定文の「まだ」は still。`],
+['link',`Reservations are required, ------- for groups of ten or more.`,[`especially`,`nearly`,`hardly`,`lately`],`「特に10人以上の団体は」。especially「特に」。`]
 ];
 const SETS=[
 {id:'p6-1',u:'p6',docs:[{h:'お知らせ',t:`To: All Tenants
@@ -2706,7 +2736,31 @@ const CLUE={
 "vocab-22":[["exceeded its target", "目標を超えた。どのように？"]],
 "vocab-23":[["if you have any questions", "質問があれば連絡"]],
 "vocab-24":[["under", "under construction の形"], ["will open next year", "来年開く"]],
-"vocab-25":[["decided to approve it", "見たうえで承認"]]
+"vocab-25":[["decided to approve it", "見たうえで承認"]],
+"link-1":[["The store was very busy last month.", "理由"], ["we hired two more staff", "その結果"]],
+"link-2":[["expensive", "高い"], ["always fully booked", "なのに満室。逆の内容"]],
+"link-3":[["by Friday", "条件"], ["may be delayed", "守らなかった場合"]],
+"link-4":[["easy to use", "よい点1"], ["it is free", "よい点2。付け足し"]],
+"link-5":[["The meeting was canceled.", "なくなったこと"], ["by e-mail", "その代わり"]],
+"link-6":[["Ms. Lee will prepare the slides.", "1人目の作業"], ["Mr. Ito will book the room", "同時に2人目の作業"]],
+"link-7":[["Sales fell", "落ちた"], ["profits rose", "なのに上がった。逆の内容"]],
+"link-8":[["The Tokyo office closes at 6 P.M.", "東京は6時"], ["the Osaka office closes at 6 P.M.", "大阪も同じ"]],
+"link-9":[["many services", "まとめ"], ["printing, copying, and shipping", "具体例"]],
+"link-10":[["the rain stops", "きっかけ"], ["the game will start", "すぐ起きること"]],
+"link-11":[["successful", "成功した"], ["short of staff", "人手不足なのに"]],
+"link-12":[["Mr. Kim prefers e-mail", "1人目"], ["Ms. Ota prefers phone calls", "2人目。対比"]],
+"link-13":[["speak clearly", "すること"], ["everyone can hear you", "その目的"]],
+"link-14":[["cannot enter", "入れない"], ["you have a pass", "例外の条件"]],
+"link-15":[["postponed", "延期された"], ["the heavy snow", "その原因"]],
+"link-16":[["also", "「〜も」。付け足しの合図"]],
+"link-17":[["who is sick", "部長は出られない"]],
+"link-18":[["time", "数えられない名詞"]],
+"link-19":[["employees", "数えられる名詞の複数形"]],
+"link-20":[["faster", "比較級。強めるのは much"], ["than", "比較の合図"]],
+"link-21":[["finished", "肯定文の完了"], ["so I can help you now", "もう終わっている"]],
+"link-22":[["has not replied", "否定文。文末は yet"]],
+"link-23":[["9 P.M.", "遅い時間"], ["but", "なのに"]],
+"link-24":[["for groups of ten or more", "特に当てはまる場合"]]
 };
 const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 /* raw の中で clues を探し、印を付けた HTML を返す。found に番号つきの説明を積む。post は印付け後の HTML に施す置換 */
