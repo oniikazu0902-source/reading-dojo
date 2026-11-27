@@ -50,6 +50,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .btn{border:1px solid var(--ink);background:transparent;border-radius:4px;padding:8px 16px;font-weight:500;white-space:nowrap}
 .btn.pri{background:var(--pen);border-color:var(--pen);color:var(--paper);font-weight:700;padding:14px 18px;font-size:16px;letter-spacing:.2em;width:100%}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
+a.btn{color:inherit;text-decoration:none;display:inline-block}
 .link{border:0;background:none;padding:6px 0;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
 /* header */
 .head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
@@ -1662,6 +1663,76 @@ const Q5=[
 ['link',`Mr. Sato has not replied to my e-mail -------.`,[`yet`,`already`,`still`,`ever`],`否定文の文末で「まだ」は yet。`],
 ['link',`It is 9 P.M., but the store is ------- open.`,[`still`,`yet`,`already`,`ever`],`夜9時なのに「まだ」開いている。肯定文の「まだ」は still。`],
 ['link',`Reservations are required, ------- for groups of ten or more.`,[`especially`,`nearly`,`hardly`,`lately`],`「特に10人以上の団体は」。especially「特に」。`]
+,
+['pos',`The new office chairs are designed to provide ------- support for the lower back.`,[`additional`,`addition`,`additionally`,`add`],`provide ___ support。名詞 support の前なので形容詞 additional「追加の」。`],
+['pos',`Please read the safety instructions ------- before operating the machine.`,[`thoroughly`,`thorough`,`thoroughness`,`more thorough`],`動詞 read を飾るので副詞 thoroughly「徹底的に」。目的語 the safety instructions のあとに置かれている。`],
+['pos',`The marketing team conducted a detailed ------- of customer feedback.`,[`analysis`,`analyze`,`analytical`,`analytically`],`a detailed ___ of。冠詞＋形容詞のあと、前置詞の前は名詞 analysis。`],
+['pos',`Mr. Garcia's ------- to the project helped it finish ahead of schedule.`,[`contribution`,`contribute`,`contributes`,`contributed`],`所有格 Mr. Garcia's のあとは名詞。contribution to 〜「〜への貢献」。`],
+['pos',`The hotel staff responded ------- to our request for an extra bed.`,[`promptly`,`prompt`,`prompted`,`promptness`],`自動詞 responded を飾る副詞 promptly「すぐに」。`],
+['pos',`Visitors must obtain ------- from the front desk before entering the laboratory.`,[`permission`,`permitted`,`permissive`,`permissively`],`他動詞 obtain の目的語になる名詞 permission「許可」。`],
+['pos',`The quarterly report shows a ------- increase in online sales.`,[`noticeable`,`notice`,`noticeably`,`notices`],`a ___ increase。名詞 increase の前は形容詞 noticeable「目立つ」。`],
+['pos',`Ms. Wong is ------- regarded as one of the best designers in the industry.`,[`widely`,`wide`,`width`,`widen`],`is ___ regarded（受け身）。過去分詞 regarded を飾る副詞 widely「広く」。`],
+['pos',`Our customer service representatives are available ------- to answer your questions.`,[`daily`,`day`,`days`,`dated`],`are available のあとで「毎日」を表す副詞 daily。daily は形容詞・副詞の両方で使える。`],
+['pos',`The board will make a ------- on the merger at next week's meeting.`,[`decision`,`decide`,`decisive`,`decisively`],`make a decision「決定を下す」。冠詞 a のあとは名詞。`],
+['verb',`The new branch manager ------- next week, after Mr. Davis retires.`,[`will be appointed`,`appointed`,`has appointed`,`appoints`],`支店長は「任命される」側で、next week は未来。未来の受け身 will be appointed。`],
+['verb',`Ms. Hill ------- the sales report when the power went out.`,[`was reviewing`,`reviews`,`has reviewed`,`will review`],`停電した過去のその時に「〜していた」。過去進行形 was reviewing。`],
+['verb',`The renovation of the lobby ------- by the end of next month.`,[`will be completed`,`completed`,`has completed`,`is completing`],`改装は「完了される」側。by the end of next month は未来の期限。`],
+['verb',`All the participants ------- a certificate after completing the course.`,[`will receive`,`receiving`,`to receive`,`receives`],`文に動詞がないので動詞が必要。主語 participants は複数なので receives は×。`],
+['verb',`The company avoids ------- prices during the holiday season.`,[`raising`,`to raise`,`raise`,`raised`],`avoid のあとは -ing。suggest, consider, enjoy と同じ仲間。`],
+['verb',`Since last April, the factory ------- its energy use by 15 percent.`,[`has reduced`,`reduces`,`will reduce`,`is reduced`],`Since 〜「〜以来ずっと」は現在完了。うしろに目的語 its energy use があるので能動。`],
+['verb',`The budget proposal needs to ------- by the finance department before Friday.`,[`be approved`,`approve`,`approving`,`approved`],`提案書は「承認される」側。needs to のあとは原形なので be approved。`],
+['verb',`If the delivery had arrived on time, we ------- the event as planned.`,[`would have held`,`will hold`,`had held`,`would hold`],`If ＋ had ＋ 過去分詞（過去の事実と逆の仮定）なら、主節は would have ＋ 過去分詞。`],
+['verb',`The report ------- by the time the board meeting starts tomorrow.`,[`will have been finished`,`has finished`,`finishes`,`was finished`],`by the time 〜 tomorrow（未来のある時点までに）完了しているので未来完了。報告書は「仕上げられる」側なので受け身。`],
+['verb',`Mr. Park is considering ------- to the Singapore office next year.`,[`transferring`,`to transfer`,`transfer`,`transferred`],`consider のあとは -ing。`],
+['pron',`Ms. Ramos asked ------- assistant to reschedule the meeting.`,[`her`,`she`,`hers`,`herself`],`名詞 assistant の前は所有格 her。`],
+['pron',`The new employees will be trained by Mr. Cho and -------.`,[`me`,`I`,`my`,`mine`],`前置詞 by のあとなので目的格。and で並んでいても形は変わらない。`],
+['pron',`The engineers checked the equipment ------- instead of hiring an outside company.`,[`themselves`,`them`,`their`,`theirs`],`「自分たちで」点検した。主語と同じ人を強めるのは -selves。`],
+['pron',`Our prices are lower than ------- of our competitors.`,[`those`,`that`,`these`,`this`],`prices（複数）のくり返しを避ける those。単数なら that。`],
+['pron',`------- interested in joining the tour should contact the front desk.`,[`Anyone`,`Whoever`,`Each`,`Someone who`],`Anyone (who is) interested in 〜「〜に興味のある人はだれでも」。Whoever や Someone who のあとには動詞が必要。`],
+['pron',`Of the three applicants, only one has experience; the ------- are recent graduates.`,[`others`,`other`,`another`,`each other`],`3人のうち1人を除いた「残り全部」は the others。`],
+['pron',`The printer on the second floor is broken, so please use ------- on the third floor.`,[`the one`,`it`,`ones`,`them`],`特定の「3階のプリンター」は the one。it だと壊れたプリンターを指してしまう。`],
+['pron',`Ms. Patel and her team finished the project on ------- own.`,[`their`,`them`,`they`,`theirs`],`on one's own「自分たちだけで」。主語は Ms. Patel and her team（複数）なので their。`],
+['pron',`Neither of the two candidates ------- the required certification.`,[`has`,`have`,`having`,`to have`],`Neither of 〜 は単数として扱うのが基本。`],
+['prep',`------- the high cost, many customers chose the premium plan.`,[`In spite of`,`Although`,`Even though`,`Because`],`うしろが名詞のかたまり the high cost なので前置詞 In spite of。Although は接続詞。`],
+['prep',`Please keep your belongings with you ------- all times.`,[`at`,`in`,`on`,`for`],`at all times「常に」。決まった言い方。`],
+['prep',`The seminar was moved to the larger hall ------- the number of participants increased.`,[`because`,`because of`,`due to`,`despite`],`うしろが主語＋動詞（the number increased）なので接続詞 because。`],
+['prep',`Mr. Ali has worked here ------- more than ten years.`,[`for`,`since`,`during`,`while`],`for ＋ 期間「〜の間」。since はうしろに起点（2015 など）。`],
+['prep',`The parking lot is reserved for staff ------- 8 A.M. and 6 P.M. on weekdays.`,[`between`,`from`,`among`,`through`],`between A and B「AとBの間」。from は from A to B。`],
+['prep',`------- the new system is installed, staff will need two days of training.`,[`After`,`Following`,`Prior to`,`During`],`うしろが主語＋動詞なので接続詞 After。Following、Prior to、During は前置詞。`],
+['prep',`Refunds will be issued ------- the item is returned in its original packaging.`,[`provided that`,`in case of`,`regardless of`,`as for`],`provided that 〜「〜という条件で」は接続詞。ほかはうしろに名詞をとる。`],
+['prep',`The conference room is available ------- request.`,[`upon`,`at`,`with`,`for`],`available upon request「お申し出があればご利用いただけます」。決まった言い方。`],
+['prep',`The shipment was delayed ------- a shortage of drivers.`,[`owing to`,`so that`,`even though`,`unless`],`うしろが名詞のかたまり a shortage of drivers なので前置詞の owing to「〜のために」（＝ due to）。`],
+['prep',`The museum will remain open ------- the renovation work is completed.`,[`until`,`by`,`during`,`within`],`「工事が終わるまでずっと」開いている（継続）。うしろが主語＋動詞なので接続詞の until。by は「〜までに（期限）」。`],
+['rel',`The company ------- I applied to has offices in five countries.`,[`that`,`who`,`where`,`what`],`先行詞は会社（物）。applied to の目的語が欠けているので that。where だと to が余る。`],
+['rel',`Applicants ------- résumés are incomplete will not be considered.`,[`whose`,`who`,`which`,`whom`],`空所のあとに名詞 résumés が続き「応募者の履歴書」なので whose。`],
+['rel',`The workshop will be held in Room 5, ------- is on the second floor.`,[`which`,`where`,`what`,`that`],`コンマのあとの説明で、主語が欠けているので which。that はコンマのあとに使えない。`],
+['rel',`This is the factory ------- the new product will be manufactured.`,[`where`,`which`,`what`,`whose`],`うしろが受け身の完全な文（the new product will be manufactured）で、先行詞が場所なので where。`],
+['rel',`The new laptop is the ------- of all the models we tested.`,[`lightest`,`lighter`,`light`,`most light`],`the ＋ of all 〜 は最上級。light は短い語なので -est。`],
+['rel',`The more you practice, the ------- you will become.`,[`more confident`,`most confident`,`confident`,`confidently`],`The ＋ 比較級 〜, the ＋ 比較級 …「〜すればするほど…」。`],
+['rel',`Our new office is not as ------- as the old one.`,[`spacious`,`more spacious`,`most spacious`,`spaciously`],`as 〜 as の間は原級。be動詞のあとなので形容詞。`],
+['rel',`Employees ------- wish to take leave in August should apply early.`,[`who`,`which`,`whose`,`whom`],`先行詞は人で、wish の主語が欠けているので who。`],
+['rel',`Sales in December were ------- higher than in November.`,[`considerably`,`very`,`more`,`most`],`比較級 higher を強めるのは considerably、much、far など。very は比較級に使わない。`],
+['rel',`Please send me the documents ------- you mentioned in your e-mail.`,[`that`,`what`,`who`,`where`],`先行詞 the documents（物）があり、mentioned の目的語が欠けているので that。what は先行詞を含むので×。`],
+['vocab',`The factory will ------- production of the old model at the end of the year.`,[`discontinue`,`disconnect`,`discourage`,`dismiss`],`discontinue production「生産を中止する」。`],
+['vocab',`Please ------- that all lights are turned off before leaving.`,[`ensure`,`assure`,`insure`,`measure`],`ensure that 〜「〜を確実にする」。assure は人を目的語にとる（assure you that）。`],
+['vocab',`The sales figures for the third quarter ------- our expectations.`,[`exceeded`,`excelled`,`excluded`,`expected`],`exceed expectations「予想を上回る」。`],
+['vocab',`Mr. Ng was ------- for his outstanding customer service.`,[`recognized`,`realized`,`reminded`,`recovered`],`be recognized for 〜「〜で表彰される・評価される」。`],
+['vocab',`Customers can choose from a wide ------- of colors.`,[`range`,`rank`,`rate`,`raise`],`a wide range of 〜「幅広い〜」。`],
+['vocab',`The new policy is ------- to reduce paperwork.`,[`intended`,`attended`,`extended`,`pretended`],`be intended to 〜「〜することを目的としている」。`],
+['vocab',`This coupon is ------- for 30 days from the date of issue.`,[`valid`,`valuable`,`various`,`vacant`],`valid for 30 days「30日間有効」。`],
+['vocab',`The software update will be ------- installed overnight.`,[`automatically`,`accurately`,`approximately`,`annually`],`「夜の間に自動で」インストールされる。`],
+['vocab',`Please ------- your expense report to the accounting department by Friday.`,[`submit`,`admit`,`commit`,`permit`],`submit A to B「AをBに提出する」。`],
+['vocab',`The hotel is ------- located within walking distance of the station.`,[`ideally`,`idly`,`identically`,`ideologically`],`ideally located「理想的な場所にある」。conveniently located と同じ使い方。`],
+['link',`The train was delayed by an hour. -------, Mr. Ito missed the opening speech.`,[`As a result`,`In contrast`,`For instance`,`Otherwise`],`遅れた（原因）→ 開会のあいさつを逃した（結果）。As a result「その結果」。`],
+['link',`We have offices in Tokyo and Osaka. -------, we will open a branch in Fukuoka next year.`,[`In addition`,`Instead`,`However`,`Otherwise`],`東京・大阪に加えて福岡にも。付け足しの In addition。`],
+['link',`You can pay by credit card. -------, you can pay in cash at the counter.`,[`Alternatively`,`Consequently`,`Similarly`,`Therefore`],`カードか、または現金か。別の選択肢を示す Alternatively「あるいは」。`],
+['link',`There were ------- applicants for the position, so the deadline was extended.`,[`few`,`little`,`much`,`a lot`],`数えられる名詞の複数形 applicants には few「ほとんどない」。だから締め切りを延ばした。`],
+['link',`------- all of the staff members have completed the training.`,[`Almost`,`Most`,`Every`,`Much`],`Almost all of 〜「ほとんど全員」。almost は all を飾る副詞。Most all とは言わない。`],
+['link',`The event was a great success; -------, we plan to hold it again next year.`,[`therefore`,`although`,`unless`,`whereas`],`セミコロンのあとで「だから」。理由→結果の therefore。ほかは接続詞で、この位置には入らない。`],
+['link',`Mr. Lee is ------- busy to attend the lunch meeting.`,[`too`,`so`,`very`,`enough`],`too 〜 to …「…するには〜すぎる（だからできない）」。`],
+['link',`The hall is large ------- to hold 500 people.`,[`enough`,`too`,`so`,`very`],`形容詞 ＋ enough to 〜「〜できるほど十分」。enough は形容詞のうしろに置く。`],
+['link',`The store sells ------- fresh fruit and frozen foods.`,[`both`,`either`,`neither`,`not only`],`both A and B「AもBも」。either は or、neither は nor と組む。`],
+['link',`Ms. Tanaka has ------- visited our Kyoto office, but she plans to go there next month.`,[`never`,`ever`,`already`,`yet`],`but 以下で「来月行く予定」なので、まだ一度も行っていない never。`]
 ];
 const SETS=[
 {id:'p6-1',u:'p6',docs:[{h:'お知らせ',t:`To: All Tenants
@@ -1804,6 +1875,244 @@ Emily Chen`}],
      {q:`How much money does Ms. Chen expect to get back?`,o:[`$7`,`$5`,`$12`,`$20`],ex:`速達は12ドル。注文は38ドルで50ドルを超えないので、通常配送は5ドル。差額は 12 − 5 = 7ドル。`},
      {q:`What is indicated about next-day shipping?`,o:[`Orders must be placed in the morning.`,`It is free for orders over $50.`,`It takes two business days.`,`It is not offered in June.`],ex:`available only for orders placed before noon。before noon を in the morning と言い換えている。`},
      {q:`When is return shipping free?`,o:[`When an item has a fault`,`When an order is over $50`,`When an item is returned within a week`,`When express shipping was chosen`],ex:`Return shipping is free if the item is defective。defective を has a fault と言い換えている。`}]}
+,
+{id:'p6-4',u:'p6',docs:[{h:'Eメール',t:`To: Sarah Mills
+From: Daniel Ortiz, Human Resources
+Subject: Your First Day
+
+Dear Ms. Mills,
+
+We are delighted that you have accepted our offer to join Greenfield Design as a graphic designer. Your first day will be Monday, May 6. Please [1] at the reception desk on the third floor at 9:00 A.M. A member of our team will show you around the office and help you set up your computer. [2], you will attend a short orientation session with other new staff members. The session usually [3] about two hours. Please bring a form of photo identification and your signed contract. [4] We look forward to working with you.
+
+Best regards,
+Daniel Ortiz`}],
+ qs:[{o:[`report`,`reporting`,`reported`,`reports`],ex:`Please のあとは動詞の原形。report to 〜「〜に出向く」。`},
+     {o:[`In the afternoon`,`In the past`,`In contrast`,`In other words`],ex:`朝9時に受付→案内→その後の予定。時間の流れをつなぐ In the afternoon。`},
+     {o:[`lasts`,`lasting`,`to last`,`last`],ex:`主語 The session は単数で、usually（ふだん）があるので現在形の lasts。`},
+     {o:[`If you have any questions before then, feel free to contact me.`,`Thank you for applying for the position of sales manager.`,`Unfortunately, the position has already been filled.`,`Our office will be closed on Monday, May 6.`],ex:`結びの直前。問い合わせ先を伝える文が自然。ほかは内容と合わない（すでに採用済み、職種はデザイナー、初日は5月6日）。`}]},
+{id:'p6-5',u:'p6',docs:[{h:'お知らせ',t:`Harbor Street Market — Notice to Customers
+
+Starting July 1, Harbor Street Market will [1] its opening hours. The store will open at 7 A.M. instead of 9 A.M. on weekdays. This change is a response to [2] from many customers who shop before work. Weekend hours will remain the same. [3], our bakery section will begin offering fresh bread from 7 A.M. every day. [4] We thank all of our customers for their continued support.`}],
+ qs:[{o:[`extend`,`expire`,`exceed`,`explain`],ex:`開店が9時から7時に早まるので、営業時間を「延ばす」extend。`},
+     {o:[`requests`,`requested`,`requesting`,`to request`],ex:`前置詞 to のあとは名詞。from many customers が続くので「多くの客からの要望」requests。`},
+     {o:[`In addition`,`However`,`Otherwise`,`Instead`],ex:`営業時間の変更に加えて、パンも7時から。付け足しの In addition。`},
+     {o:[`Please note that the pharmacy counter will continue to open at 9 A.M.`,`The store will be closed permanently from July 1.`,`Bread will be available only on weekends.`,`We are currently hiring delivery drivers.`],ex:`店は7時からだが、薬局カウンターは例外で9時のまま、という補足が自然。ほかは内容と矛盾するか、話題がずれる。`}]},
+{id:'p6-6',u:'p6',docs:[{h:'記事',t:`GREENVILLE (October 3) — Tech company Brightway Solutions announced yesterday that it will build a new research center in Greenville. The center, which [1] to open in 2028, will employ about 300 people. "Greenville has an excellent university and a strong [2] of skilled workers," said CEO Laura Kim. Construction will begin early next year. [3] City officials welcomed the news. [4], some residents have expressed concern about increased traffic near the site.`}],
+ qs:[{o:[`is expected`,`expects`,`expecting`,`has expected`],ex:`主語は The center。センターは開業が「見込まれる」側なので受け身 is expected to。`},
+     {o:[`supply`,`delivery`,`shipment`,`purchase`],ex:`a strong supply of skilled workers「熟練労働者の豊富な供給」。人材について使えるのは supply。`},
+     {o:[`It is expected to take about two years to complete.`,`The research center closed last month.`,`Ms. Kim will retire at the end of this year.`,`Tickets for the event are now on sale.`],ex:`直前が工事開始の話。完成まで約2年（2028年開業）とつながる。`},
+     {o:[`However`,`Therefore`,`Similarly`,`For example`],ex:`市は歓迎したが、一部の住民は心配している。逆の内容をつなぐ However。`}]},
+{id:'p6-7',u:'p6',docs:[{h:'社内メモ',t:`To: All Employees
+From: IT Department
+Date: February 10
+Subject: Password Update
+
+To improve the security of our network, all employees are required to change their passwords by February 20. New passwords must be at least twelve characters [1] and include at least one number. You will receive an e-mail with a link to the update page tomorrow. [2] who do not update their passwords by the deadline will be unable to log in to their accounts. [3] If you need [4], please call the IT help desk at extension 4410.`}],
+ qs:[{o:[`long`,`length`,`lengthy`,`lengthen`],ex:`数量 ＋ long で「〜の長さ」。twelve characters long「12文字の長さ」。`},
+     {o:[`Those`,`They`,`Them`,`These`],ex:`Those who 〜「〜する人々」。`},
+     {o:[`In that case, you will need to contact the IT department to restore access.`,`The new office will open on February 20.`,`Your password does not need to be changed.`,`The cafeteria menu has been updated.`],ex:`ログインできなくなった場合どうするか、が続く。In that case が前の文を受ける。`},
+     {o:[`assistance`,`assist`,`assisted`,`assistive`],ex:`need の目的語なので名詞 assistance「手助け」。`}]},
+{id:'p6-8',u:'p6',docs:[{h:'Eメール',t:`Dear Valued Subscriber,
+
+Thank you for reading City Life Magazine. Your current subscription will [1] on March 31. To continue receiving the magazine without interruption, please renew by March 15. Subscribers who renew before this date will receive a 20 percent discount. [2], they will get free access to our digital edition.
+
+Renewing is easy. Simply visit our Web site and enter the subscriber number printed on your mailing label. [3]
+
+We hope you will continue to enjoy our articles on local events, restaurants, and [4].
+
+City Life Magazine`}],
+ qs:[{o:[`expire`,`expose`,`exceed`,`exist`],ex:`定期購読が3月31日で「切れる」expire。`},
+     {o:[`In addition`,`Instead`,`Otherwise`,`Nevertheless`],ex:`割引に加えて、デジタル版も無料。付け足しの In addition。`},
+     {o:[`You can also renew by calling our customer service line.`,`Your subscription has already been canceled.`,`The magazine will no longer be published.`,`Our restaurant is open every day from noon.`],ex:`更新の方法の話が続いている。電話でも更新できる、が自然。`},
+     {o:[`entertainment`,`entertain`,`entertained`,`entertains`],ex:`local events, restaurants, and ___ と名詞を並べているので名詞 entertainment。`}]},
+{id:'p6-9',u:'p6',docs:[{h:'お知らせ',t:`Notice: Library Study Rooms
+
+Beginning next Monday, students and residents can [1] study rooms online. Each room may be booked for up to two hours per day. Rooms that are not occupied within 15 minutes of the reservation time [2] to other users. [3] Study rooms are designed for quiet work. [4], phone calls are not permitted inside the rooms.`}],
+ qs:[{o:[`reserve`,`reserved`,`reserving`,`reservation`],ex:`助動詞 can のあとは原形 reserve。`},
+     {o:[`will be released`,`will release`,`releasing`,`has released`],ex:`部屋は他の人に「開放される」側なので受け身。`},
+     {o:[`Please arrive on time to keep your reservation.`,`The library will be closed for renovation all year.`,`Books may be borrowed for up to three weeks.`,`Study rooms are available only to library staff.`],ex:`15分以内に来ないと開放される→時間どおりに来てください、と続く。`},
+     {o:[`Therefore`,`However`,`Meanwhile`,`Instead`],ex:`静かな作業用の部屋だから、通話は禁止。理由→結果の Therefore。`}]},
+{id:'p7s-7',u:'p7s',docs:[{h:'広告',t:`Wanted: Part-Time Office Assistant
+
+Lakeview Dental Clinic is looking for a part-time office assistant to work three days a week (Monday, Wednesday, and Friday). Duties include answering phone calls, scheduling appointments, and greeting patients. Previous experience in a medical office is preferred but not required. Applicants must be able to work on some Saturdays when the clinic is busy.
+
+To apply, send a résumé and a short cover letter to Dr. Helen Park at hpark@lakeviewdental.com by June 10. Interviews will take place the week of June 17.`}],
+ qs:[{q:`What is one of the duties of the position?`,o:[`Making appointments for patients`,`Cleaning medical equipment`,`Ordering office supplies`,`Training new staff`],ex:`scheduling appointments を making appointments と言い換えている。`},
+     {q:`What is indicated about the position?`,o:[`It sometimes requires weekend work.`,`It requires medical experience.`,`It is a full-time job.`,`It starts on June 10.`],ex:`some Saturdays は weekend。経験は「あれば望ましいが必須ではない」。`},
+     {q:`What should applicants send?`,o:[`A letter and a résumé`,`A copy of a license`,`A list of references`,`A completed application form`],ex:`a résumé and a short cover letter。`}]},
+{id:'p7s-8',u:'p7s',docs:[{h:'テキストメッセージ',t:`Ken Ota (2:05 P.M.)
+Hi, Lisa. The projector in Meeting Room B isn't working. The client presentation starts at 3:00.
+
+Lisa Brand (2:07 P.M.)
+Oh no. Have you tried the one in Room C?
+
+Ken Ota (2:08 P.M.)
+Room C is being used by the accounting team until 4:00.
+
+Lisa Brand (2:10 P.M.)
+I can bring the portable projector from my office. It's a little small, though.
+
+Ken Ota (2:11 P.M.)
+That would be great. The room only has eight seats anyway.
+
+Lisa Brand (2:12 P.M.)
+OK. I'll be there in ten minutes.`}],
+ qs:[{q:`What problem does Mr. Ota mention?`,o:[`A piece of equipment is not working.`,`A client has canceled a meeting.`,`A room is too small.`,`A presentation file is missing.`],ex:`projector を a piece of equipment と言い換えている。`},
+     {q:`Why can't Mr. Ota use Room C?`,o:[`Another team is using it.`,`It is being repaired.`,`It is too far away.`,`It has no projector.`],ex:`経理チームが4時まで使っている。`},
+     {q:`At 2:11 P.M., what does Mr. Ota mean when he writes, "The room only has eight seats anyway"?`,o:[`A small projector will be good enough.`,`More chairs are needed.`,`The client is bringing many people.`,`The meeting should be moved.`],ex:`「小さいけど」と言われたのに対し、「部屋も小さいから問題ない」と答えている。`}]},
+{id:'p7s-9',u:'p7s',docs:[{h:'Eメール',t:`To: Raj Mehta
+From: Sunrise Hotel Reservations
+Date: August 2
+Subject: Your reservation
+
+Dear Mr. Mehta,
+
+Thank you for choosing the Sunrise Hotel. This e-mail confirms your reservation for a double room from August 14 to August 17 (three nights). As requested, your room is on a high floor with a view of the bay.
+
+Breakfast is served in the Garden Restaurant from 6:30 to 10:00 A.M. and is included in your room rate. Check-in begins at 3:00 P.M. If you expect to arrive after 11:00 P.M., please let us know in advance so that we can hold your room.
+
+If you need to cancel, please do so at least 48 hours before your arrival date to avoid a charge of one night's stay.
+
+Sincerely,
+Anna Cruz, Reservations Manager`}],
+ qs:[{q:`What is the purpose of the e-mail?`,o:[`To confirm a booking`,`To offer a room upgrade`,`To announce a new restaurant`,`To request a payment`],ex:`confirms your reservation を confirm a booking と言い換えている。`},
+     {q:`What is suggested about Mr. Mehta?`,o:[`He asked for a room with a view.`,`He will stay for four nights.`,`He is a member of a hotel club.`,`He will arrive after 11 P.M.`],ex:`As requested「ご要望どおり」なので、眺めのよい部屋は本人の希望。宿泊は3泊。`},
+     {q:`By what date should Mr. Mehta cancel to avoid a fee?`,o:[`August 12`,`August 13`,`August 14`,`August 10`],ex:`到着は8月14日。その48時間前は8月12日。`},
+     {q:`What is stated about breakfast?`,o:[`It is included in the price.`,`It is served until 11 A.M.`,`It must be reserved in advance.`,`It is served in the room.`],ex:`included in your room rate を included in the price と言い換えている。`}]},
+{id:'p7s-10',u:'p7s',docs:[{h:'記事',t:`NORTHPORT (May 20) — The Northport City Bus Service will add a new route connecting the downtown area with Northport Airport starting June 1. Buses on Route 22 will run every 20 minutes from 5 A.M. to midnight. A one-way ticket will cost $4, about one-fifth the cost of a taxi ride.
+
+"Many travelers told us that getting to the airport was difficult and expensive," said Mark Lin, director of the bus service. The new buses have extra space for luggage and free Wi-Fi.
+
+To celebrate the launch, rides on Route 22 will be free for the first week.`}],
+ qs:[{q:`What is the article mainly about?`,o:[`A new transportation service`,`The opening of an airport`,`A change in taxi fares`,`The hiring of a new director`],ex:`新しいバス路線の記事。`},
+     {q:`How often will Route 22 buses run?`,o:[`Three times an hour`,`Twice an hour`,`Once an hour`,`Every 10 minutes`],ex:`20分ごと＝1時間に3本。`},
+     {q:`What is NOT mentioned as a feature of the new service?`,o:[`Reserved seats`,`Space for luggage`,`Free Internet access`,`A lower cost than a taxi`],ex:`荷物スペース・Wi-Fi・タクシーより安い運賃は本文にある。座席の予約は書かれていない。`},
+     {q:`When can passengers ride Route 22 for free?`,o:[`From June 1 to June 7`,`Throughout May`,`On weekends only`,`After midnight`],ex:`6月1日開始で、最初の1週間は無料。`}]},
+{id:'p7s-11',u:'p7s',docs:[{h:'ウェブページ',t:`Greenleaf Online Grocery — Frequently Asked Questions
+
+Q: Is there a minimum order?
+A: Yes. Orders must total at least $30. Orders over $80 are delivered free of charge; otherwise, a $6 delivery fee applies.
+
+Q: When will my groceries arrive?
+A: Orders placed by 10 A.M. are delivered the same day between 4 and 8 P.M. Orders placed after 10 A.M. arrive the next day.
+
+Q: What if an item is out of stock?
+A: We will replace it with a similar product of equal or greater value at no extra cost. If you prefer not to receive substitutes, please select "No substitutions" at checkout.`}],
+ qs:[{q:`Ms. Ross places a $50 order. How much will she pay for delivery?`,o:[`$6`,`$0`,`$3`,`$8`],ex:`80ドルを超えないので配送料6ドルがかかる。`},
+     {q:`When will an order placed at 11 A.M. on Tuesday most likely arrive?`,o:[`On Wednesday`,`On Tuesday afternoon`,`On Tuesday morning`,`On Thursday`],ex:`10時を過ぎた注文は翌日配達。`},
+     {q:`What happens when an item is unavailable?`,o:[`A similar item may be sent instead.`,`The order is canceled.`,`The customer is charged extra.`,`The delivery is delayed by a week.`],ex:`似た商品で代わりにする。追加料金はかからない。`}]},
+{id:'p7s-12',u:'p7s',docs:[{h:'社内メモ',t:`To: All Staff
+From: Grace Liu, Office Manager
+Date: November 4
+Subject: Kitchen cleaning
+
+Starting next Monday, we will be using a rotation schedule for cleaning the staff kitchen. Each department will be responsible for one week at a time, beginning with the Marketing Department. The schedule is posted on the kitchen door.
+
+Duties include wiping counters, emptying the dishwasher, and throwing away any food left in the refrigerator on Friday afternoons. Please label your food with your name and the date.
+
+If your department cannot take its turn because of a deadline or business trip, please arrange to switch weeks with another department and let me know by e-mail.`}],
+ qs:[{q:`Why was the memo written?`,o:[`To explain a new cleaning system`,`To announce a kitchen renovation`,`To introduce a new manager`,`To ask for volunteers for an event`],ex:`a rotation schedule（交代制）の説明。`},
+     {q:`What are employees asked to do?`,o:[`Write their names on food items`,`Clean the refrigerator every day`,`Bring their own dishes`,`Eat lunch outside the office`],ex:`label your food with your name を言い換えている。`},
+     {q:`What should a department do if it cannot take its turn?`,o:[`Trade weeks with another department`,`Hire a cleaning company`,`Skip the week`,`Ask Ms. Liu to do the work`],ex:`switch weeks を trade weeks と言い換えている。`}]},
+{id:'p7s-13',u:'p7s',docs:[{h:'オンラインレビュー',t:`Pinewood Cabin Rentals
+Rating: 3 out of 5
+Posted by M. Ortega
+
+The cabin itself was lovely, with a big fireplace and a view of the lake. However, the directions on the Web site were out of date, and we spent nearly an hour looking for the entrance road. When we finally arrived, the heater in the bedroom was not working. The owner came the next morning and fixed it quickly, and he even gave us a discount on our next stay. I would return, but I hope the directions are updated soon.`}],
+ qs:[{q:`What did Ms. Ortega like about the cabin?`,o:[`Its view`,`Its low price`,`Its location near a town`,`Its modern kitchen`],ex:`a view of the lake がよかった点。`},
+     {q:`What problem did Ms. Ortega have when arriving?`,o:[`The directions were inaccurate.`,`The road was closed for repairs.`,`The owner was not there to meet her.`,`The cabin was double-booked.`],ex:`out of date（古い）を inaccurate と言い換えている。`},
+     {q:`What did the owner do?`,o:[`He offered a lower price for a future visit.`,`He refunded the entire stay.`,`He moved her to another cabin.`,`He updated the Web site immediately.`],ex:`a discount on our next stay を言い換えている。案内はまだ直っていない。`}]},
+{id:'p7d-3',u:'p7d',docs:[{h:'ウェブページ',t:`Pacific Marketing Conference 2027
+Dates: March 8-9 | Location: Harbor Convention Center, Seattle
+
+Registration fees:
+- Early registration (by January 31): $250
+- Regular registration (February 1-28): $320
+- On-site registration: $380
+
+Group discount: Organizations registering five or more people receive 15% off each registration.
+
+All registrations include lunch on both days. A dinner reception on March 8 is available for an additional $40.`},{h:'Eメール',t:`To: registration@pacmarketconf.com
+From: Olivia Grant
+Date: February 3
+Subject: Registration
+
+Hello,
+
+I would like to register myself and two colleagues from Tanaka Foods for the conference. All three of us would also like to attend the dinner reception. Could you send the invoice to our accounting department at accounts@tanakafoods.com?
+
+Also, one of my colleagues is vegetarian. Will vegetarian meals be available at lunch?
+
+Best regards,
+Olivia Grant`}],
+ qs:[{q:`What is the purpose of the e-mail?`,o:[`To sign up for an event`,`To cancel a registration`,`To propose a speaker`,`To ask about hotel rooms`],ex:`register for the conference。`},
+     {q:`How much will Ms. Grant's company most likely pay per person for registration, not including the reception?`,o:[`$320`,`$250`,`$272`,`$380`],ex:`2月3日の申し込みは通常料金320ドル。3人なので5人以上の団体割引は使えない。2つの文書を合わせる問題。`},
+     {q:`What will Ms. Grant's group receive for an extra charge?`,o:[`A meal on the evening of March 8`,`Lunch on March 9`,`Hotel rooms`,`Conference bags`],ex:`追加40ドルは3月8日の夕食会。昼食は料金に含まれる。`},
+     {q:`What does Ms. Grant ask about?`,o:[`Food options`,`Parking`,`The schedule of talks`,`Payment by credit card`],ex:`ベジタリアンの食事があるかを聞いている。`}]},
+{id:'p7d-4',u:'p7d',docs:[{h:'社内メモ',t:`To: All Sales Staff
+From: Kevin Shaw, Training Coordinator
+Subject: Customer service training
+
+Our new customer service training will be offered on the following dates. Each session is the same, so you only need to attend one.
+
+- Session A: Tuesday, April 6, 9 A.M.-12 P.M., Room 301
+- Session B: Thursday, April 8, 1-4 P.M., Room 301
+- Session C: Monday, April 12, 9 A.M.-12 P.M., Room 205 (online attendance available)
+
+Please sign up by April 2 using the form on the staff intranet. Sessions are limited to 20 people.`},{h:'Eメール',t:`To: Kevin Shaw
+From: Mina Cho
+Date: April 5
+Subject: Training session
+
+Hi Kevin,
+
+I tried to sign up for the training, but the form says the deadline has passed. I was on a business trip in Singapore until yesterday, so I couldn't register earlier. I have client meetings every morning this week, and I'll be visiting our Osaka office all day on April 12. Is there still space in any session I could attend?
+
+Thanks,
+Mina`}],
+ qs:[{q:`What is indicated about the training sessions?`,o:[`They all cover the same content.`,`They are held in the same room.`,`They are only for managers.`,`They last a full day.`],ex:`Each session is the same。`},
+     {q:`Why did Ms. Cho miss the deadline?`,o:[`She was traveling for work.`,`She forgot about it.`,`The form was not working.`,`She was ill.`],ex:`business trip を traveling for work と言い換えている。`},
+     {q:`Which session can Ms. Cho most likely attend?`,o:[`Session B`,`Session A`,`Session C`,`None of them`],ex:`今週は毎朝会議があるので午前の A は無理、12日は大阪なので C も無理。午後の B なら出られる。2つの文書を合わせる問題。`},
+     {q:`What is suggested about Session C?`,o:[`Participants can join remotely.`,`It is the most popular session.`,`It is held in a larger room.`,`It will be canceled.`],ex:`online attendance available を join remotely と言い換えている。`}]},
+{id:'p7d-5',u:'p7d',docs:[{h:'広告',t:`Casa Verde — Now Open on Elm Street!
+
+Enjoy authentic Mexican cuisine made with fresh local ingredients.
+
+Opening Week Special (September 10-16): Get a free dessert with any main dish.
+
+Lunch: 11 A.M.-2:30 P.M. (Tuesday-Sunday)
+Dinner: 5-10 P.M. (Tuesday-Sunday)
+Closed on Mondays. Reservations recommended for groups of six or more.`},{h:'オンラインレビュー',t:`Casa Verde
+Rating: 4 out of 5
+Posted by D. Morgan, September 15
+
+I took my family of seven to Casa Verde for dinner last night. Luckily, I had called ahead, because the place was packed. The tacos were excellent, and the free dessert was a nice surprise for my kids. The only problem was the noise. It was hard to have a conversation. I'll definitely go back, but next time I'll try a quieter weekday lunch.`}],
+ qs:[{q:`What is suggested about Mr. Morgan?`,o:[`He made a reservation.`,`He visited on a Monday.`,`He went there for lunch.`,`He paid for dessert.`],ex:`called ahead（前もって電話した）＝予約。7人なので予約が勧められる人数でもある。`},
+     {q:`When did Mr. Morgan visit Casa Verde?`,o:[`On September 14`,`On September 15`,`On September 16`,`On September 10`],ex:`投稿は15日で、行ったのは last night（前の晩）なので14日。`},
+     {q:`Why did Mr. Morgan's children receive a dessert?`,o:[`Because of an opening promotion`,`Because it was a birthday`,`Because the food was served late`,`Because they ordered it`],ex:`開店記念の期間（9月10〜16日）は無料デザート。2つの文書を合わせる問題。`},
+     {q:`What did Mr. Morgan complain about?`,o:[`The noise level`,`The price`,`The service`,`The waiting time`],ex:`The only problem was the noise。`}]},
+{id:'p7d-6',u:'p7d',docs:[{h:'ウェブページ',t:`CityRide Bike Rental — Rates
+
+- 1 hour: $8
+- 4 hours: $20
+- Full day (up to 10 hours): $30
+
+Helmets are provided free of charge. Child seats are available for $5 per rental.
+
+Bikes must be returned to the same location. A late fee of $10 per hour will be charged for bikes returned after the rental period.`},{h:'Eメール',t:`To: CityRide Customer Service
+From: Thomas Becker
+Date: July 22
+Subject: Charge on my card
+
+Hello,
+
+Yesterday I rented a bike for four hours at your Riverside location. I added a child seat for my daughter. I returned the bike about an hour late because we got lost, and I understand that there is a fee for that. However, I was charged $45 in total, which seems too high. Could you check this for me?
+
+Thomas Becker`}],
+ qs:[{q:`Why did Mr. Becker write the e-mail?`,o:[`To ask about a charge`,`To make a reservation`,`To report a damaged bike`,`To ask for directions`],ex:`請求額が高すぎるので確認を頼んでいる。`},
+     {q:`How much did Mr. Becker most likely expect to pay?`,o:[`$35`,`$30`,`$45`,`$25`],ex:`4時間20ドル＋チャイルドシート5ドル＋1時間の延滞10ドル＝35ドル。2つの文書を合わせる問題。`},
+     {q:`What is indicated about helmets?`,o:[`They are free.`,`They cost $5.`,`Customers must bring their own.`,`They are only for children.`],ex:`free of charge。`},
+     {q:`When did Mr. Becker rent the bike?`,o:[`On July 21`,`On July 22`,`On July 20`,`On July 23`],ex:`メールは7月22日で、借りたのは Yesterday なので21日。`}]}
 ];
 
 /* ===================== 索引 ===================== */
@@ -2760,7 +3069,139 @@ const CLUE={
 "link-21":[["finished", "肯定文の完了"], ["so I can help you now", "もう終わっている"]],
 "link-22":[["has not replied", "否定文。文末は yet"]],
 "link-23":[["9 P.M.", "遅い時間"], ["but", "なのに"]],
-"link-24":[["for groups of ten or more", "特に当てはまる場合"]]
+"link-24":[["for groups of ten or more", "特に当てはまる場合"]],
+"pos-26":[["provide","動詞。うしろに目的語"],["support","名詞。名詞の前は形容詞"]],
+"pos-27":[["read the safety instructions","動詞＋目的語。そのあとで動詞を飾るのは副詞"]],
+"pos-28":[["a detailed","冠詞＋形容詞。次は名詞"],["of","前置詞の前は名詞"]],
+"pos-29":[["Mr. Garcia's","所有格。次は名詞"],["helped","文の動詞はここ。空所は主語の一部"]],
+"pos-30":[["responded","動詞。動詞を飾るのは副詞"],["to our request","前置詞のかたまり。目的語ではない"]],
+"pos-31":[["obtain","他動詞。目的語（名詞）が必要"],["from the front desk","目的語のあとの前置詞句"]],
+"pos-32":[["a","冠詞"],["increase","名詞。名詞の前は形容詞"]],
+"pos-33":[["is","be動詞"],["regarded","過去分詞。be と過去分詞の間は副詞"]],
+"pos-34":[["are available","文はここで完成。あとは飾りの語"],["to answer","目的を表す不定詞"]],
+"pos-35":[["make a","make a ＋ 名詞"],["on the merger","前置詞句。名詞のあと"]],
+"verb-26":[["manager","任命される側。受け身"],["next week","未来の時"]],
+"verb-27":[["when the power went out","過去のある時点。その時にしていた"]],
+"verb-28":[["The renovation","完了される側。受け身"],["by the end of next month","未来の期限"]],
+"verb-29":[["All the participants","複数の主語。文の動詞が必要"]],
+"verb-30":[["avoids","avoid ＋ -ing"]],
+"verb-31":[["Since last April","〜以来。現在完了"],["its energy use","目的語がある。能動"]],
+"verb-32":[["needs to","to のあとは原形"],["by the finance department","by ＋ する人。受け身の合図"]],
+"verb-33":[["had arrived","過去の事実と逆の仮定"],["If","仮定の合図"]],
+"verb-34":[["by the time","その時までに完了"],["tomorrow","未来"]],
+"verb-35":[["is considering","consider ＋ -ing"]],
+"pron-24":[["assistant","名詞。名詞の前は所有格"]],
+"pron-25":[["by","前置詞のあとは目的格"]],
+"pron-26":[["The engineers","主語と同じ人"],["instead of hiring an outside company","外部に頼まず自分たちで"]],
+"pron-27":[["prices","複数形。くり返しは those"]],
+"pron-28":[["interested in","前に who is が省略された形"],["should contact","文の動詞"]],
+"pron-29":[["the three applicants","全部で3人"],["only one","1人を除いた残り"]],
+"pron-30":[["The printer","くり返しを避ける"],["is broken","it は壊れた方を指してしまう"]],
+"pron-31":[["Ms. Patel and her team","複数。所有格は their"],["own","on one's own の形"]],
+"pron-32":[["Neither of","単数扱い"]],
+"prep-26":[["the high cost","名詞のかたまり。前置詞が必要"],["chose the premium plan","高いのに選んだ。逆の関係"]],
+"prep-27":[["all times","at all times の形"]],
+"prep-28":[["the number of participants increased","主語＋動詞。接続詞が必要"]],
+"prep-29":[["more than ten years","期間"],["has worked","現在完了"]],
+"prep-30":[["and 6 P.M.","A and B の形"]],
+"prep-31":[["the new system is installed","主語＋動詞。接続詞が必要"]],
+"prep-32":[["the item is returned","主語＋動詞"],["in its original packaging","条件の内容"]],
+"prep-33":[["available","available upon request の形"]],
+"prep-34":[["a shortage of drivers","名詞のかたまり。理由"]],
+"prep-35":[["will remain open","ずっと続く状態"],["the renovation work is completed","主語＋動詞"]],
+"rel-24":[["The company","先行詞は物"],["applied to","to の目的語が欠けている"]],
+"rel-25":[["Applicants","先行詞は人"],["résumés","名詞が続く。whose ＋ 名詞"]],
+"rel-26":[["Room 5,","コンマ。that は使えない"],["is on the second floor","主語が欠けている"]],
+"rel-27":[["the factory","場所"],["the new product will be manufactured","欠けのない文"]],
+"rel-28":[["the","最上級の合図"],["of all the models","〜の中で。最上級"]],
+"rel-29":[["The more","The ＋ 比較級の形"]],
+"rel-30":[["as","as 〜 as。間は原級"],["as the old one","比べる相手"]],
+"rel-31":[["Employees","先行詞は人"],["wish","主語が欠けている"]],
+"rel-32":[["higher than","比較級"]],
+"rel-33":[["the documents","先行詞は物。what は使えない"],["mentioned","目的語が欠けている"]],
+"vocab-26":[["production of the old model","旧型の生産"],["at the end of the year","年末で終わり"]],
+"vocab-27":[["that all lights are turned off","that 節を直接とる"]],
+"vocab-28":[["our expectations","exceed expectations の形"]],
+"vocab-29":[["for his outstanding customer service","たたえられる理由"]],
+"vocab-30":[["a wide","a wide range of の形"],["of colors","選べる種類"]],
+"vocab-31":[["to reduce paperwork","目的"]],
+"vocab-32":[["for 30 days","有効期間"],["from the date of issue","発行日から"]],
+"vocab-33":[["overnight","人がいない夜の間"]],
+"vocab-34":[["your expense report","提出するもの"],["to the accounting department","提出先"]],
+"vocab-35":[["located","located とよく使う副詞"],["within walking distance","駅から歩ける"]],
+"link-25":[["was delayed by an hour","原因"],["missed the opening speech","結果"]],
+"link-26":[["offices in Tokyo and Osaka","いまある事務所"],["open a branch in Fukuoka","さらに付け足し"]],
+"link-27":[["by credit card","選択肢1"],["in cash","選択肢2"]],
+"link-28":[["applicants","数えられる名詞の複数形"],["the deadline was extended","少なかったから延長"]],
+"link-29":[["all of the staff members","all を飾るのは almost"]],
+"link-30":[["was a great success","理由"],["hold it again next year","結果"]],
+"link-31":[["to attend","too 〜 to の形"]],
+"link-32":[["large","形容詞のうしろに enough"],["to hold 500 people","〜できるほど"]],
+"link-33":[["and frozen foods","A and B の形"]],
+"link-34":[["but she plans to go there next month","まだ行っていない"]],
+"p6-4-1":[["Please","命令文。うしろは原形"],["at the reception desk","行く場所"]],
+"p6-4-2":[["at 9:00 A.M.","朝の予定"],["you will attend","このあとの予定"]],
+"p6-4-3":[["The session usually","単数の主語＋習慣"]],
+"p6-4-4":[["We look forward to working with you.","結びの直前の文"],["accepted our offer","すでに採用が決まっている"]],
+"p6-5-1":[["at 7 A.M. instead of 9 A.M.","開店が早まる＝時間が延びる"]],
+"p6-5-2":[["a response to","前置詞 to のあとは名詞"],["from many customers","だれからの要望か"]],
+"p6-5-3":[["Weekend hours will remain the same.","前の文"],["will begin offering fresh bread","さらに新しい知らせ"]],
+"p6-5-4":[["The store will open at 7 A.M.","店全体の時間"],["every day","パンは毎日"]],
+"p6-6-1":[["The center, which","主語はセンター。見込まれる側"]],
+"p6-6-2":[["of skilled workers","人材の量"]],
+"p6-6-3":[["Construction will begin early next year.","直前の文。工事の話"],["in 2028","完成の時期"]],
+"p6-6-4":[["welcomed the news","歓迎"],["expressed concern","心配。逆の内容"]],
+"p6-7-1":[["at least twelve characters","数量のあとに long"]],
+"p6-7-2":[["who do not update","those who 〜 の形"]],
+"p6-7-3":[["will be unable to log in","ログインできない場合"]],
+"p6-7-4":[["If you need","need のあとは名詞"]],
+"p6-8-1":[["on March 31","期限の日付"],["To continue receiving","続けるには更新が必要"]],
+"p6-8-2":[["a 20 percent discount","特典1"],["free access","特典2"]],
+"p6-8-3":[["Renewing is easy.","更新の方法の話"]],
+"p6-8-4":[["local events, restaurants, and","名詞を並べている"]],
+"p6-9-1":[["can","助動詞のあとは原形"]],
+"p6-9-2":[["Rooms that are not occupied","部屋が主語。開放される側"],["to other users","だれに"]],
+"p6-9-3":[["within 15 minutes of the reservation time","遅れると開放される"]],
+"p6-9-4":[["designed for quiet work","理由"],["phone calls are not permitted","結果"]],
+"p7s-7-1":[["scheduling appointments","making appointments の言い換え"]],
+"p7s-7-2":[["work on some Saturdays","Saturdays は weekend"],["preferred but not required","経験は必須ではない"]],
+"p7s-7-3":[["send a résumé and a short cover letter","送るもの"]],
+"p7s-8-1":[["isn't working","故障している"]],
+"p7s-8-2":[["is being used by the accounting team","別のチームが使用中"]],
+"p7s-8-3":[["It's a little small, though.","小さいという心配"],["The room only has eight seats anyway","部屋も小さいので十分"]],
+"p7s-9-1":[["This e-mail confirms your reservation","目的はここ"]],
+"p7s-9-2":[["As requested","本人が頼んだ"],["a view of the bay","眺めのよい部屋"]],
+"p7s-9-3":[["from August 14","到着日"],["at least 48 hours before your arrival date","14日の48時間前は12日"]],
+"p7s-9-4":[["is included in your room rate","料金に含まれる"]],
+"p7s-10-1":[["will add a new route","新しい路線"]],
+"p7s-10-2":[["every 20 minutes","20分ごと＝1時間に3本"]],
+"p7s-10-3":[["extra space for luggage","荷物スペースはある"],["free Wi-Fi","インターネットもある"],["one-fifth the cost of a taxi ride","タクシーより安い"]],
+"p7s-10-4":[["starting June 1","運行開始日"],["free for the first week","最初の1週間は無料"]],
+"p7s-11-1":[["Orders over $80 are delivered free of charge","80ドル超で無料。50ドルは対象外"],["a $6 delivery fee applies","配送料6ドル"]],
+"p7s-11-2":[["Orders placed after 10 A.M. arrive the next day","10時以降は翌日"]],
+"p7s-11-3":[["replace it with a similar product","似た商品で代わり"],["at no extra cost","追加料金なし"]],
+"p7s-12-1":[["a rotation schedule","新しい交代制"]],
+"p7s-12-2":[["label your food with your name","食べ物に名前を書く"]],
+"p7s-12-3":[["switch weeks with another department","trade weeks の言い換え"]],
+"p7s-13-1":[["a view of the lake","よかった点"]],
+"p7s-13-2":[["the directions on the Web site were out of date","案内が古かった"]],
+"p7s-13-3":[["a discount on our next stay","次回の割引"],["I hope the directions are updated soon","まだ直っていない"]],
+"p7d-3-1":[["I would like to register","申し込み"]],
+"p7d-3-2":[["Date: February 3","申し込みの日付"],["Regular registration (February 1-28): $320","2月は通常料金"],["five or more people","5人以上が条件。3人は対象外"]],
+"p7d-3-3":[["A dinner reception on March 8 is available for an additional $40.","追加料金は8日の夕食"],["would also like to attend the dinner reception","3人とも参加"]],
+"p7d-3-4":[["Will vegetarian meals be available at lunch?","食事についての質問"]],
+"p7d-4-1":[["Each session is the same","内容は同じ"]],
+"p7d-4-2":[["I was on a business trip","出張中だった"]],
+"p7d-4-3":[["client meetings every morning this week","午前は無理"],["all day on April 12","12日の C も無理"],["Thursday, April 8, 1-4 P.M.","午後の B なら出られる"]],
+"p7d-4-4":[["online attendance available","remotely の言い換え"]],
+"p7d-5-1":[["I had called ahead","前もって電話＝予約"],["Reservations recommended for groups of six or more","7人は予約が勧められる"]],
+"p7d-5-2":[["September 15","投稿日"],["last night","前の晩＝14日"]],
+"p7d-5-3":[["Opening Week Special (September 10-16)","開店記念の期間"],["the free dessert","無料のデザート"]],
+"p7d-5-4":[["The only problem was the noise.","不満は騒がしさ"]],
+"p7d-6-1":[["which seems too high","金額がおかしい"],["Could you check this for me?","確認を頼む"]],
+"p7d-6-2":[["4 hours: $20","4時間は20ドル"],["$5 per rental","チャイルドシートは5ドル"],["$10 per hour","1時間遅れで10ドル"]],
+"p7d-6-3":[["Helmets are provided free of charge","無料"]],
+"p7d-6-4":[["Date: July 22","メールの日付"],["Yesterday","前日＝21日"]]
 };
 const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 /* raw の中で clues を探し、印を付けた HTML を返す。found に番号つきの説明を積む。post は印付け後の HTML に施す置換 */
@@ -2788,14 +3229,14 @@ const uname=u=>u.part?('Part '+u.part+' '+u.name):u.name;
 /* ===================== 状態 ===================== */
 function today(){const n=new Date();return Math.floor((n.getTime()-n.getTimezoneOffset()*6e4-4*36e5)/DAY)}
 function fresh(){return{v:1,updatedAt:0,xp:0,streak:0,best:0,freezes:0,lastDone:null,
-  day:{key:today(),done:0,correct:0,total:0,kin:false,w:0,b:0},quota:5,nextQuota:null,trigger:'',setup:false,
+  day:{key:today(),done:0,correct:0,total:0,kin:false,w:0,b:0},quota:5,nextQuota:null,trigger:'',setup:false,remind:{mode:'trigger',time:'20:00'},
   testDate:'2026-11-15',kinOn:false,easy:{1:false,2:false,3:false},kin:{pos:1,pace:50},cards:{},hist:{},lastUnit:''}}
-function fix(s){const f=fresh();s=Object.assign(f,s||{});s.kin=Object.assign({pos:1,pace:50},s.kin);s.easy=Object.assign({1:false,2:false,3:false},s.easy);if(s.easyOn){s.easy={1:true,2:true,3:true};delete s.easyOn}s.day=Object.assign({key:today(),done:0,correct:0,total:0,kin:false,w:0,b:0},s.day);return s}
+function fix(s){const f=fresh();s=Object.assign(f,s||{});s.kin=Object.assign({pos:1,pace:50},s.kin);s.easy=Object.assign({1:false,2:false,3:false},s.easy);s.remind=Object.assign({mode:'trigger',time:'20:00'},s.remind);if(s.easyOn){s.easy={1:true,2:true,3:true};delete s.easyOn}s.day=Object.assign({key:today(),done:0,correct:0,total:0,kin:false,w:0,b:0},s.day);return s}
 let S=fresh(), view='home', sess=null, done=null, openTips={}, resetArm=false, syncState='この端末に保存';
 function loadLocal(){try{const t=localStorage.getItem(KEY);if(t)S=fix(JSON.parse(t))}catch(e){}}
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let cloud=null,busy=false,dirty=false;
-function save(){S.updatedAt=Date.now();saveLocal();push()}
+function save(){S.updatedAt=Date.now();saveLocal();push();mirror();badge();armTimer()}
 async function push(){if(!cloud)return;if(busy){dirty=true;return}busy=true;
   try{await cloud.set({json:JSON.stringify(S),updatedAt:S.updatedAt});syncState='アカウントに保存（ほかの端末でも続きから）'}catch(e){syncState='この端末に保存（アカウントへの保存は失敗）'}
   busy=false;if(dirty){dirty=false;push()}}
@@ -2870,12 +3311,12 @@ function slots(){return `<div class="slots">${Array.from({length:Math.max(S.quot
 function vHome(){const L=level(),dt=daysToTest(),lk=locked();let h='';
   h+=`<div class="head"><div><h1>リーディング道場</h1><p class="sub">${dlabel(S.day.key)}${dt!=null&&dt>=0?(dt===0?'　今日が本番':`　本番まであと${dt}日`):''}</p></div><div class="rank">${L.title}<br><span class="lab">Lv.${L.lv}</span></div></div>`;
   if(done)h+=vDone();
-  if(!S.setup){h+=`<div class="sec"><h2>いつやるか、先に決める</h2><p class="sub">毎日かならずやっていることの直後がおすすめです。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><div><button class="btn" data-act="setupdone"${S.trigger?'':' disabled'}>決定</button></div></div>`}
+  if(!S.setup){h+=`<div class="sec"><h2>いつやるか、先に決める</h2><p class="sub">毎日かならずやっていることの直後がおすすめです。</p><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div><div><button class="btn" data-act="setupdone"${S.trigger?'':' disabled'}>決定</button></div><p class="sub">時刻で知らせてほしいときは、あとで設定の「お知らせの方法」から選べます。</p></div>`}
   h+=`<div class="sec"><div class="row between"><span class="lab">今日の分${FREE?'　<span class="red">上限なし</span>':''}</span><span class="sub">連続 <b class="num">${S.streak}</b> 日</span></div>${slots()}`;
   if(!lk){const u=recommend(),un=UNIT[u],st=ustat(u);
     h+=`<div style="margin-top:8px"><p class="lab">${S.day.done+1}本目</p><h2>${uname(un)}</h2><p class="sub">${est(u)}${st.due?`　<span class="red">復習${st.due}問</span>`:''}</p></div>
     <button class="btn pri" data-act="start" data-v="${u}">始める</button>
-    ${S.trigger?`<p class="sub">${esc(S.trigger)}、1本。</p>`:''}`}
+    ${remindLine()?`<p class="sub">${remindLine()}</p>`:''}`}
   else{h+=`<div class="row" style="margin-top:8px"><span class="hanko big${done&&done.streakUp?' pop':''}">済</span><div><h2>今日はここまで</h2><p class="sub">ゲーム解禁。続きは明日の朝4時から。</p></div></div>`}
   h+=`</div>`;
   const ws=ustat('word'),wl=wLocked();
@@ -2924,14 +3365,14 @@ function vRecord(){const L=level();let tot=0,w=0;Object.values(S.cards).forEach(
   h+=`<div class="sec line"><h2>なぜこの作りか</h2><ul class="why">
    <li>全部が問題形式。読み直すより、思い出すほうが残る。<small>Roediger &amp; Karpicke 2006</small></li>
    <li>正解した問題は1日後、3日後、7日後にまた出る。<small>Cepeda ほか 2006</small></li>
-   <li>通知ではなく「〜したら1本」。先に決めた人のほうが実行する。<small>Gollwitzer &amp; Sheeran 2006</small></li>
+   <li>基本は「〜したら1本」。先に決めた人のほうが実行する。通知は設定で足せる補助。<small>Gollwitzer &amp; Sheeran 2006</small></li>
    <li>ゲームは終わってから。楽しみを後ろに置くと続く。<small>Milkman ほか 2014</small></li>
    <li>1日休んでも習慣は崩れない。だからお守りがある。<small>Lally ほか 2010</small></li>
    <li>1日の上限は、上の5つほど研究の裏づけがない。始めるのを軽くするための工夫。</li></ul></div>`;
   return h}
 
 function vSetup(){let h=`<div class="head"><h1>設定</h1></div>`;
-  h+=`<div class="sec"><h2>きっかけ</h2><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div></div>`;
+  h+=vRemind();
   h+=`<div class="sec line"><h2>1日の本数</h2><div class="chips">${[3,4,5,6,8].map(n=>`<button class="chip${(S.nextQuota||S.quota)===n?' on':''}" data-act="quota" data-v="${n}">${n}</button>`).join('')}</div><p class="sub">今日は${S.quota}本。変えても反映は明日からです。</p></div>`;
   h+=`<div class="sec line"><h2>試験日</h2><div><label for="testdate">次に受ける日</label><input id="testdate" type="date" value="${esc(S.testDate)}"></div></div>`;
   h+=`<div class="sec line"><h2>基本語</h2><p class="sub">易しい語として外した${WB.length}語です。入れた種類は、ホームとユニットの「基本語」で本編とは別に練習できます。例文はありません。</p>${[1,2,3].map(k=>{const n=WB.filter(r=>r[3]===k).length,on=S.easy[k];return `<div class="row between"><div class="grow"><b>${k}. ${WBK[k][0]}</b><p class="sub">${n}語・${WBK[k][1]}</p></div><div class="chips"><button class="chip${on?' on':''}" data-act="easy" data-v="${k}1">入れる</button><button class="chip${on?'':' on'}" data-act="easy" data-v="${k}0">入れない</button></div></div>`}).join('')}</div>`;
@@ -2963,6 +3404,74 @@ function render(){syncWB();rollover();const app=document.getElementById('app'),t
   app.innerHTML=view==='units'?vUnits():view==='record'?vRecord():view==='setup'?vSetup():vHome();
   tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===view))}
 
+/* ===================== お知らせ ===================== */
+/* 3つの方式を設定で切り替える。
+   trigger：通知なし。「〜したら1本」を決めて自分で始める（最初からの方式）
+   cal：毎日の予定をカレンダーに入れ、カレンダーアプリに通知してもらう（サーバー不要・閉じていても確実）
+   app：ホーム画面アイコンのバッジ＋ブラウザの通知（対応している端末のみ。閉じている間はブラウザ任せ） */
+const RMODES=[['trigger','きっかけだけ'],['cal','カレンダーで通知'],['app','アプリの通知']];
+const APP_URL='https://oniikazu0902-source.github.io/reading-dojo/';
+const remaining=()=>FREE?0:Math.max(0,S.quota-S.day.done);
+const canNotify=()=>'Notification' in window&&'serviceWorker' in navigator;
+function remindLine(){const r=S.remind,t=S.trigger?esc(S.trigger)+'、1本。':'';
+  if(r.mode==='cal')return `毎日 ${esc(r.time)} にカレンダーがお知らせ。${t}`;
+  if(r.mode==='app')return `${esc(r.time)} を過ぎてまだなら通知。${t}`;
+  return t}
+function untilPart(){const p=(S.testDate||'').split('-').map(Number);if(daysToTest()==null||daysToTest()<0)return '';return `;UNTIL=${p[0]}${String(p[1]).padStart(2,'0')}${String(p[2]).padStart(2,'0')}T235959`}
+const ics2=n=>String(n).padStart(2,'0');
+const icsLocal=d=>`${d.getFullYear()}${ics2(d.getMonth()+1)}${ics2(d.getDate())}T${ics2(d.getHours())}${ics2(d.getMinutes())}00`;
+function firstAt(){const d=new Date(),[hh,mm]=S.remind.time.split(':').map(Number);const at=new Date(d);at.setHours(hh,mm,0,0);if(at<=d)at.setDate(at.getDate()+1);return at}
+function firstDay(){return icsLocal(firstAt())}
+function icsText(){const now=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const desc=(S.trigger?S.trigger+'、1本。\\n':'')+'1本は2〜5分。'+APP_URL;
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//reading-dojo//JA','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+   'UID:reading-dojo-daily@oniikazu0902-source.github.io','DTSTAMP:'+now,'DTSTART:'+firstDay(),'DURATION:PT10M',
+   'RRULE:FREQ=DAILY'+untilPart(),'SUMMARY:リーディング道場 1本','DESCRIPTION:'+desc,'URL:'+APP_URL,
+   'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:リーディング道場 1本','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].map(icsFold).join('\r\n')+'\r\n'}
+/* iCalendar は1行75バイトまで。超える行は改行＋空白で折り返す（文字の途中では切らない） */
+function icsFold(line){const te=new TextEncoder();let out='',cur='',n=0;for(const ch of line){const b=te.encode(ch).length;if(n+b>(out?74:75)){out+=(out?'\r\n ':'')+cur;cur='';n=0}cur+=ch;n+=b}return out?out+'\r\n '+cur:cur}
+function downloadIcs(){const b=new Blob([icsText()],{type:'text/calendar;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='reading-dojo.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
+function gcalUrl(){const a=firstAt(),s=icsLocal(a),end=icsLocal(new Date(a.getTime()+10*6e4));
+  let tz='Asia/Tokyo';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||tz}catch(x){}
+  return 'https://calendar.google.com/calendar/render?'+new URLSearchParams({action:'TEMPLATE',text:'リーディング道場 1本',dates:s+'/'+end,ctz:tz,
+   recur:'RRULE:FREQ=DAILY'+untilPart(),details:(S.trigger?S.trigger+'、1本。\n':'')+APP_URL}).toString()}
+/* サービスワーカーが閉じている間も読めるよう、今日の進み具合を Cache Storage に置く */
+function mirror(){try{if(!('caches' in window))return;caches.open('reading-dojo-state').then(async c=>{let old={};try{const r=await c.match('state.json');if(r)old=await r.json()}catch(e){}
+  const s={key:S.day.key,done:S.day.done,quota:S.quota,free:FREE,mode:S.remind.mode,time:S.remind.time,trigger:S.trigger,notified:old.notified};
+  await c.put('state.json',new Response(JSON.stringify(s),{headers:{'Content-Type':'application/json'}}))}).catch(()=>{})}catch(e){}}
+function badge(){try{if(!navigator.setAppBadge)return;const n=remaining();
+  if(S.remind.mode==='app'&&n>0)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}catch(e){}}
+let remindTimer=null,notifState='';
+function armTimer(){clearTimeout(remindTimer);if(S.remind.mode!=='app'||!canNotify()||Notification.permission!=='granted')return;
+  const [hh,mm]=S.remind.time.split(':').map(Number),now=new Date(),at=new Date(now);at.setHours(hh,mm,0,0);if(at<=now)return;
+  remindTimer=setTimeout(()=>{rollover();if(remaining()>0)notify()},Math.min(at-now,2**31-1))}
+async function notify(test){try{const reg=await navigator.serviceWorker.ready;const n=remaining();
+  await reg.showNotification('リーディング道場',{body:test?'通知のテストです。この時刻に、まだなら届きます。':`今日の1本がまだです（残り${n}本）。${S.trigger?S.trigger+'、1本。':''}`,
+   tag:'dojo-remind',icon:'icon-192.png',badge:'icon-192.png',data:{url:APP_URL}})}catch(e){notifState='通知を出せませんでした'}}
+async function enableApp(){if(!canNotify()){notifState='このブラウザは通知に対応していません';render();return}
+  let p=Notification.permission;if(p==='default'){try{p=await Notification.requestPermission()}catch(e){}}
+  if(p!=='granted'){notifState='通知が許可されていません。端末の設定でこのアプリの通知をオンにしてください';render();return}
+  try{const reg=await navigator.serviceWorker.ready;if(reg.periodicSync){let ok=true;
+    try{const st=await navigator.permissions.query({name:'periodic-background-sync'});ok=st.state==='granted'}catch(e){}
+    if(ok){await reg.periodicSync.register('dojo-remind',{minInterval:6*36e5});notifState='オンにしました。アプリを閉じていても、ブラウザが数時間おきに確認します'}
+    else notifState='オンにしました。閉じている間の確認はこの端末ではできません（バッジは出ます）'}
+   else notifState='オンにしました。閉じている間の確認はこの端末ではできません（バッジは出ます）'}catch(e){notifState='オンにしました'}
+  armTimer();badge();render()}
+function vRemind(){const r=S.remind;let h=`<div class="sec"><h2>お知らせの方法</h2><div class="chips">${RMODES.map(([k,l])=>`<button class="chip${r.mode===k?' on':''}" data-act="rmode" data-v="${k}">${l}</button>`).join('')}</div>`;
+  if(r.mode==='trigger')h+=`<p class="sub">通知は使いません。毎日かならずやることの直後に1本、と先に決めておく方式です。</p>`;
+  else h+=`<div><label for="rtime">時刻</label><input id="rtime" type="time" value="${esc(r.time)}"></div>`;
+  if(r.mode==='cal')h+=`<p class="sub">毎日この時刻の予定（10分）をカレンダーに入れ、カレンダーアプリに通知してもらいます。アプリを閉じていても確実に届きます。${daysToTest()>0?'予定は試験日まで繰り返します。':''}</p>
+    <div class="chips"><button class="btn" data-act="ics">カレンダーに追加</button><a class="btn" href="${esc(gcalUrl())}" target="_blank" rel="noopener">Googleカレンダーに追加</a></div>
+    <p class="sub">「カレンダーに追加」は iPhone・Mac・Outlook 用のファイル（.ics）です。開くと追加画面になります。時刻を変えたときは、前の予定を消してから追加し直してください。</p>`;
+  if(r.mode==='app'){const perm=canNotify()?Notification.permission:'none';
+    h+=`<p class="sub">今日の分が残っていると、ホーム画面のアイコンに残りの本数が出ます。通知を許可すると、この時刻を過ぎてまだのときに通知します。</p>
+    <div class="chips"><button class="btn" data-act="appon">${perm==='granted'?'通知の設定を更新':'通知を許可する'}</button>${perm==='granted'?'<button class="btn" data-act="apptest">テスト通知</button>':''}</div>
+    ${notifState?`<p class="sub red">${esc(notifState)}</p>`:''}
+    <p class="sub">iPhone はホーム画面に追加して開いたときだけ使えます（iOS 16.4 以降）。アプリを閉じている間の通知は Android の Chrome だけで、時刻はブラウザまかせになります。決まった時刻に確実に鳴らしたいときは「カレンダーで通知」を選んでください。</p>`}
+  h+=`<h2 style="margin-top:10px">きっかけ</h2><div class="chips">${TRIGGERS.map((t,i)=>`<button class="chip${S.trigger===t?' on':''}" data-act="trig" data-v="${i}">${t}</button>`).join('')}</div>${r.mode==='trigger'?'':'<p class="sub">通知と組み合わせて使えます。</p>'}</div>`;
+  return h}
+
 /* ===================== 操作 ===================== */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,v=b.dataset.v;
   if(a!=='reset')resetArm=false;
@@ -2974,6 +3483,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   else if(a==='tips'){openTips[v]=!openTips[v];render()}
   else if(a==='trig'){S.trigger=TRIGGERS[+v];save();render()}
   else if(a==='setupdone'){S.setup=true;save();render()}
+  else if(a==='rmode'){S.remind.mode=v;notifState='';save();render();if(v==='app'&&canNotify()&&Notification.permission==='granted')enableApp()}
+  else if(a==='ics')downloadIcs();
+  else if(a==='appon')enableApp();
+  else if(a==='apptest')notify(true);
   else if(a==='quota'){const n=+v;S.nextQuota=n===S.quota?null:n;save();render()}
   else if(a==='kinon'){S.kinOn=v==='1';save();render()}
   else if(a==='easy'){S.easy[v[0]]=v[1]==='1';save();render()}
@@ -2981,10 +3494,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   else if(a==='reset'){if(resetArm){S=fresh();resetArm=false;save();view='home'}else resetArm=true;render()}});
 document.addEventListener('change',e=>{const t=e.target;
   if(t.id==='testdate'){S.testDate=t.value;save()}
+  else if(t.id==='rtime'&&/^\d\d:\d\d$/.test(t.value)){S.remind.time=t.value;save();render()}
   else if(t.id==='kinpos'){S.kin.pos=Math.max(1,Math.min(1000,parseInt(t.value,10)||1));save()}
   else if(t.id==='kinpace'){S.kin.pace=+t.value;save()}});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!sess)render()});
-loadLocal();rollover();render();initCloud();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!sess)render();mirror();badge();armTimer()}});
+loadLocal();rollover();render();initCloud();mirror();badge();armTimer();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 </script>
 </body>
