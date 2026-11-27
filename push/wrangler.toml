@@ -1,0 +1,20 @@
+# リーディング道場のプッシュ通知サーバー。URL は https://dojo-push.<アカウントのサブドメイン>.workers.dev
+name = "dojo-push"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+APP_URL = "https://oniikazu0902-source.github.io/reading-dojo/"
+# 送信元を名乗るための連絡先（VAPID の sub）
+VAPID_SUBJECT = "https://github.com/oniikazu0902-source/reading-dojo"
+# /sync などを呼んでよいページのオリジン（カンマ区切り）
+ALLOW_ORIGINS = "https://oniikazu0902-source.github.io,http://localhost:8765"
+
+[[durable_objects.bindings]]
+name = "SCHED"
+class_name = "Scheduler"
+
+# 無料プランでは SQLite バックエンドの Durable Object を使う
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Scheduler"]
