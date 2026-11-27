@@ -73,12 +73,45 @@ self.addEventListener('periodicsync', e => {
   })());
 });
 
-// 通知を押したら、開いているアプリに切り替える（なければ開く）
+/* ---------- プッシュ通知（設定で「プッシュ通知」を選んだとき） ----------
+   サーバーは Declarative Web Push の形（{web_push: 8030, notification: {...}, app_badge}）で送る。
+   iOS 18.4 以降はこの JSON をそのまま表示するので、ここは通らない。Android の Chrome などはここで表示する */
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { notification: { title: 'リーディング道場', body: e.data ? e.data.text() : '' } }; }
+  const n = d.notification || { title: 'リーディング道場', body: '今日の1本がまだです。' };
+  const jobs = [self.registration.showNotification(n.title || 'リーディング道場', {
+    body: n.body || '',
+    tag: n.tag || 'dojo-remind',
+    renotify: true,
+    icon: 'icon-192.png',
+    badge: 'badge-96.png',            // Android のステータスバーに出る白抜きのマーク
+    lang: n.lang || 'ja-JP',
+    data: { url: n.navigate || './' },
+    actions: [{ action: 'start', title: '1本やる' }, { action: 'snooze', title: '30分後に' }]
+  })];
+  if (typeof d.app_badge === 'number' && self.navigator.setAppBadge) {
+    jobs.push((d.app_badge > 0 ? self.navigator.setAppBadge(d.app_badge) : self.navigator.clearAppBadge()).catch(() => {}));
+  }
+  e.waitUntil(Promise.all(jobs));
+});
+
+// 通知を押したら、開いているアプリに切り替える（なければ開く）。「30分後に」はサーバーにもう一度送ってもらう
 self.addEventListener('notificationclick', e => {
   e.notification.close();
+  if (e.action === 'snooze') {
+    e.waitUntil((async () => {
+      const s = await readState();
+      if (s && s.pushId && s.pushBase) {
+        try { await fetch(s.pushBase + '/snooze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: s.pushId, min: 30 }) }); } catch (x) {}
+      }
+    })());
+    return;
+  }
+  const url = (e.notification.data && e.notification.data.url) || './';
   e.waitUntil((async () => {
     const list = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const c of list) { if ('focus' in c) return c.focus(); }
-    return self.clients.openWindow('./');
+    return self.clients.openWindow(url);
   })());
 });

@@ -3236,7 +3236,7 @@ let S=fresh(), view='home', sess=null, done=null, openTips={}, resetArm=false, s
 function loadLocal(){try{const t=localStorage.getItem(KEY);if(t)S=fix(JSON.parse(t))}catch(e){}}
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let cloud=null,busy=false,dirty=false;
-function save(){S.updatedAt=Date.now();saveLocal();push();mirror();badge();armTimer()}
+function save(){S.updatedAt=Date.now();saveLocal();push();mirror();badge();armTimer();pushSync()}
 async function push(){if(!cloud)return;if(busy){dirty=true;return}busy=true;
   try{await cloud.set({json:JSON.stringify(S),updatedAt:S.updatedAt});syncState='アカウントに保存（ほかの端末でも続きから）'}catch(e){syncState='この端末に保存（アカウントへの保存は失敗）'}
   busy=false;if(dirty){dirty=false;push()}}
@@ -3409,13 +3409,52 @@ function render(){syncWB();rollover();const app=document.getElementById('app'),t
    trigger：通知なし。「〜したら1本」を決めて自分で始める（最初からの方式）
    cal：毎日の予定をカレンダーに入れ、カレンダーアプリに通知してもらう（サーバー不要・閉じていても確実）
    app：ホーム画面アイコンのバッジ＋ブラウザの通知（対応している端末のみ。閉じている間はブラウザ任せ） */
-const RMODES=[['trigger','きっかけだけ'],['cal','カレンダーで通知'],['app','アプリの通知']];
+const RMODES=[['trigger','きっかけだけ'],['push','プッシュ通知'],['cal','カレンダーで通知'],['app','端末だけで通知']];
+/* プッシュ通知サーバー（push/ フォルダの Cloudflare Worker） */
+const PUSH_BASE='https://dojo-push.checkes.workers.dev';
+const PKEY='reading-dojo-push';
+let pushDev=(()=>{try{return JSON.parse(localStorage.getItem(PKEY)||'null')}catch(e){return null}})(); /* この端末の購読 {id,on}。アカウントには同期しない */
+const savePushDev=()=>{try{pushDev?localStorage.setItem(PKEY,JSON.stringify(pushDev)):localStorage.removeItem(PKEY)}catch(e){}};
+const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=()=>navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+const canPush=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+let pushMsg='',pushBusy=false,pushTimer=null;
+function pushBody(extra){let tz='Asia/Tokyo';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||tz}catch(e){}
+  return Object.assign({id:pushDev.id,tz,time:S.remind.time,day:S.day.key,done:S.day.done,quota:S.quota,free:FREE,streak:S.streak,trigger:S.trigger},extra||{})}
+async function pushPost(path,body){const r=await fetch(PUSH_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw Object.assign(new Error(j.error||('HTTP '+r.status)),{status:r.status});return j}
+/* 保存のたびに進み具合をサーバーへ（まとめて2秒後に1回） */
+function pushSync(){if(!pushDev||!pushDev.on)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>{pushPost('/sync',pushBody()).catch(e=>{if(e.status===404){pushDev.on=false;savePushDev();pushMsg='サーバー側の登録が消えていました。もう一度オンにしてください';render()}})},2000)}
+async function enablePush(){if(pushBusy)return;pushBusy=true;pushMsg='設定中…';render();
+  try{
+    if(!canPush()){pushMsg=isIOS()&&!standalone()?'iPhone では、共有ボタンから「ホーム画面に追加」して、そのアイコンから開いてください（iOS 16.4 以降）':'このブラウザはプッシュ通知に対応していません';return}
+    let p=Notification.permission;if(p==='default')p=await Notification.requestPermission();
+    if(p!=='granted'){pushMsg='通知が許可されていません。端末の設定で、このアプリの通知をオンにしてください';return}
+    const reg=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error('アプリの準備ができていません。一度閉じて開き直してください')),8000))]);
+    const {key}=await (await fetch(PUSH_BASE+'/vapid')).json();
+    let sub=await reg.pushManager.getSubscription();
+    if(sub){const cur=sub.options&&sub.options.applicationServerKey;if(cur&&b64u(new Uint8Array(cur))!==key){await sub.unsubscribe();sub=null}}
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:unb64u(key)});
+    if(!pushDev)pushDev={id:randId()};
+    const r=await pushPost('/sync',pushBody({sub:sub.toJSON()}));
+    pushDev.on=true;savePushDev();mirror();
+    pushMsg=`オンにしました。次の通知は ${new Date(r.next).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}（今日の分が終わっていれば届きません）`;
+  }catch(e){pushMsg='サーバーにつながりませんでした（'+(e.message||e)+'）。少しあとでもう一度試してください'}
+  finally{pushBusy=false;render()}}
+async function disablePush(){if(!pushDev)return;try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(sub)await sub.unsubscribe()}catch(e){}
+  try{await pushPost('/unsub',{id:pushDev.id})}catch(e){}
+  pushDev.on=false;savePushDev();mirror();pushMsg='オフにしました';render()}
+async function testPush(){try{const r=await pushPost('/test',{id:pushDev.id});pushMsg=r.ok?'テスト通知を送りました。数秒で届きます':'送れませんでした（'+r.status+'）'}catch(e){pushMsg='送れませんでした（'+(e.message||e)+'）'}render()}
+const randId=()=>Array.from(crypto.getRandomValues(new Uint8Array(18)),b=>'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'[b&63]).join('');
+const b64u=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const unb64u=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),c=>c.charCodeAt(0));
 const APP_URL='https://oniikazu0902-source.github.io/reading-dojo/';
 const remaining=()=>FREE?0:Math.max(0,S.quota-S.day.done);
 const canNotify=()=>'Notification' in window&&'serviceWorker' in navigator;
 function remindLine(){const r=S.remind,t=S.trigger?esc(S.trigger)+'、1本。':'';
   if(r.mode==='cal')return `毎日 ${esc(r.time)} にカレンダーがお知らせ。${t}`;
   if(r.mode==='app')return `${esc(r.time)} を過ぎてまだなら通知。${t}`;
+  if(r.mode==='push')return pushDev&&pushDev.on?`${esc(r.time)} にまだなら通知が届きます。${t}`:`プッシュ通知はまだオフです（設定から）。${t}`;
   return t}
 function untilPart(){const p=(S.testDate||'').split('-').map(Number);if(daysToTest()==null||daysToTest()<0)return '';return `;UNTIL=${p[0]}${String(p[1]).padStart(2,'0')}${String(p[2]).padStart(2,'0')}T235959`}
 const ics2=n=>String(n).padStart(2,'0');
@@ -3438,10 +3477,10 @@ function gcalUrl(){const a=firstAt(),s=icsLocal(a),end=icsLocal(new Date(a.getTi
    recur:'RRULE:FREQ=DAILY'+untilPart(),details:(S.trigger?S.trigger+'、1本。\n':'')+APP_URL}).toString()}
 /* サービスワーカーが閉じている間も読めるよう、今日の進み具合を Cache Storage に置く */
 function mirror(){try{if(!('caches' in window))return;caches.open('reading-dojo-state').then(async c=>{let old={};try{const r=await c.match('state.json');if(r)old=await r.json()}catch(e){}
-  const s={key:S.day.key,done:S.day.done,quota:S.quota,free:FREE,mode:S.remind.mode,time:S.remind.time,trigger:S.trigger,notified:old.notified};
+  const s={key:S.day.key,done:S.day.done,quota:S.quota,free:FREE,mode:S.remind.mode,time:S.remind.time,trigger:S.trigger,notified:old.notified,pushId:pushDev&&pushDev.on?pushDev.id:null,pushBase:PUSH_BASE};
   await c.put('state.json',new Response(JSON.stringify(s),{headers:{'Content-Type':'application/json'}}))}).catch(()=>{})}catch(e){}}
 function badge(){try{if(!navigator.setAppBadge)return;const n=remaining();
-  if(S.remind.mode==='app'&&n>0)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}catch(e){}}
+  if((S.remind.mode==='app'||S.remind.mode==='push')&&n>0)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}catch(e){}}
 let remindTimer=null,notifState='';
 function armTimer(){clearTimeout(remindTimer);if(S.remind.mode!=='app'||!canNotify()||Notification.permission!=='granted')return;
   const [hh,mm]=S.remind.time.split(':').map(Number),now=new Date(),at=new Date(now);at.setHours(hh,mm,0,0);if(at<=now)return;
@@ -3461,6 +3500,11 @@ async function enableApp(){if(!canNotify()){notifState='このブラウザは通
 function vRemind(){const r=S.remind;let h=`<div class="sec"><h2>お知らせの方法</h2><div class="chips">${RMODES.map(([k,l])=>`<button class="chip${r.mode===k?' on':''}" data-act="rmode" data-v="${k}">${l}</button>`).join('')}</div>`;
   if(r.mode==='trigger')h+=`<p class="sub">通知は使いません。毎日かならずやることの直後に1本、と先に決めておく方式です。</p>`;
   else h+=`<div><label for="rtime">時刻</label><input id="rtime" type="time" value="${esc(r.time)}"></div>`;
+  if(r.mode==='push'){const on=pushDev&&pushDev.on;
+    h+=`<p class="sub">この時刻に今日の分が終わっていなければ、アプリを閉じていても通知が届きます。終わっていれば届きません。ホーム画面のアイコンには残りの本数が出ます。${S.streak>=3?'連続日数が続いているときは、通知でも知らせます。':''}</p>
+    <div class="chips">${on?`<button class="btn" data-act="pushon"${pushBusy?' disabled':''}>登録しなおす</button><button class="btn" data-act="pushtest">テスト通知</button><button class="btn" data-act="pushoff">オフにする</button>`:`<button class="btn" data-act="pushon"${pushBusy?' disabled':''}>通知をオンにする</button>`}</div>
+    ${pushMsg?`<p class="sub red">${esc(pushMsg)}</p>`:''}
+    <p class="sub">iPhone はホーム画面に追加したアプリから開いたときだけ使えます（iOS 16.4 以降）。iPhone の通知のアイコンはアプリのアイコンになります。Android では通知に「30分後に」「1本やる」のボタンが付きます。時刻を変えるとサーバーにも伝わります。</p>`}
   if(r.mode==='cal')h+=`<p class="sub">毎日この時刻の予定（10分）をカレンダーに入れ、カレンダーアプリに通知してもらいます。アプリを閉じていても確実に届きます。${daysToTest()>0?'予定は試験日まで繰り返します。':''}</p>
     <div class="chips"><button class="btn" data-act="ics">カレンダーに追加</button><a class="btn" href="${esc(gcalUrl())}" target="_blank" rel="noopener">Googleカレンダーに追加</a></div>
     <p class="sub">「カレンダーに追加」は iPhone・Mac・Outlook 用のファイル（.ics）です。開くと追加画面になります。時刻を変えたときは、前の予定を消してから追加し直してください。</p>`;
@@ -3483,8 +3527,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   else if(a==='tips'){openTips[v]=!openTips[v];render()}
   else if(a==='trig'){S.trigger=TRIGGERS[+v];save();render()}
   else if(a==='setupdone'){S.setup=true;save();render()}
-  else if(a==='rmode'){S.remind.mode=v;notifState='';save();render();if(v==='app'&&canNotify()&&Notification.permission==='granted')enableApp()}
+  else if(a==='rmode'){const was=S.remind.mode;S.remind.mode=v;notifState='';pushMsg='';save();render();if(v==='app'&&canNotify()&&Notification.permission==='granted')enableApp();if(was==='push'&&v!=='push'&&pushDev&&pushDev.on)disablePush()}
   else if(a==='ics')downloadIcs();
+  else if(a==='pushon')enablePush();
+  else if(a==='pushoff')disablePush();
+  else if(a==='pushtest')testPush();
   else if(a==='appon')enableApp();
   else if(a==='apptest')notify(true);
   else if(a==='quota'){const n=+v;S.nextQuota=n===S.quota?null:n;save();render()}
@@ -3498,7 +3545,7 @@ document.addEventListener('change',e=>{const t=e.target;
   else if(t.id==='kinpos'){S.kin.pos=Math.max(1,Math.min(1000,parseInt(t.value,10)||1));save()}
   else if(t.id==='kinpace'){S.kin.pace=+t.value;save()}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!sess)render();mirror();badge();armTimer()}});
-loadLocal();rollover();render();initCloud();mirror();badge();armTimer();
+loadLocal();rollover();render();initCloud();mirror();badge();armTimer();pushSync();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 </script>
 </body>
